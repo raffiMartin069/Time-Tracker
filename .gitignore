@@ -1,0 +1,35 @@
+# Ignore Composer's vendor directory
+/vendor/
+
+# Ignore environment variables
+.env
+
+# Ignore IDE specific files
+/.vscode/
+.idea/
+/PHP-PDO.code-workspace/
+/PHP-PDO.code-workspace
+PHP-PDO.code-workspace/
+PHP-PDO.code-workspace
+/.code-workspace/
+/.code-workspace
+.code-workspace/
+.code-workspace
+
+# Ignore OS generated files
+.DS_Store
+Thumbs.db
+
+# Ignore log files and databases
+*.log
+*.sql
+*.sqlite
+
+# Ignore build files
+/build/
+
+# Ignore workspace
+/workspace/
+
+# Ignore node_modules
+/public/node_modules/

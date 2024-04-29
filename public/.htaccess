@@ -1,0 +1,16 @@
+# To test if htaccess is working or not, add some random text here and check if it is displayed on the browser.
+# Uncomment the sample in the next line, go to the browser and check if error 500 is displayed.
+
+# If error 500 is displayed, then htaccess is working fine.
+
+# Turn on URL rewriting
+RewriteEngine On
+
+# Some hosts may require you to use the `RewriteBase` directive.
+RewriteCond %{REQUEST_FILENAME} !-f
+
+# Don't rewrite files or directories
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Rewrite all other URLs to index.php/URL
+RewriteRule ^(.*)$ index.php?url=$1 [L,QSA]
