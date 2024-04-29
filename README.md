@@ -43,6 +43,4 @@ After cloning the project from GitHub, you will need to download the necessary d
 
 1. Open a terminal in the project's root directory.
 2. Run the following command to install the project's dependencies:
-
 `npm install`
-# Time-Tracker
