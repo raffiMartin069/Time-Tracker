@@ -6,7 +6,7 @@ class Login extends Controller {
 
     public function index() {
     
-        $this->view('Login');
+        $this->view('login/Login');
     
     }
 }

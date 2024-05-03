@@ -1,9 +1,11 @@
 <?php
 
-// This only checks if the server is localhost or not.
-// If it is localhost, the ROOT constant is set to the localhost URL.
-// If it is not localhost, the ROOT constant is set to the website URL.
-// This is useful for setting the ROOT constant in the config file.
+/*
+ * This file contains configuration settings for the application. 
+ * If there is a necessity to change the configuration, this is the place to do it.
+ * Best practice is to create functions that will define the configuration settings.
+ * This will make it easier to manage the settings.
+ */
 function defineRoot() {
     if($_SERVER['SERVER_NAME'] == 'localhost') {
         // database configuration
@@ -17,16 +19,28 @@ function defineRoot() {
         define('DBHOST', 'localhost');
         define('DBUSER', 'root');
         define('DBKEY', '');
-        define('ROOT', 'http://www.website.com');
+        define('ROOT', 'http://www.website.com/');
     }
 }
 
-// NOTE: DISABLE DEBUG IN PRODUCTION
-define('APPNAME', 'PHP-PDO');
-define('APPDESC', 'A simple PHP PDO framework');
-define('APPVERSION', '1.0.0');
-define('DEBUG', true);
+/*
+ * Define the application settings
+ * We can use this for debugging purposes 
+ */
+function TestingDebugger() {
+    define('DEBUG', true);
+}
+
+/*
+ * Define the application information
+ */
+function AppInformation() {
+    define('APPNAME', 'PHP-PDO');
+    define('APPDESC', 'A simple PHP PDO framework');
+    define('APPVERSION', '1.0.0');
+}
 
 
-
+TestingDebugger();
+AppInformation();
 defineRoot();
