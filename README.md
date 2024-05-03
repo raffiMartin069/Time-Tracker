@@ -41,6 +41,6 @@ To run the project, navigate to the `public/` directory and start a PHP server:
 
 After cloning the project from GitHub, you will need to download the necessary dependencies. This project uses npm for package management.
 
-1. Open a terminal in the project's root directory.
+1. Open a terminal in the projdct public directory.
 2. Run the following command to install the project's dependencies:
 `npm install`
