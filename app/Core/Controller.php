@@ -6,7 +6,7 @@ class Controller {
         if (file_exists($filename)) {
             require_once $filename;
         } else {
-            $filename = "../app/Views/404.view.php";
+            $filename = "../app/Views/Shared/404.view.php";
             require_once $filename;
         }
     }

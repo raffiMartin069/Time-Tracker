@@ -1,0 +1,15 @@
+/* allows positioning the wrapper div in order to fit in the side navigation view */
+@media only screen and (min-width: 993px) {
+    #wrapper {
+        margin-left: 18.7rem;
+    }
+}
+
+@media only screen and (min-width:1024px) {
+    .search {
+        display: flex;
+        width: 20% !important;
+        padding: 0%;
+        
+    }
+}

@@ -1,0 +1,87 @@
+hr {
+    width: 264px;
+    margin-top: -15px;
+    margin-left: 17px;
+}
+
+.sidebar {
+    background: linear-gradient(180deg, #FBF9F3 0%, #C3F7EB 100%);
+    box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.25);
+    position: fixed;
+    height: 100vh;
+    width: 300px;
+    overflow: hidden;
+}
+
+@media only screen and (min-width:993px) {
+    .sidebar.active {
+        left: -300px;
+        height: 100%;
+        position: absolute;
+        overflow: visible;
+        top: 0;
+        z-index: 666;
+        float: left;
+    }
+
+    #content-area.active {
+        width: 100%;
+    }
+}
+
+.logo h3 img {
+    width: 45px;
+}
+
+.sidebar ul li a {
+    align-items: center;
+    text-decoration: none;
+    padding: 5px 10px 5px 20px;
+}
+
+/* Adds background when hovered */
+.sidebar ul li a:hover {
+    color: #FFF !important;
+    background: #3B9FD8;
+}
+
+/* Adds background when clicked */
+.sidebar li a.active {
+    color: #FFF !important;
+    background: #3B9FD8;
+}
+
+.menu-navbar {
+    width: 100%;
+    padding: 15px 30px;
+}
+
+.sidebar.show-nav,
+.body-overlay.show-nav {
+    transform: translatex(0%);
+    display: block;
+}
+
+@media only screen and (max-width:993px) {
+    .sidebar {
+        transform: translatex(-100%);
+        transition: all 150ms linear;
+    }
+
+    .body-overlay {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        display: none;
+    }
+
+    .sidebar {
+        position: fixed;
+    }
+}
+
+
+.bottom-items {
+    position: absolute;
+    bottom: 15px;
+}
