@@ -18,7 +18,6 @@
     <link rel="stylesheet" href="<?=ROOT ?>css/default.css" />
     
 </head>
-
 <body>
 
     <div>
@@ -28,8 +27,7 @@
                 <h3 class="ms-3 mt-4 mb-4">
                     <img src="<?php ROOT ?>assets/img/Sidebar/logo.png" class="img-fluid ms-2" />
                     <a>
-                        <span class="ms-2" style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo</span>
-                        <span style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</span>
+                        <span class="ms-2" style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
                     </a>
                 </h3>
             </div>
@@ -120,6 +118,6 @@
     ?>
 
     <script src="<?php ROOT ?>scripts/Admin/sidebar.js"></script>
+    <script src="<?php ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

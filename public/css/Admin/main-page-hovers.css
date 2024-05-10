@@ -1,0 +1,7 @@
+.filter-hover {
+    transition: all 0.3s ease-in-out;
+}
+.filter-hover:hover {
+    color: #FFF !important;
+    background: #3B9FD8 !important;
+}

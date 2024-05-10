@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="<?php echo ROOT?>node_modules/sweetalert2/dist/sweetalert2.css" />
 </head>
 <body>
-  <div id="form-wrapper" class="d-flex align-items-center justify-content-center vh-100">
+  <div id="form-wrapper" class="d-flex align-items-center justify-content-center vh-100 text-center p-3">
     <form id="login-form" method="POST">
       <?php if (isset($error)) : ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
