@@ -1,0 +1,38 @@
+.background {
+    background: linear-gradient(180deg, #FBF9F3 0%, #C3F7EB 100%);
+}
+
+#emp-id {
+    color: hsl(166, 79%, 42%);
+}
+
+.margins {
+    margin: 0 2rem 0 20rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+table tr {
+    border-bottom: 1px solid #d3d3d3;
+}
+
+/* Responsive table in smaller screen */
+@media only screen and (max-width: 600px) {
+    table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table td, table th {
+        padding: 0.5rem;
+    }
+}
+
+.icon {
+    font-size: 1.5rem;
+}
