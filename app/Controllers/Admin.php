@@ -2,11 +2,11 @@
 
 require_once "../app/Core/Controller.php";
 
-class Login extends Controller {
+class Admin extends Controller {
 
     public function index() {
     
-        $this->view('Login/Login');
+        $this->view('Shared/sidenav/Admin');
     
     }
 }
