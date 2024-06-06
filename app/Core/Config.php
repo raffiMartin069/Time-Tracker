@@ -9,10 +9,12 @@
 function defineRoot() {
     if($_SERVER['SERVER_NAME'] == 'localhost') {
         // database configuration
-        define('DBNAME', $_SERVER['DB_NAME']);
-        define('DBHOST', $_SERVER['DB_HOST']);
-        define('DBUSER', $_SERVER['DB_USERNAME']);
-        define('DBKEY', $_SERVER['DB_PASSWORD']);
+        $config = simplexml_load_file('../App.config');
+        define('DBNAME', $config->database->dbname);
+        define('DBHOST', $config->database->host);
+        define('DBUSER', $config->database->username);
+        define('DBKEY', $config->database->password);
+        define('PORT', $config->database->port);
         define('ROOT', 'http://localhost/Time-Tracker/public/');
     } else {
         define('DBNAME', 'test');
