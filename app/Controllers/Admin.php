@@ -27,7 +27,7 @@ class Admin extends Controller
                 'DATE' => property_exists($row, 'date') ? $row->date : null,
                 'CLOCK_IN' => property_exists($row, 'clock_in') ? $row->clock_in : null,
                 'CLOCK_OUT' => property_exists($row, 'clock_out') ? $row->clock_out : null,
-                'BREAK_STATUS' => property_exists($row, 'break_in') ? $row->break_status : null,
+                'BREAK_STATUS' => property_exists($row, 'break_status') ? $row->break_status : null,
                 'HRS_WORKED' => property_exists($row, 'hrs_worked') ? $row->hrs_worked : null,
                 'MEETING_STATUS' => property_exists($row, 'meeting_status') ? $row->meeting_status : null,
                 'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
@@ -72,10 +72,13 @@ class Admin extends Controller
     public function test()
     {
         $results = $this->GetAll('DAILY_REPORT');
-        $del = $this->Delete(195, 'DAILY_REPORT');
+        $del = $this->Delete(212, 'DAILY_REPORT', 'daily_id');
+        $meeting_logs = $this->GetAll('MEETING_LOGS');
+        $del_meeting_log = $this->Delete(6, 'MEETING_LOGS', 'record_id');
 
         $this->view('Test', [
-            'results' => $results
+            'results' => $results,
+            'meeting_logs' => $meeting_logs
         ]);
     }
 
@@ -101,28 +104,31 @@ class Admin extends Controller
         switch ($action) {
             case 0:
                 $success = $this->adminClockIn(7);
-                // gi session nalang nako kay kay mausab gyud ang icon sa time in.
                 $_SESSION["ClockedIn"] = true;
                 break;
 
             case 1:
-                // gi session nalang nako kay kay mausab gyud ang icon sa time in.
                 $success = $this->adminClockOut(7);
                 $_SESSION["ClockedIn"] = false;
                 break;
             case 2:
-
-                
-
+                $success = $this->adminMeetingIn(7);
+                $_SESSION["MeetingIn"] = true;
                 break;
 
             case 3:
+                $success = $this->adminMeetingOut(7);
+                $_SESSION["MeetingIn"] = false;
                 break;
 
             case 4:
+                $success = $this->adminBreakIn(7);
+                $_SESSION["BreakIn"] = true;
                 break;
 
             case 5:
+                $success = $this->adminBreakOut(7);
+                $_SESSION["BreakIn"] = false;
                 break;
 
             default:
@@ -168,7 +174,7 @@ class Admin extends Controller
             header("Content-Type: application/json");
             echo json_encode([
                 'status' => false,
-                'message' => 'Failed to clock in'
+                'message' => 'Something went wrong. Please try again later.'
             ]);
             die();
         }

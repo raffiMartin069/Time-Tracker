@@ -1,3 +1,7 @@
+import * as Err from '../error.js';
+
+
+
 // Function to handle time in/out button click
 const timeInOutButton = () => {
   const textElement = timeToggle.querySelector("small");
@@ -21,10 +25,9 @@ const timeInOutButton = () => {
 };
 
 const meetingBtn = () => {
-    let meeting = meetingToggle.querySelector("small");    
+    const meeting = meetingToggle.querySelector("small");    
     meetingToggle.addEventListener("click", function(e){
         e.preventDefault();
-
         let state = 2;
         let action = "";
 
@@ -37,7 +40,55 @@ const meetingBtn = () => {
         }
         httpRequest(state, action);
     });
+}
 
+const breakBtn = () => {
+    const adminBreak = breakToggle.querySelector("small");
+    breakToggle.addEventListener("click", function(e){
+        e.preventDefault();
+        let state = 4;
+        let action = "";
+
+        if(adminBreak.innerText === "Break In"){
+            action = "startBreak";
+            state = 4;
+        } else {
+            action = "endBreak";
+            state = 5;
+        }
+        httpRequest(state, action);
+    });
+
+}
+
+const errorMsg = (error) => {
+  let message = Err.DEFAULT_ERROR;
+
+  if(error.message.includes(Err.ALREADY_CLOCKED_IN)){
+    message = Err.TIME_IN_PAST;
+  }
+
+  if(error.message.includes(Err.INVALID_MEETING_HOUR)){
+    message = Err.OUT_OF_HOURS_MEETING;
+  }
+
+  if(error.message.includes(Err.NO_MEETING)){
+    message = Err.NO_MEETING_SCHEDULED;
+  }
+
+  if(error.message.includes(Err.NO_ASSIGNED_MEETING)){
+    message = Err.NO_MEETING_ASSIGNED;
+  }
+
+  if(error.message.includes(Err.MEETING_ATTENDED)){
+    message = Err.MEETING_ALREADY_LOGGED;
+  }
+
+  if(error.message.includes(Err.BREAK_ALREADY_LOGGED)){
+    message = Err.BREAK_USED;
+  }
+
+  return message;
 }
 
 const httpRequest = async (state, action) => {
@@ -72,13 +123,8 @@ const httpRequest = async (state, action) => {
     })
     .catch((error) => {
       // Check if the error message contains the specific text
-      let message = error.message.includes(
-        "You have already clocked in for today"
-      )
-        ? "You have already clocked in for today."
-        : "An unexpected error occurred.";
-
-      console.error("Error:", error.message);
+      let message = errorMsg(error);
+      
       Swal.fire({
         title: "Error",
         text: message,
@@ -89,3 +135,5 @@ const httpRequest = async (state, action) => {
 
 // Initialize the time in/out button
 timeInOutButton();
+meetingBtn();
+breakBtn();

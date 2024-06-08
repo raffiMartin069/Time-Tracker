@@ -31,29 +31,31 @@
             <div class="container d-flex justify-content-center  ">
                 <div class="row row-cols gap-5 gap-md-5   w-100 text-center">
                     <div class="col p-1 rounded-5 d-flex align-items-center justify-content-center">
-                        
-                    <?php 
-                        if(isset($_SESSION["ClockedIn"]) && $_SESSION["ClockedIn"] == true){
+
+                        <?php
+                        if (isset($_SESSION["ClockedIn"]) && $_SESSION["ClockedIn"] == true) {
                             echo '<a id="timeToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
-                            src="'.ROOT.'assets/img/admin/Time-out.png" class="img-fluid" /> <small
+                            src="' . ROOT . 'assets/img/admin/Time-out.png" class="img-fluid" /> <small
                             id="timeStatusText" class="fs-3 fw-medium">Time Out</small></a>';
-                        }else{
+                        } else {
                             echo '<a id="timeToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
-                            src="'.ROOT.'assets/img/admin/Time-in.png" class="img-fluid" /> <small
+                            src="' . ROOT . 'assets/img/admin/Time-in.png" class="img-fluid" /> <small
                             id="timeStatusText" class="fs-3 fw-medium">Time In</small></a>';
                         }
-                    ?>
-                    
+                        ?>
+
                     </div>
                     <div class=" col p-1 rounded-5 d-flex align-items-center justify-content-center">
                         <a id="breakToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
                                 src="<?= ROOT ?>assets/img/admin/break.png" class="img-fluid" /> <small
-                                class="fs-3 fw-medium">Break In</small></a>
+                                class="fs-3 fw-medium"><?php echo isset($_SESSION['BreakIn']) && $_SESSION['BreakIn'] === true ? 'Break Out' : 'Break In' ?></small></a>
                     </div>
+
                     <div class=" col   p-1 rounded-5 d-flex align-items-center justify-content-center">
-                        <a id="meetingToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
-                                src="<?= ROOT ?>assets/img/admin/meeting.png" class="img-fluid" /> <small
-                                class="fs-3 fw-medium">Meeting In</small></a>
+                        <a id="meetingToggle" href="" class="text-decoration-none text-dark"
+                            onclick="return false;"><img src="<?= ROOT ?>assets/img/admin/meeting.png"
+                                class="img-fluid" /> <small
+                                class="fs-3 fw-medium"><?php echo isset($_SESSION['MeetingIn']) && $_SESSION['MeetingIn'] === true ? 'Meeting Out' : 'Meeting In' ?></small></a>
                     </div>
                 </div>
             </div>
@@ -81,7 +83,8 @@
                             </div>
                         </form>
                     </nav>
-                    <p class="d-none d-md-block" style="color:hsl(166, 79%, 42%);">I.D. <?php echo $_SESSION["UID"]; ?></p>
+                    <p class="d-none d-md-block" style="color:hsl(166, 79%, 42%);">I.D. <?php echo $_SESSION["UID"]; ?>
+                    </p>
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center">
@@ -103,10 +106,17 @@
                                     <td><?php echo $report->getBreakStatus(); ?></td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <p class="border px-2 rounded-3"
-                                                style=" background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%);">
-                                                <?php echo $report->getMeetingStatus(); ?>
-                                            </p>
+                                            <?php if ($report->getMeetingStatus() == 'In session'): ?>
+                                                <p class="border px-2 rounded-3"
+                                                    style="background-color: hsl(0, 100%, 89%); color: hsl(0, 96%, 45%); border: 1.5px solid hsl(0, 96%, 45%) !important;">
+                                                    <?php echo $report->getMeetingStatus(); ?>
+                                                </p>
+                                            <?php else: ?>
+                                                <p class="border px-2 rounded-3"
+                                                    style="background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%); border: 1.5px solid hsl(166, 100%, 26%) !important;">
+                                                    <?php echo $report->getMeetingStatus(); ?>
+                                                </p>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                     <td><?php echo $report->getClockOut(); ?></td>
@@ -126,7 +136,7 @@
 <script type="text/javascript">
     var ROOT = "<?= ROOT ?>";
 </script>
-<script defer src="<?= ROOT ?>scripts/Admin/dashboard.js"></script>
+<script defer type="module" src="<?= ROOT ?>scripts/Admin/dashboard.js"></script>
 </body>
 
 </html>

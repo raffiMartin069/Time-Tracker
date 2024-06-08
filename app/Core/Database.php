@@ -19,9 +19,9 @@ Trait Database {
             return $result ?: []; // Always return an array, even if it's empty
         } catch(PDOException $e) {
             http_response_code(500); // Set a proper HTTP response code
-    header('Content-Type: application/json'); // Indicate the content type is JSON
-    echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
-    exit;
+            header('Content-Type: application/json'); // Indicate the content type is JSON
+            echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+            exit;
         }
     }
 

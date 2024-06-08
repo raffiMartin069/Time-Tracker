@@ -31,10 +31,10 @@ Trait Model {
         }
     }
 
-    public function Delete($id, $table) {
+    public function Delete($id, $table, $col) {
         try{
             // $this->validate($table);
-            $query = "DELETE FROM {$table} WHERE daily_id = :id";
+            $query = "DELETE FROM {$table} WHERE {$col} = :id";
             $params = [
                 'id' => $id
             ];

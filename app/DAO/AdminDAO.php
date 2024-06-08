@@ -8,9 +8,66 @@
  */
 trait AdminDAO
 {
-    private function adminMeetingIn($id) {
+
+    private function adminBreakOut($id)
+    {
         try {
-            $query = "update daily_report set meeting_in = current_timestamp where emp_id = :id and date = current_date;";
+            $query = "update daily_report set break_status = false where emp_id = :id and date = current_date;";
+            
+            $params = [
+                'id' => $id
+            ];
+
+            return !empty($this->Query($query, $params)) ? true : false;
+
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    private function adminBreakIn($id)
+    {
+        try {
+            $query = "update daily_report set break_status = true WHERE EMP_ID = :id and date = current_date; ";
+            
+            $params = [
+                'id' => $id
+            ];
+
+            return !empty($this->Query($query, $params)) ? true : false;
+
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    private function adminMeetingOut($id) 
+    {
+        try {
+            $query = "update daily_report set meeting_status = false where emp_id = :id and date = current_date;";
+            
+            $params = [
+                'id' => $id
+            ];
+
+            return !empty($this->Query($query, $params)) ? true : false;
+
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    private function adminMeetingIn($id) 
+    {
+        try {
+            $query = "update daily_report set meeting_status = true WHERE EMP_ID = :id and date = current_date; ";
+            
             $params = [
                 'id' => $id
             ];
