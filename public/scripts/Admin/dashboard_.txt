@@ -1,0 +1,131 @@
+$(function(){
+
+    const timeIn = ROOT + "assets/img/admin/Time-in.png";
+    const timeOut = ROOT + "assets/img/admin/Time-out.png";
+
+    // Function to initialize the time state based on local storage
+    const initializeTimeState = () => {
+        const timeState = localStorage.getItem('timeState') || 'Time Out'; // Default to 'Time Out'
+        const imgSrc = timeState === 'Time Out' ? timeOut : timeIn;
+        $('#timeToggle img').attr('src', imgSrc);
+        $("#timeStatusText").text(timeState);
+    }
+
+    // Function to update the time state icon and label
+    const updateTimeState = (newState) => {
+        const imgSrc = newState === 'Time Out' ? timeOut : timeIn;
+        $('#timeToggle img').attr('src', imgSrc);
+        $("#timeStatusText").text(newState);
+        localStorage.setItem('timeState', newState);
+    }
+
+    initializeTimeState();
+
+    const meetingState = (element) => {
+        var statusText1 = $(element).find('small');
+        var statusText2 = $('.d-flex.justify-content-center p');
+        if (statusText1.text() === 'Meeting In' || statusText2.text() === 'Available') {
+            statusText1.text('Meeting Out');
+            statusText2.text('Not Available');
+            statusText2.css('background-color', '#FFC5C5');
+            statusText2.css('border', '1px solid #DF0404');
+            statusText2.css('color', '#DF0404');
+        } else {
+            statusText1.text('Meeting In');
+            statusText2.text('Available');
+            statusText2.css('background-color', 'hsl(166, 58%, 78%)');
+            statusText2.css('border', 'hsl(166, 100%, 26%)');
+            statusText2.css('color', 'hsl(166, 100%, 26%)');
+        }
+    }
+
+    const breakState = (element) => {
+        var statusText = $(element).find('small');
+        if (statusText.text() === 'Break In') {
+            statusText.text('Break Out');
+        } else {
+            statusText.text('Break In');
+        }
+    }
+
+    $("#timeToggle").click(function(e) {
+        e.preventDefault();
+        var img = $(this).find('img');
+        var src = img.attr('src');
+        var newState = src.includes('Time-in.png') ? 'Time Out' : 'Time In';
+        httpRequest(0, newState === 'Time In', this);
+    });
+
+
+    
+    $('#breakToggle').click(function(e) {
+        e.preventDefault();
+        var statusText = $(this).find('small');
+        if (statusText.text() === 'Break In') {
+            httpRequest(1, true, this);
+        } else {
+            httpRequest(1, false, this);
+        }
+    });
+
+    $('#meetingToggle').click(function(e) {
+        e.preventDefault();
+        var statusText1 = $(this).find('small');
+        var statusText2 = $('.d-flex.justify-content-center p');
+        if (statusText1.text() === 'Meeting In' && statusText2.text() === 'Available') {
+            httpRequest(2, true, this);
+        } else {
+            httpRequest(2, false, this);
+        }
+    });
+    
+    const actionToggler = (response, element) => {
+        switch(response) {
+            case 0:
+                var newState = localStorage.getItem('timeState') === 'Time Out' ? 'Time In' : 'Time Out';
+                updateTimeState(newState);
+                break;
+            case 1:
+                breakState(element);
+                break;
+            case 2:
+                meetingState(element);
+                break;
+            default:
+                console.error('Invalid action');
+                break;
+        }
+    }
+
+    const httpRequest = (action, status, element) => {
+        $.ajax({
+            url: "Admin/Status",
+            method: "POST",
+            data: JSON.stringify({
+                action: action,
+                status: status
+            }),
+            contentType: "application/json",
+            processData: false,
+            success: function(response) {
+                console.log("Response from server:", response.operation);
+                actionToggler(response.operation, element);
+                // Remove the window.location.reload();
+                // window.location.reload(); // Not needed if we handle UI updates correctly
+            },
+            error: function(err) {
+                var message = "";
+                if (err.responseText === 'You already clocked in today{"status":false,"operation":0}') {
+                    message = "You already clocked in today{\"status\":false,\"operation\":0}";
+                    message = message.replace(/\{.*\}$/, ''); // Removes the JSON part at the end of the string
+                }
+
+                Swal.fire({
+                    title: "Error",
+                    text: message,
+                    icon: "error"
+                });
+            }
+        });
+    }
+})

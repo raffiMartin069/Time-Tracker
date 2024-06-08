@@ -16,6 +16,7 @@ function defineRoot() {
         define('DBKEY', $config->database->password);
         define('PORT', $config->database->port);
         define('ROOT', 'http://localhost/Time-Tracker/public/');
+        define('APP', 'http://localhost/Time-Tracker/app/');
     } else {
         define('DBNAME', 'test');
         define('DBHOST', 'localhost');
@@ -41,8 +42,6 @@ function AppInformation() {
     define('APPDESC', 'A simple PHP PDO framework');
     define('APPVERSION', '1.0.0');
 }
-
-
 TestingDebugger();
 AppInformation();
 defineRoot();

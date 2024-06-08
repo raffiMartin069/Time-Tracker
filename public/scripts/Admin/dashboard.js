@@ -1,113 +1,91 @@
-$(function(){
+// Function to handle time in/out button click
+const timeInOutButton = () => {
+  const textElement = timeToggle.querySelector("small");
+  timeToggle.addEventListener("click", function (e) {
+    e.preventDefault();
 
-    const timeIn = ROOT + "assets/img/admin/Time-in.png";
-    const timeOut = ROOT + "assets/img/admin/Time-out.png";
+    let state = 0;
+    let action = "";
 
-    const timeState = (element) => {
-        var img = $(element).find('img');
-        var src = img.attr('src');
-        if(src.includes('Time-in.png')){
-            img.attr('src', timeOut);
-            $("#timeStatusText").text('Time In');
-        } else {
-            img.attr('src', timeIn);
-            $("#timeStatusText").text('Time Out');
-        }
+    // Toggle the text and state
+    if (textElement.innerText === "Time In") {
+      action = "timeIn";
+      state = 0; // User is timed in
+    } else {
+      action = "timeOut";
+      state = 1;
     }
+    // Perform HTTP request
+    httpRequest(state, action);
+  });
+};
 
-    const meetingState = (element) => {
-        var statusText1 = $(element).find('small');
-        var statusText2 = $('.d-flex.justify-content-center p');
-        if (statusText1.text() === 'Meeting In' || statusText2.text() === 'Available') {
-            statusText1.text('Meeting Out');
-            statusText2.text('Not Available');
-            statusText2.css('background-color', '#FFC5C5');
-            statusText2.css('border', '1px solid #DF0404');
-            statusText2.css('color', '#DF0404');
-        } else {
-            statusText1.text('Meeting In');
-            statusText2.text('Available');
-            statusText2.css('background-color', 'hsl(166, 58%, 78%)');
-            statusText2.css('border', 'hsl(166, 100%, 26%)');
-            statusText2.css('color', 'hsl(166, 100%, 26%)');
-        }
-    }
-
-    const breakState = (element) => {
-        var statusText = $(element).find('small');
-        if (statusText.text() === 'Break In') {
-            statusText.text('Break Out');
-        } else {
-            statusText.text('Break In');
-        }
-    }
-
-    $("#timeToggle").click(function(e){
+const meetingBtn = () => {
+    let meeting = meetingToggle.querySelector("small");    
+    meetingToggle.addEventListener("click", function(e){
         e.preventDefault();
-        var img = $(this).find('img');
-        var src = img.attr('src');
-        if(src.includes('Time-in.png')){
-            httpRequest(0, true, this);            
+
+        let state = 2;
+        let action = "";
+
+        if(meeting.innerText === "Meeting In"){
+            action = "startMeeting";
+            state = 2;
         } else {
-            httpRequest(0, false, this);            
+            action = "endMeeting";
+            state = 3;
         }
+        httpRequest(state, action);
     });
 
-    
-    $('#breakToggle').click(function(e) {
-        e.preventDefault();
-        var statusText = $(this).find('small');
-        if (statusText.text() === 'Break In') {
-            httpRequest(1, true, this);
-        } else {
-            httpRequest(1, false, this);
-        }
-    });
+}
 
-    $('#meetingToggle').click(function(e) {
-        e.preventDefault();
-        var statusText1 = $(this).find('small');
-        var statusText2 = $('.d-flex.justify-content-center p');
-        if (statusText1.text() === 'Meeting In' && statusText2.text() === 'Available') {
-            httpRequest(2, true, this);
-        } else {
-            httpRequest(2, false, this);
-        }
-    });
-    
-    const actionToggler = (response, element) => {
-        switch(response) {
-            case 0:
-                timeState(element);
-                break;
-            case 1:
-                breakState(element);
-                break;
-            case 2:
-                meetingState(element);
-                break;
-            default:
-                console.error('Invalid action');
-                break
-        }
-    }
+const httpRequest = async (state, action) => {
+  let url = "Admin/Status";
 
-    const httpRequest = (action, status, element) => {
-        $.ajax({
-            url: "Admin/Status",
-            method: "POST",
-            data: JSON.stringify({
-                action: action,
-                status: status
-            }),
-            contentType: "application/json",
-            processData: false,
-            success: function(response){
-                actionToggler(response.operation, element);
-            },
-            error: function(err){
-                console.error(err);
-            }
-        })
-    }
-})
+  let response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ state, action }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        // If the response status code is not in the 200-299 range,
+        // we still want to parse the response as JSON to get the error message.
+        return response.json().then((errorData) => {
+          throw new Error(errorData.error || "Unknown error occurred");
+        });
+      }
+      return response.json(); // Parse successful response as JSON
+    })
+    .then((response) => {
+      // Handle your successful response data
+      Swal.fire({
+        title: "Success",
+        text: "Time in/out successful",
+        icon: "success",
+      }).then(() => {
+        window.location.reload(); // Reload the page after the alert is closed
+      });;
+    })
+    .catch((error) => {
+      // Check if the error message contains the specific text
+      let message = error.message.includes(
+        "You have already clocked in for today"
+      )
+        ? "You have already clocked in for today."
+        : "An unexpected error occurred.";
+
+      console.error("Error:", error.message);
+      Swal.fire({
+        title: "Error",
+        text: message,
+        icon: "error",
+      });
+    });
+};
+
+// Initialize the time in/out button
+timeInOutButton();

@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/main-page-icon.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/media.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
+    <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
 </head>
 
 <body>
@@ -30,16 +31,29 @@
             <div class="container d-flex justify-content-center  ">
                 <div class="row row-cols gap-5 gap-md-5   w-100 text-center">
                     <div class="col p-1 rounded-5 d-flex align-items-center justify-content-center">
-                        <a id="timeToggle" href="" class="text-decoration-none text-dark"><img src="<?= ROOT ?>assets/img/admin/Time-out.png"
-                                class="img-fluid" /> <small id="timeStatusText" class="fs-3 fw-medium">Time In</small></a>
+                        
+                    <?php 
+                        if(isset($_SESSION["ClockedIn"]) && $_SESSION["ClockedIn"] == true){
+                            echo '<a id="timeToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
+                            src="'.ROOT.'assets/img/admin/Time-out.png" class="img-fluid" /> <small
+                            id="timeStatusText" class="fs-3 fw-medium">Time Out</small></a>';
+                        }else{
+                            echo '<a id="timeToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
+                            src="'.ROOT.'assets/img/admin/Time-in.png" class="img-fluid" /> <small
+                            id="timeStatusText" class="fs-3 fw-medium">Time In</small></a>';
+                        }
+                    ?>
+                    
                     </div>
                     <div class=" col p-1 rounded-5 d-flex align-items-center justify-content-center">
-                        <a id="breakToggle" href="" class="text-decoration-none text-dark"><img src="<?= ROOT ?>assets/img/admin/break.png"
-                                class="img-fluid" /> <small class="fs-3 fw-medium">Break In</small></a>
+                        <a id="breakToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
+                                src="<?= ROOT ?>assets/img/admin/break.png" class="img-fluid" /> <small
+                                class="fs-3 fw-medium">Break In</small></a>
                     </div>
                     <div class=" col   p-1 rounded-5 d-flex align-items-center justify-content-center">
-                        <a id="meetingToggle" href="" class="text-decoration-none text-dark"><img src="<?= ROOT ?>assets/img/admin/meeting.png"
-                                class="img-fluid" /> <small class="fs-3 fw-medium">Meeting In</small></a>
+                        <a id="meetingToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
+                                src="<?= ROOT ?>assets/img/admin/meeting.png" class="img-fluid" /> <small
+                                class="fs-3 fw-medium">Meeting In</small></a>
                     </div>
                 </div>
             </div>
@@ -58,7 +72,8 @@
                                     placeholder="Search" aria-label="Search">
                             </div>
                             <div>
-                                <select class="h-100 w-100 form-control mx-lg-2 mx-3 rounded-3 bg-light filter-hover text-center ">
+                                <select
+                                    class="h-100 w-100 form-control mx-lg-2 mx-3 rounded-3 bg-light filter-hover text-center ">
                                     <option class="bg-light" disabled selected>Sort By</option>
                                     <option class="bg-light" style="color:black;" value="1">Oldest</option>
                                     <option class="bg-light" style="color:black;" value="2">Newest</option>
@@ -66,7 +81,7 @@
                             </div>
                         </form>
                     </nav>
-                    <p class="d-none d-md-block" style="color:hsl(166, 79%, 42%);">I.D.</p>
+                    <p class="d-none d-md-block" style="color:hsl(166, 79%, 42%);">I.D. <?php echo $_SESSION["UID"]; ?></p>
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center">
@@ -74,41 +89,30 @@
                             <tr>
                                 <th>Date</th>
                                 <th>Time In</th>
-                                <th>Break In</th>
-                                <th>Break Out</th>
+                                <th>Break Status</th>
                                 <th>Meeting</th>
                                 <th>Time Out</th>
                                 <th>Total Hours</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>
-                                    <p>2024-05-05</p>
-                                </td>
-                                <td>
-                                    <p>8:00 AM</p>
-                                </td>
-                                <td>
-                                    <p>12:00 PM</p>
-                                </td>
-                                <td>
-                                    <p>1:00 PM</p>
-                                </td>
-                                <td>
-                                    <div class="d-flex justify-content-center">
-                                        <p class="border px-2 rounded-3"
-                                            style=" background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%);">
-                                            Available</p>
-                                    </div>
-                                </td>
-                                <td>
-                                    <p>5:00 PM</p>
-                                </td>
-                                <td>
-                                    <p>9 Hours</p>
-                                </td>
-                            </tr>
+                            <?php foreach ($results as $report): ?>
+                                <tr>
+                                    <td><?php echo $report->getDate(); ?></td>
+                                    <td><?php echo $report->getClockIn(); ?></td>
+                                    <td><?php echo $report->getBreakStatus(); ?></td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <p class="border px-2 rounded-3"
+                                                style=" background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%);">
+                                                <?php echo $report->getMeetingStatus(); ?>
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td><?php echo $report->getClockOut(); ?></td>
+                                    <td><?php echo $report->getHrsWorked(); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
@@ -118,10 +122,11 @@
 </body>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
 <script src="<?= ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
+<script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
 <script type="text/javascript">
     var ROOT = "<?= ROOT ?>";
 </script>
-<script src="<?= ROOT ?>scripts/Admin/dashboard.js"></script>
+<script defer src="<?= ROOT ?>scripts/Admin/dashboard.js"></script>
 </body>
 
 </html>

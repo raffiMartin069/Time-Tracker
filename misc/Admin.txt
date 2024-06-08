@@ -1,19 +1,18 @@
 <?php
 
-require_once __DIR__ . "/../Core/Controller.php";
-require_once __DIR__ . "/../Models/AdminModels/DailyReportModel.php";
-require_once __DIR__ . "/../DAO/AdminDAO.php";
+// require_once __DIR__ . "/../Core/Controller.php";
+// require_once __DIR__ . "/../Models/AdminModels/DailyReportModel.php";
+// require_once __DIR__ . "/../DAO/AdminDAO.php";
 
 class Admin extends Controller
 {
 
-    use Model;
-    use AdminDAO;
+    // use Model;
+    // use AdminDAO;
 
 
     public function index()
     {
-        $_SESSION["UID"] = 7;
         $this->view('Shared/sidenav/Admin');
     }
 
@@ -72,21 +71,20 @@ class Admin extends Controller
     public function test()
     {
         $results = $this->GetAll('DAILY_REPORT');
-        $del = $this->Delete(195, 'DAILY_REPORT');
+        $del = $this->Delete(132, 'DAILY_REPORT');
 
         $this->view('Test', [
             'results' => $results
         ]);
     }
 
-    private function verifyTimeInDate($date)
-    {
+    private function verifyTimeInDate($date) {
         // id number 7 is only for place holder
         $searchDate = $this->findCurrentDate(7);
         // search for the date in the database
         // if the date is found return true
         // else return false
-        foreach ($searchDate as $findDate) {
+        foreach($searchDate as $findDate) {
             if ($findDate->date == $date) {
                 return true;
             }
@@ -94,91 +92,84 @@ class Admin extends Controller
         return false;
     }
 
-    private function Action($action, $state)
+    // private function verifyTimeIn($id)
+    // {
+    //     $isFound = $this->checkClockIn($id);
+    //     return $isFound;
+    // }
+
+    private function Action($action)
     {
-        $success = true;
-
-        switch ($action) {
+        // 0 = clock in
+        // 1 = clock out
+        // 2 = break in
+        // 3 = break out
+        // This is how to get local time
+        // $currentDate = date('Y-m-d');
+        switch($action) {
             case 0:
-                $success = $this->adminClockIn(7);
-                // gi session nalang nako kay kay mausab gyud ang icon sa time in.
-                $_SESSION["ClockedIn"] = true;
-                break;
-
+                try {
+                    $date = date('Y-m-d');
+                    $isExist = $this->verifyTimeInDate($date);
+                    if($isExist == true) {
+                        // Suppose that 7 is from the session.
+                        $this->adminClockOut(7);
+                        return true;
+                    } 
+                    $this->adminClockIn(7);
+                    return true;
+                } catch(PDOException $e) {
+                    echo 'PDO Error: ' . $e->getMessage();
+                } catch(Exception $e) {
+                    echo 'Error: ' . $e->getMessage();
+                }
             case 1:
-                // gi session nalang nako kay kay mausab gyud ang icon sa time in.
-                $success = $this->adminClockOut(7);
-                $_SESSION["ClockedIn"] = false;
+                
                 break;
             case 2:
-
                 
-
                 break;
-
-            case 3:
-                break;
-
-            case 4:
-                break;
-
-            case 5:
-                break;
-
             default:
                 echo 'Invalid action';
         }
-
-        return $success;
-    }
+    } 
 
     // http endpoint
     public function Status()
     {
-        // check if the request method is post
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             header("Content-Type: application/json");
             echo json_encode([
                 'status' => false,
                 'message' => 'Invalid request method'
             ]);
-            die();
         }
 
-        // get the data from the request being sent.
+        // Get raw data from request body
         $rawData = file_get_contents('php://input');
-        // decode the json data
+
+        // Decode JSON data into PHP object
         $data = json_decode($rawData);
 
-        // check if the data is empty
-        if (empty($data)) {
-            header("Content-Type: application/json");
-            echo json_encode([
-                'status' => false,
-                'message' => 'Invalid request data'
-            ]);
-            die();
-        }
+        $getStatus = isset($data->status) ? $data->status : null;
+        $getOperation = isset($data->action) ? $data->action : null;
 
-        $state = $data->state;
-        $action = $data->action;
+        // This method decides which action to take
+        // based on the operations performed in the client side.
+        $this->Action($getOperation);
 
-        $isSuccess = $this->Action($state, $action);
-        if (!$isSuccess) {
-            header("Content-Type: application/json");
-            echo json_encode([
-                'status' => false,
-                'message' => 'Failed to clock in'
-            ]);
-            die();
-        }
-
-        header("Content-Type: application/json");
-        $serverResponse = [
-            'status' => true,
-            'message' => 'Success'
+        // Prepare data to send back
+        $responseData = [
+            'status' => $getStatus,
+            'operation' => $getOperation,
         ];
-        echo json_encode($serverResponse);
+
+        // Set header to application/json
+        header('Content-Type: application/json');
+
+        // Send data back to frontend
+        echo json_encode($responseData);
+
     }
 
     private function inputValidation($array)
