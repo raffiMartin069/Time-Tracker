@@ -3,6 +3,7 @@
 session_start();
 
 require "../app/Core/init.php";
+require __DIR__ . "/vendor/autoload.php";
 
 function Debugger() {
     return DEBUG ? ini_set('display_errors', 1) : ini_set('display_errors', 0);

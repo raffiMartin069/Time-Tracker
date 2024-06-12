@@ -1,190 +1,287 @@
-/**
- * Validates an array of employee fields.
- * @param {Array} array - The array of employee fields to validate.
- * @returns {boolean} - Returns true if all fields are valid, false otherwise.
- */
-function validateEmployeeFields(array) {
-    for (let i = 0; i < array.length; i++) {
-        if (array[i] === undefined || array[i] === "") {
-            return false;
-        }
+import * as Err from "../error.js";
+
+document.addEventListener("DOMContentLoaded", function () {
+  var contactInput = document.getElementById("contact");
+
+  contactInput.addEventListener("input", function () {
+    // Replace any non-digit character with an empty string
+    this.value = this.value.replace(/\D/g, "");
+  });
+});
+
+const employmentMapping = {
+  2: { emp_stat_name: "Part-time", req_hrs: 20 },
+  3: { emp_stat_name: "Part-time", req_hrs: 30 },
+  1: { emp_stat_name: "Full-time", req_hrs: 40 },
+};
+
+const positionMapping = {
+  1: "Learning and Development Specialist",
+  2: "Chief Financial Officer",
+  3: "Head of Sales",
+  4: "Relations Director",
+  5: "Director of Training",
+  6: "Chief Operations Officer",
+  7: "Co Founder",
+  8: "Virtual Assistant",
+  9: "Chief Executive Officer",
+};
+
+const shiftMapping = {
+  36: "Wednesday-Sunday",
+  37: "Thursday-Monday",
+  38: "Friday-Tuesday",
+  39: "Saturday-Wednesday",
+  35: "Tuesday-Saturday",
+  33: "Sunday-Thursday",
+  34: "Monday-Friday",
+};
+
+const emptyFields = () => {
+  // return a swal warning
+  Swal.fire({
+    icon: "warning",
+    title: "Oops...",
+    text: "Please fill out all fields!",
+  });
+};
+
+const phoneLength = () => {
+  Swal.fire({
+    icon: "warning",
+    title: "Oops...",
+    text: "Number should be exactly 11 digits!",
+  });
+};
+
+const validateInput = (arr) => {
+  for (let i = 0; i < arr.length; i++) {
+    if (
+      arr[i] === "" ||
+      arr[i] === undefined ||
+      arr[i] === null ||
+      arr[i] === "undefined"
+    ) {
+      return false;
     }
-    return true;
-}
+  }
 
-/**
- * Retrieves the employee details from the form.
- * @returns {Array} - Returns an array containing the employee details.
- */
-function getEmployees() {
-    let fname = document.getElementById('fname').value;
-    let mname = document.getElementById('mname').value;
-    let lname = document.getElementById('lname').value;
-    let email = document.getElementById('email').value;
-    let dob = document.getElementById('dob').value;
-    let hireDate = document.getElementById('hireDate').value;
+  return true; // Ensure the function returns true if all validations pass
+};
 
-    let empType = Array.from(document.getElementsByName('shift')).find(r => r.checked)?.value;
-    let workingHrs = Array.from(document.getElementsByName('numberOfHrs')).find(r => r.checked)?.value;
-    let role = Array.from(document.getElementsByName('role')).find(r => r.checked)?.value;
-    let data = [fname, mname, lname, email, dob, hireDate, empType, workingHrs, role];
+const summary = () => {
+  let fname = document.getElementById("fname").value;
+  let mname = document.getElementById("mname").value;
+  let lname = document.getElementById("lname").value;
+  let email = document.getElementById("email").value;
+  let dob = document.getElementById("dob").value;
+  let hireDate = document.getElementById("hireDate").value;
+  let contact = document.getElementById("contact").value;
 
-    let validateField = validateEmployeeFields(data);
+  let empType = Array.from(document.getElementsByName("type")).find(
+    (r) => r.checked
+  )?.value;
+  let role = Array.from(document.getElementsByName("role")).find(
+    (r) => r.checked
+  )?.value;
+  let shift = Array.from(document.getElementsByName("shift")).find(
+    (r) => r.checked
+  )?.value;
 
-    if (!validateField) {
-        Swal.fire({
-            title: "Forgot something?",
-            text: "Some fields might be empty. Please fill them up.",
-            icon: "warning"
-        });
-        return [false];
-    }
-    return [true, data];
-}
+  let empTypeText = empType
+    ? `${employmentMapping[empType].emp_stat_name} (${employmentMapping[empType].req_hrs} Hours)`
+    : null;
+  let roleText = role ? positionMapping[role] : null;
+  let shiftText = shift ? shiftMapping[shift] : null;
 
-/**
- * Generates the HTML markup for the employee details summary modal.
- * @param {string} fullname - The full name of the employee.
- * @param {string} dob - The date of birth of the employee.
- * @param {string} hireDate - The hire date of the employee.
- * @param {string} email - The email address of the employee.
- * @param {string} empType - The employment type of the employee.
- * @param {string} workingHrs - The working hours of the employee.
- * @param {string} role - The role of the employee.
- * @returns {string} - Returns the HTML markup for the summary modal.
- */
-const summaryDetails = (fullname, dob, hireDate, email, empType, workingHrs, role) => {
-    return `
-        <div class="modal-dialog">
-        <div class="modal-content">
-        <div class="modal-header">
-            <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Details</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <h4 class="mb-3 fw-bold">Employee Details</h4>
-        
-            <p><strong>Full Name:</strong> ${fullname}</p>
-            <p><strong>Date of birth:</strong> ${dob}</p>
-            <p><strong>Position/Title:</strong> ${hireDate}</p>
-            <p><strong>Hired Date:</strong> ${email}</p>
-            <p><strong>Email:</strong> ${empType}</p>
-            <p><strong>Employment Type:</strong> ${workingHrs}</p>
-            <p><strong>Working Hours:</strong> ${role}</p>
-        </div>
-        <div class="modal-footer justify-content-center">
-            <button type="button" class="btn fs-5 fw-medium" style="color: #595959" data-bs-dismiss="modal">Cancel</button>
-            <input type="submit" id="sendForm" class="btn text-white rounded-5 fs-5 fw-medium" style="background: hsl(202, 71%, 42%)" value="OK">
-        </div>
-        </div>
+  // array for validation
+  let array = [
+    fname,
+    lname,
+    email,
+    dob,
+    hireDate,
+    contact,
+    empType,
+    role,
+    shift,
+  ];
+
+  if (!validateInput(array)) {
+    emptyFields();
+    return;
+  }
+
+  if (contact.length < 11) {
+    phoneLength();
+    return;
+  }
+
+  let fullname = `${fname} ${mname} ${lname}`;
+  return `
+    <div class="modal-dialog">
+    <div class="modal-content">
+    <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirm Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    `;
-}
+    <div class="modal-body">
+        <h4 class="mb-3 fw-bold">Employee Details</h4>
+    
+        <p><strong>Full Name:</strong> ${fullname}</p>
+        <p><strong>Date of birth:</strong> ${dob}</p>
+        <p><strong>Position/Title:</strong> ${roleText}</p>
+        <p><strong>Hired Date:</strong> ${hireDate}</p>
+        <p><strong>Email:</strong> ${email}</p>
+        <p><strong>Employment Type:</strong> ${empTypeText}</p>
+        <p><strong>Contact Number:</strong> ${contact}</p>
+        <p><strong>Shift:</strong> ${shiftText}</p>
+    </div>
+    <div class="modal-footer justify-content-center">
+        <button type="button" class="btn fs-5 fw-medium" style="color: #595959" data-bs-dismiss="modal">Cancel</button>
+        <input type="submit" id="sendForm" class="btn text-white rounded-5 fs-5 fw-medium" style="background: hsl(202, 71%, 42%)" value="OK">
+    </div>
+    </div>
+</div>
+`;
+};
 
-/**
- * Creates and displays the employee details summary modal.
- * @param {Array} array - The array containing the employee details.
- */
-const createModal = (array) => {
-    let fullname = array[0] + " " + array[1] + " " + array[2];
-    let dob = array[3];
-    let hireDate = array[4];
-    let email = array[5];
-    let empType = array[6];
-    let workingHrs = array[7];
-    let role = array[8];
+const openSummary = () => {
+  document.addEventListener("DOMContentLoaded", function () {
+    // This ensures the DOM is fully loaded before trying to attach the event listener
+    const showSummaryBtn = document.getElementById("submit");
+    if (showSummaryBtn) {
+      showSummaryBtn.addEventListener("click", function (e) {
+        // Call summary() to get the modal HTML
+        const modalHtml = summary();
 
-    let renderModal = summaryDetails(fullname, dob, hireDate, email, empType, workingHrs, role);
+        // Check if modalHtml is not null or undefined
+        if (modalHtml) {
+          // Insert the modal HTML into the div with ID 'empSummary'
+          const modalDiv = document.getElementById("empSummary");
+          modalDiv.innerHTML = modalHtml;
 
-    // render modal to the document
-    document.getElementById('empSummary').innerHTML = renderModal;
-
-    var myModal = new bootstrap.Modal(document.getElementById('empSummary'), {});
-    myModal.show();
-    prepareForm(array);
-}
-
-/**
- * Prepares the form for submission.
- * @param {Array} array - The array containing the employee details.
- */
-const prepareForm = (array) => {
-    let sendForm = document.getElementById('employeeForm');
-    sendForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-        console.log("I am sending a data: " + array);
-        httpRequest(sendForm);
-    });
-}
-
-/**
- * Opens the employee details summary modal.
- */
-const openSummaryModal = () => {
-    document.addEventListener('DOMContentLoaded', function () {
-        let openSummary = document.getElementById('submit');
-        openSummary.addEventListener('click', function () {
-
-            if (!getEmployees()[0]) {
-                return;
-            }
-
-            let data = getEmployees()[1];
-            createModal(data);
-        });
-    });
-}
-
-/**
- * Sends an HTTP request to add the employee.
- * @param {FormData} formData - The form data to be sent.
- */
-const httpRequest = async (formData) => {
-    let form = new FormData(formData);
-
-    let jsonObject = {};
-    for (let [key, value] of form.entries()) {
-        jsonObject[key] = value;
-    }
-
-    try {
-        const response = await fetch("Admin/AddEmployee", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(jsonObject)
-        });
-
-        if (!response.ok) {
-            throw new Error(`Something went wrong: ${response.status}`);
+          // Use Bootstrap's modal method to show the modal
+          const modalElement = new bootstrap.Modal(modalDiv);
+          modalElement.show();
         }
-
-        let responseBody = await response.json();
-
-        if (!responseBody.status) {
-            Swal.fire({
-                title: "Error",
-                text: responseBody.message,
-                icon: "error"
-            });
-            return;
-        }
-
-        Swal.fire({
-            title: " Employee Added!",
-            html: "Thank you for confirming the details. Employee account has been added successfully." +
-                "<br/><br/><strong>Employee Details</strong>" +
-                "<br/><br/><strong>User ID:</strong> " +
-                "<br/><strong>Password:</strong> " +
-                "<br/><br/><a class=' fs-6' href=''>Download Credentials</a>",
-            icon: "success"
-        }).then(() => {
-            window.location.reload();
-        });
-    } catch (error) {
-        console.error("Something went wrong " + error);
+      });
     }
-}
+  });
+};
 
-openSummaryModal();
+document.addEventListener("DOMContentLoaded", function () {
+  document
+    .getElementById("employeeForm")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+      httpRequest(this);
+    });
+});
+
+const errors = (err) => {
+  let mess = "";
+
+  if (err.error.includes(Err.DUPLICATE_EMAIL)) {
+    Swal.fire({
+      title: "Duplicate Email",
+      text: Err.DUPLICATE_EMAIL_MESS,
+      icon: "error",
+    });
+    return false;
+  }
+
+  if (err.error.includes(Err.DUPLICATE_PHONE)) {
+    Swal.fire({
+      title: "Duplicate Phone Number",
+      text: Err.DUPLICATE_PHONE_MESS,
+      icon: "error",
+    });
+    return false;
+  }
+  return true;
+};
+
+const getName = () => {
+  return (
+    document.getElementById("fname").value +
+    "_" +
+    document.getElementById("lname").value
+  );
+};
+
+const decodePdf = (data, empData) => {
+  // Decode the base64 PDF string
+  const base64Pdf = data.pdf;
+  const binaryString = window.atob(base64Pdf);
+  const len = binaryString.length;
+  const bytes = new Uint8Array(len);
+  for (let i = 0; i < len; i++) {
+    bytes[i] = binaryString.charCodeAt(i);
+  }
+
+  // Create a Blob from the bytes array
+  const pdfBlob = new Blob([bytes], { type: "application/pdf" });
+
+  // Create a download link
+  const downloadLink = document.createElement("a");
+  downloadLink.href = URL.createObjectURL(pdfBlob);
+  downloadLink.download =
+    getName() + "_credentials.pdf_" + empData.login_id + ".pdf";
+
+  // Trigger the download
+  return downloadLink.click();
+};
+
+const httpRequest = (formData) => {
+  let url = "Admin/AddEmployee";
+  let form = new FormData(formData);
+
+  let jsonObject = {};
+  for (let [key, value] of form.entries()) {
+    jsonObject[key] = value;
+  }
+
+  fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(jsonObject),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((errorData) => {
+          throw new Error(errorData.error || "An unknown error occurred");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      const empData = data.data[0];
+      decodePdf(data, empData);
+
+      Swal.fire({
+        title: "Employee Added!",
+        html:
+          "Thank you for confirming the details. Employee account has been added successfully." +
+          "<br/><br/><strong>Employee Details</strong>" +
+          "<br/><br/><strong>User ID:</strong> " +
+          empData.login_id +
+          "<br/><strong>Password:</strong> " +
+          empData.password,
+        icon: "success",
+      }).then(() => {
+        window.location.reload();
+      });
+    })
+    .catch((error) => {
+      Swal.fire({
+        title: "Oops.",
+        text: error.toString().replace("Error: ", ""),
+        icon: "error",
+      });
+    });
+};
+openSummary();

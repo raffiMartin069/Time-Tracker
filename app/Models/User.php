@@ -1,7 +1,7 @@
 <?php
 require '../Core/Model.php';
 
-class User  {
+class User {
 
     use Model;
 

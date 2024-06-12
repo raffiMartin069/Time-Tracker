@@ -1,0 +1,4 @@
+<FilesMatch "\.(gitignore|dockerignore|config|yaml|md)$|Dockerfile">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

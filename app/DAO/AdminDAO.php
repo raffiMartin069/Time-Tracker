@@ -4,22 +4,87 @@
  * This class contains methods that are used to interact with the database.
  * The methods in this class are used to clock in and clock out employees.
  * The only focus of this groups of classes is to have specific and non-general operations in the database.
- * PHP version 7.4
  */
 trait AdminDAO
 {
 
+    use Database;
+
+    public function adminButtonState($id, $date)
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('AdminState.sql');
+            $params = [
+                $id,
+                $date
+            ];
+            return $this->Query($query, $params);
+        } catch(Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch(PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function insertNewEmployee($data = [])
+    {
+        try {
+            $LOADER = new SQLoader();
+            // Load the SQL query from the InsertNewEmployee.sql file
+            $query = $LOADER->loadSqlQuery('AddEmployee.sql');
+
+            $params = [
+                $data['lname'],
+                $data['mname'],
+                $data['fname'],
+                $data['dob'],
+                $data['hireDate'],
+                $data['email'],
+                $data['contact'],
+                $data['role'],
+                $data['shift'],
+                $data['type']
+            ];
+
+            $result = $this->Query($query, $params);
+            // Use $params instead of $data when calling the Query method
+            return $result;
+        } catch (Exception $e) {
+            header("Content-Type: application/json");
+            http_response_code(500);
+            echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+            exit;
+        } catch (PDOException $e) {
+            header("Content-Type: application/json");
+            http_response_code(500);
+            echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+            exit;
+        }
+    }
+
+    public function manageEmployeeTable()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('ManageEmployeeView.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
     private function adminBreakOut($id)
     {
         try {
-            $query = "update daily_report set break_status = false where emp_id = :id and date = current_date;";
-            
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('BreakOut.sql');
             $params = [
                 'id' => $id
             ];
-
             return !empty($this->Query($query, $params)) ? true : false;
-
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
         } catch (PDOException $e) {
@@ -30,14 +95,12 @@ trait AdminDAO
     private function adminBreakIn($id)
     {
         try {
-            $query = "update daily_report set break_status = true WHERE EMP_ID = :id and date = current_date; ";
-            
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('BreakIn.sql');
             $params = [
                 'id' => $id
             ];
-
             return !empty($this->Query($query, $params)) ? true : false;
-
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
         } catch (PDOException $e) {
@@ -45,17 +108,15 @@ trait AdminDAO
         }
     }
 
-    private function adminMeetingOut($id) 
+    private function adminMeetingOut($id)
     {
         try {
-            $query = "update daily_report set meeting_status = false where emp_id = :id and date = current_date;";
-            
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('MeetingOut.sql');
             $params = [
                 'id' => $id
             ];
-
             return !empty($this->Query($query, $params)) ? true : false;
-
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
         } catch (PDOException $e) {
@@ -63,40 +124,36 @@ trait AdminDAO
         }
     }
 
-    private function adminMeetingIn($id) 
+    private function adminMeetingIn($id)
     {
         try {
-            $query = "update daily_report set meeting_status = true WHERE EMP_ID = :id and date = current_date; ";
-            
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('MeetingIn.sql');
             $params = [
                 'id' => $id
             ];
-
             return !empty($this->Query($query, $params)) ? true : false;
-
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
         } catch (PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage();
         }
     }
-    
+
     private function adminClockIn($id)
     {
         try {
-            $query = "insert into daily_report(emp_id) values (:id);";
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('ClockIn.sql');
             $params = [
                 'id' => $id
             ];
-            return $this->Query($query, $params);
-        
+            return !empty($this->Query($query, $params)) ? true : false;
         } catch (Exception $e) {
-            
             http_response_code(500); // Set a proper HTTP response code
             header('Content-Type: application/json'); // Indicate the content type is JSON
             echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
             exit;
-
         } catch (PDOException $e) {
             http_response_code(500); // Set a proper HTTP response code
             header('Content-Type: application/json'); // Indicate the content type is JSON
@@ -108,29 +165,24 @@ trait AdminDAO
     private function adminClockOut($id)
     {
         try {
-            $query = "update daily_report set clock_out = current_timestamp where emp_id = :id and date = current_date;";
-            
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('ClockOut.sql');
             $params = [
                 'id' => $id
             ];
-
             return !empty($this->Query($query, $params)) ? true : false;
-
         } catch (Exception $e) {
-
             echo 'Error: ' . $e->getMessage();
-
         } catch (PDOException $e) {
-
             echo 'PDO Error: ' . $e->getMessage();
-
         }
     }
 
     private function findCurrentDate($id)
     {
         try {
-            $query = "SELECT date FROM get_daily_report(:id)";
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('FindCurrentDate.sql');
             $params = [
                 'id' => $id
             ];

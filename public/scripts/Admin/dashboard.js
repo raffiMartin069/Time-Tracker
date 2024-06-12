@@ -1,7 +1,5 @@
 import * as Err from '../error.js';
 
-
-
 // Function to handle time in/out button click
 const timeInOutButton = () => {
   const textElement = timeToggle.querySelector("small");
@@ -23,6 +21,24 @@ const timeInOutButton = () => {
     httpRequest(state, action);
   });
 };
+
+const sortByNewest = () => {
+  const table = document.querySelector("#table");
+  const tbody = table.querySelector("tbody");
+  const rows = [...tbody.rows];
+
+  rows.sort((a, b) => {
+    let dateA = new Date(a.cells[0].textContent);
+    let dateB = new Date(b.cells[0].textContent);
+
+    return dateB - dateA;
+  });
+
+  rows.forEach((row) => {
+    tbody.appendChild(row);
+  });
+};
+
 
 const meetingBtn = () => {
     const meeting = meetingToggle.querySelector("small");    
@@ -61,35 +77,33 @@ const breakBtn = () => {
 
 }
 
-const errorMsg = (error) => {
-  let message = Err.DEFAULT_ERROR;
+const action = {
+  timeIn: 0,
+  timeOut: 1,
+  startMeeting: 2,
+  endMeeting: 3,
+  startBreak: 4,
+  endBreak: 5,
+};
 
-  if(error.message.includes(Err.ALREADY_CLOCKED_IN)){
-    message = Err.TIME_IN_PAST;
-  }
-
-  if(error.message.includes(Err.INVALID_MEETING_HOUR)){
-    message = Err.OUT_OF_HOURS_MEETING;
-  }
-
-  if(error.message.includes(Err.NO_MEETING)){
-    message = Err.NO_MEETING_SCHEDULED;
-  }
-
-  if(error.message.includes(Err.NO_ASSIGNED_MEETING)){
-    message = Err.NO_MEETING_ASSIGNED;
-  }
-
-  if(error.message.includes(Err.MEETING_ATTENDED)){
-    message = Err.MEETING_ALREADY_LOGGED;
-  }
-
-  if(error.message.includes(Err.BREAK_ALREADY_LOGGED)){
-    message = Err.BREAK_USED;
-  }
-
-  return message;
+const mapAction = (response) => {
+  let message = "";
+      if (response === action.timeIn) {
+        message = "Time in";
+      } else if (response === action.timeOut) {
+        message = "Time out";
+      } else if (response === action.startMeeting) {
+        message = "Meeting started";
+      } else if (response === action.endMeeting) {
+        message = "Meeting ended";
+      } else if (response === action.startBreak) {
+        message = "Break started";
+      } else if (response === action.endBreak) {
+        message = "Break ended";
+      }
+      return message;
 }
+
 
 const httpRequest = async (state, action) => {
   let url = "Admin/Status";
@@ -113,21 +127,19 @@ const httpRequest = async (state, action) => {
     })
     .then((response) => {
       // Handle your successful response data
+      let mess = mapAction(state);
       Swal.fire({
         title: "Success",
-        text: "Time in/out successful",
+        text: mess + " successfully!",
         icon: "success",
       }).then(() => {
         window.location.reload(); // Reload the page after the alert is closed
-      });;
+      });
     })
-    .catch((error) => {
-      // Check if the error message contains the specific text
-      let message = errorMsg(error);
-      
+    .catch((error) => {      
       Swal.fire({
-        title: "Error",
-        text: message,
+        title: "Oops.",
+        text: error.toString().replace("Error: ", ""),
         icon: "error",
       });
     });

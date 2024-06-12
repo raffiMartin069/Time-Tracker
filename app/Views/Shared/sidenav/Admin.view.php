@@ -19,7 +19,6 @@
     
 </head>
 <body>
-
     <div>
         <div class="body-overlay"></div>
         <div class="sidebar">
@@ -61,6 +60,13 @@
                             <span class="nav-item-title ms-2" style="margin-top: -32px;">Reports</span>
                         </a>
                     </li>
+                    <li class="nav-item mb-4 " style="width: 270px; margin-left: 14px;">
+                        <a href="?page=set/meeting" class="nav-link text-dark rounded" style="height: 50px;">
+                            <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
+                            <span class="nav-item-title ms-2" style="margin-top: -32px;">Meeting</span>
+                        </a>
+                    </li>
+                    <hr/>
                     <li class="nav-item mb-4 " style="width: 270px; margin-left: 14px;">
                         <a href="#" class="nav-link text-dark rounded" style="height: 50px;">
                             <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
@@ -120,6 +126,11 @@
                 $controller->management();
                 break;
             
+            case 'set/meeting':
+                // include __DIR__ . '../../../Admin/Meeting.view.php';
+                $controller->meeting();
+                break;
+
             default:
                 $controller->main();
                 // include __DIR__ . '../../../Admin/Main.view.php';

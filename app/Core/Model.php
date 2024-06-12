@@ -20,8 +20,7 @@ Trait Model {
 
     public function GetAll($table) {
         try {
-            // $this->validate($table);
-            $query = "SELECT * FROM {$table}";
+            $query = "SELECT * FROM {$table};";
             return $this->Query($query);
         } catch(PDOException $e) {
             echo 'PDO Error: ' . $e->getMessage();
@@ -33,7 +32,6 @@ Trait Model {
 
     public function Delete($id, $table, $col) {
         try{
-            // $this->validate($table);
             $query = "DELETE FROM {$table} WHERE {$col} = :id";
             $params = [
                 'id' => $id

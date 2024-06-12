@@ -35,3 +35,8 @@ Thumbs.db
 /public/node_modules/
 
 /App.config
+
+/Dockerfile
+/compose.yaml
+/.dockerignore
+/README.Docker.md

@@ -18,6 +18,14 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/media.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
+
+    <style>
+        .my-toast {
+            display: flex;
+            width: auto;
+            /* Adjust width as needed */
+        }
+    </style>
 </head>
 
 <body>
@@ -27,13 +35,20 @@
                 <h4>Hello Lorem Ipsum👋🏼,</h4>
             </div>
         </div>
+        <noscript>
+            <div class="noscript-visible"
+                style="background-color: #ffcc00; color: black; padding: 20px; text-align: center;">
+                Warning: JavaScript is disabled in your browser. Some features of this site will not work. Please enable
+                JavaScript to continue.
+            </div>
+        </noscript>
         <div class=" m-2 mt-3 rounded p-2 shadow-sm ">
             <div class="container d-flex justify-content-center  ">
                 <div class="row row-cols gap-5 gap-md-5   w-100 text-center">
                     <div class="col p-1 rounded-5 d-flex align-items-center justify-content-center">
 
                         <?php
-                        if (isset($_SESSION["ClockedIn"]) && $_SESSION["ClockedIn"] == true) {
+                        if ($_SESSION["ClockedIn"] ?? false) {
                             echo '<a id="timeToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
                             src="' . ROOT . 'assets/img/admin/Time-out.png" class="img-fluid" /> <small
                             id="timeStatusText" class="fs-3 fw-medium">Time Out</small></a>';
@@ -48,14 +63,14 @@
                     <div class=" col p-1 rounded-5 d-flex align-items-center justify-content-center">
                         <a id="breakToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
                                 src="<?= ROOT ?>assets/img/admin/break.png" class="img-fluid" /> <small
-                                class="fs-3 fw-medium"><?php echo isset($_SESSION['BreakIn']) && $_SESSION['BreakIn'] === true ? 'Break Out' : 'Break In' ?></small></a>
+                                class="fs-3 fw-medium"><?php echo $_SESSION['BreakIn'] ?? false ? 'Break Out' : 'Break In'; ?></small></a>
                     </div>
 
                     <div class=" col   p-1 rounded-5 d-flex align-items-center justify-content-center">
                         <a id="meetingToggle" href="" class="text-decoration-none text-dark"
                             onclick="return false;"><img src="<?= ROOT ?>assets/img/admin/meeting.png"
                                 class="img-fluid" /> <small
-                                class="fs-3 fw-medium"><?php echo isset($_SESSION['MeetingIn']) && $_SESSION['MeetingIn'] === true ? 'Meeting Out' : 'Meeting In' ?></small></a>
+                                class="fs-3 fw-medium"><?php echo $_SESSION['MeetingIn'] ?? false ? 'Meeting Out' : 'Meeting In' ?></small></a>
                     </div>
                 </div>
             </div>
@@ -66,12 +81,12 @@
                     <nav class=" d-md-flex justify-content-between">
                         <h1 class="navbar-brand fs-4 fw-bolder ">My Daily Record</h1>
                         <p style="color:hsl(166, 79%, 42%);" class="d-md-none">I.D.</p>
-                        <form class="d-flex">
+                        <div class="d-flex">
                             <div class="search-container">
                                 <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/search.svg"
                                     class="search-icon d-none d-lg-block"></img>
-                                <input class="form-control bg-light mr-sm-1 w-100 search-input" type="search"
-                                    placeholder="Search" aria-label="Search">
+                                <input class="form-control bg-light mr-sm-1 w-100 search-input" id="searchInput"
+                                    type="search" placeholder="Search" aria-label="Search">
                             </div>
                             <div>
                                 <select
@@ -81,15 +96,16 @@
                                     <option class="bg-light" style="color:black;" value="2">Newest</option>
                                 </select>
                             </div>
-                        </form>
+                        </div>
                     </nav>
-                    <p class="d-none d-md-block" style="color:hsl(166, 79%, 42%);">I.D. <?php echo $_SESSION["UID"]; ?>
+                    <p class="d-none d-md-block" style="color:hsl(166, 79%, 42%);">I.D.
+                        <?php echo htmlspecialchars($_SESSION["userId"] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center">
                         <thead class="bg-light">
-                            <tr>
+                            <tr class="table-row">
                                 <th>Date</th>
                                 <th>Time In</th>
                                 <th>Break Status</th>
@@ -98,29 +114,33 @@
                                 <th>Total Hours</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="tableBody">
                             <?php foreach ($results as $report): ?>
-                                <tr>
-                                    <td><?php echo $report->getDate(); ?></td>
-                                    <td><?php echo $report->getClockIn(); ?></td>
-                                    <td><?php echo $report->getBreakStatus(); ?></td>
+                                <tr class="table-row">
+                                    <td><?php echo htmlspecialchars($report->getDate() ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
+                                    <td><?php echo htmlspecialchars($report->getClockIn() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($report->getBreakStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                    </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <?php if ($report->getMeetingStatus() == 'In session'): ?>
+                                            <?php if (htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8') == 'In session'): ?>
                                                 <p class="border px-2 rounded-3"
                                                     style="background-color: hsl(0, 100%, 89%); color: hsl(0, 96%, 45%); border: 1.5px solid hsl(0, 96%, 45%) !important;">
-                                                    <?php echo $report->getMeetingStatus(); ?>
+                                                    <?php echo htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                                 </p>
                                             <?php else: ?>
                                                 <p class="border px-2 rounded-3"
                                                     style="background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%); border: 1.5px solid hsl(166, 100%, 26%) !important;">
-                                                    <?php echo $report->getMeetingStatus(); ?>
+                                                    <?php echo htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                                 </p>
                                             <?php endif; ?>
                                         </div>
                                     </td>
-                                    <td><?php echo $report->getClockOut(); ?></td>
-                                    <td><?php echo $report->getHrsWorked(); ?></td>
+                                    <td><?php echo htmlspecialchars($report->getClockOut() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                    </td>
+                                    <td><?php echo htmlspecialchars($report->getHrsWorked() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -137,6 +157,8 @@
     var ROOT = "<?= ROOT ?>";
 </script>
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/dashboard.js"></script>
+<script defer type="module" src="<?= ROOT ?>scripts/Admin/events.js"></script>
+<script defer type="module" src="<?= ROOT ?>scripts/Admin/notification.js"></script>
 </body>
 
 </html>
