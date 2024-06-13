@@ -1,48 +1,48 @@
 <?php
-require "Interface/DatabaseInterface.php";
-
-class Model implements DatabaseInterface {
+Trait Model {
 
     use Database;
-    protected $table = 'Account';
-    protected $id;
-    protected $password;
-    
-    
-    private function allowedTables() {
-        return [
-            'Account'
-        ];
-    }
 
-    private function validate() {
-        if (!in_array($this->table, $this->allowedTables())) {
-            throw new Exception('Invalid table name');
+    public function Get($id, $table) { 
+        try {
+            // $this->validate($table);
+            $query = "SELECT * FROM {$table}(:id); ";
+            $params = [
+                'id' => $id
+            ];
+            return $this->Query($query, $params);
+        } catch(Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch(PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
         }
     }
 
-    public function Get() { 
-        $this->validate();
-        $query = "SELECT * FROM {$this->table} WHERE id = :id";
-        $params = [
-            'id' => $this->id
-        ];
-        return $this->Query($query, $params);
+    public function GetAll($table) {
+        try {
+            // $this->validate($table);
+            $query = "SELECT * FROM {$table}";
+            return $this->Query($query);
+        } catch(PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        } catch(Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        
+        }
     }
 
-    public function GetAll() {
-        // Method implementation
-    }
-
-    public function Insert() {
-        // Method implementation
-    }
-
-    public function Update() {
-        // Method implementation
-    }
-
-    public function Delete() {
-        // Method implementation
+    public function Delete($id, $table, $col) {
+        try{
+            // $this->validate($table);
+            $query = "DELETE FROM {$table} WHERE {$col} = :id";
+            $params = [
+                'id' => $id
+            ];
+            return $this->Query($query, $params);
+        } catch(Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch(PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
     }
 }

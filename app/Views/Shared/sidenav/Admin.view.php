@@ -47,7 +47,7 @@
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="#" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
+                        <a href="?page=manage/employee" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" style="margin-left: 4px;" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
                                 <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
@@ -102,22 +102,32 @@
         if (isset($_GET['page'])) {
             $page = $_GET['page'];
         }
+
+        $controller = new Admin();
         switch ($page) {
             case 'dashboard':
-                include __DIR__ . '../../../Admin/Main.view.php';
+                // include __DIR__ . '../../../Admin/Main.view.php';
+                $controller->main();
                 break;
             
             case 'trackHistory':
-                include __DIR__ . '../../../Admin/History.view.php';
+                // include __DIR__ . '../../../Admin/History.view.php';
+                $controller->history();
+                break;
+            
+            case 'manage/employee':
+                // include __DIR__ . '../../../Admin/Management.view.php';
+                $controller->management();
                 break;
             
             default:
-                include __DIR__ . '../../../Admin/Main.view.php';
+                $controller->main();
+                // include __DIR__ . '../../../Admin/Main.view.php';
                 break;
         }
     ?>
 
-    <script src="<?php ROOT ?>scripts/Admin/sidebar.js"></script>
-    <script src="<?php ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
+    <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

@@ -2,20 +2,50 @@
 
 Trait Database {
     private function Connect() {
-        $string = "mysql:host=".DBHOST.";dbname=".DBNAME;
-        return new PDO($string,DBUSER,DBKEY);
+        $string = "pgsql:host=".DBHOST.";dbname=".DBNAME.";port=".PORT;
+        try {
+            return new PDO($string,DBUSER,DBKEY);
+        } catch (PDOException $e) {
+            throw new Exception('Database connection failed: ' . $e->getMessage());
+        }
     }
 
     public function Query($query, $params = []) {
-        $stmt = $this->Connect()->prepare($query);
-        $check = $stmt->execute($params);
-
-        if($check) {
+        $connection = $this->Connect();
+        try {
+            $stmt = $connection->prepare($query);
+            $stmt->execute($params);
             $result = $stmt->fetchAll(PDO::FETCH_OBJ);
-            if(is_array($result) && count($result)) {
-                print_r($result);
-            }
+            return $result ?: []; // Always return an array, even if it's empty
+        } catch(PDOException $e) {
+            http_response_code(500); // Set a proper HTTP response code
+            header('Content-Type: application/json'); // Indicate the content type is JSON
+            echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+            exit;
         }
-        return false;
+    }
+
+    public function UpdateQuery($query, $params = []) {
+        $connection = $this->Connect(); // Consider making this a reusable connection
+        try {
+            $stmt = $connection->prepare($query);
+            $stmt->execute($params);
+            return $stmt->rowCount(); // Return the number of rows affected
+        } catch(PDOException $e) {
+            // Log the error and potentially rethrow or handle it appropriately
+            throw new Exception('Query execution failed: ' . $e->getMessage());
+        }
+    }
+
+    public function DeleteQuery($query, $params = []) {
+        $connection = $this->Connect(); // Consider making this a reusable connection
+        try {
+            $stmt = $connection->prepare($query);
+            $stmt->execute($params);
+            return $stmt->rowCount(); // Return the number of rows affected
+        } catch(PDOException $e) {
+            // Log the error and potentially rethrow or handle it appropriately
+            throw new Exception('Query execution failed: ' . $e->getMessage());
+        }
     }
 }
