@@ -5,13 +5,13 @@ class Sanitation
     // Basic validation are done to ensure the integrity of each submission and the data it contains.
     public static function intSanitation($value)
     {
-        try{
+        try {
             $intVal = filter_var($value, FILTER_VALIDATE_INT);
             if ($intVal !== false && $intVal == $value) {
                 return $intVal;
             }
             throw new Exception("Invalid input, please check the fields and try again.");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             http_response_code(500);
             header('Content-Type: application/json');
             echo json_encode(['error' => $e->getMessage()]);
@@ -24,11 +24,35 @@ class Sanitation
     {
         try {
             $str = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
             if ($str !== false && $str === $value) {
                 return $value;
             }
             throw new Exception("Invalid input, please check the fields and try again.");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit();
+        }
+    }
+
+    public function arraySanitation($value)
+    {
+        if (!is_array($value)) {
+            throw new Exception("Invalid input, please check the fields and try again.");
+        }
+
+        try {
+            $array = filter_var_array($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+            
+
+            if ($array === false && $array !== $value) {
+
+                throw new Exception("Invalid input, please check the fields and try again.");
+            }
+            return $array;
+        } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code(500);
             echo json_encode(['error' => $e->getMessage()]);
@@ -44,7 +68,7 @@ class Sanitation
                 return $email;
             }
             throw new Exception("Invalid input, please check the fields and try again.");
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code(500);
             echo json_encode(['error' => $e->getMessage()]);

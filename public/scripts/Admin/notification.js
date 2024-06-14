@@ -1,4 +1,4 @@
-const httpRequest = () => {
+const httpRequest = async () => {
     const url = 'Admin/notification';
     const request = {
         method: 'GET',
@@ -8,7 +8,7 @@ const httpRequest = () => {
     };
     
     
-    fetch(url, request).then(response => {
+    await fetch(url, request).then(response => {
         if (!response.ok) {
             return response.json().then(data => {
                 throw new Error(data.error || "Unknown error occurred");
@@ -38,5 +38,10 @@ const httpRequest = () => {
 }
 
 window.onload = () => {
-    httpRequest();
+    if(!localStorage.getItem('hasSeenNotification')) {
+        httpRequest();
+        localStorage.setItem('hasSeenNotification', true);
+    } else {
+        console.log('Notification already seen');
+    }
 }

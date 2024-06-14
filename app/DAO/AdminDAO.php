@@ -7,8 +7,92 @@
  */
 trait AdminDAO
 {
-
     use Database;
+
+    /**
+     * @method insertMeeting(@param $data)
+     * This method accepts a an array of integers to be inserted in the database.
+     * Together with it is the meeting details.
+     */
+    public function insertMeeting($data)
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('CreateMeeting.sql');
+            
+            $array_id = array_map('intval', $data['7']);
+            $arrayString = "{" . implode(",", $array_id) . "}";
+            $params = [
+                $data[0],
+                $data[1],
+                $data[2],
+                $data[3],
+                $data[4],
+                $data[5],
+                $data[6],
+                $arrayString
+            ];
+
+            return $this->Query($query, $params);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function fetchAllPlatform()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('Platform.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function fetchAllEmployee()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('Employee.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function adminBreakLogs()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('BreakLogs.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function adminMeetingLogs()
+    {
+        try{
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('MeetingLogs.sql');
+            return $this->Query($query);
+        } catch(Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch(PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
 
     public function adminButtonState($id, $date)
     {

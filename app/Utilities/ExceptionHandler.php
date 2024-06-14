@@ -1,5 +1,11 @@
 <?php
-class exceptionHandler
+/**
+ * @class ExceptionHandler
+ * This class takes care only in cleaning the errors before thrown in the client side.
+ * One major problem is getting an exception where the error message is not clear and have unnecessary contents.
+ * @class ExceptionHandler will handle it.
+ */
+class ExceptionHandler
 {
     private $message;
 

@@ -21,6 +21,16 @@ final class EmployeeModel
     private $SHIFT;
     private $TYPE;
 
+    public function getAllEmployee()
+    {
+        try {
+            $result = $this->fetchAllEmployee();
+            return $result;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
     public function addNewEmployee() 
     {
         try {

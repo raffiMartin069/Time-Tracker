@@ -2,6 +2,12 @@
 
 trait Database
 {
+    /**
+     * @return PDO
+     * @throws Exception
+     * Connect to the database and return the connection
+     * 
+     */
     private function Connect()
     {
         $string = "pgsql:host=" . DBHOST . ";dbname=" . DBNAME . ";port=" . PORT;
@@ -14,7 +20,7 @@ trait Database
 
     private function errorHandler($mess)
     {
-        $ex = new exceptionHandler();
+        $ex = new ExceptionHandler();
         $ex->setMessage($mess);
         
         return $ex->getMessage();

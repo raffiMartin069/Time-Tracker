@@ -1,0 +1,16 @@
+@media only screen and (min-width: 1024px) {
+    .search-input {
+      padding-left: 30px; /* Adjust this value as needed */
+    }
+    .search-container {
+      position: relative;
+    }
+  
+    .search-icon {
+      position: absolute;
+      left: 10px; /* Adjust this value as needed */
+      top: 50%;
+      transform: translateY(-50%);
+    }
+  }
+  

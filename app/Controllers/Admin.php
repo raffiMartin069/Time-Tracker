@@ -2,10 +2,14 @@
 require_once __DIR__ . "/../Core/Controller.php";
 require_once __DIR__ . "/../Models/AdminModels/DailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AdminOperationModel.php";
+require_once __DIR__ . "/../Models/AdminModels/MeetingLogsModel.php";
+require_once __DIR__ . "/../Models/AdminModels/BreakLogsModel.php";
 require_once __DIR__ . "/../Models/EmployeeModel.php";
+require_once __DIR__ . "/../Models/PlatformModel.php";
 require_once __DIR__ . "/../Models/ShiftModel.php";
 require_once __DIR__ . "/../DAO/AdminDAO.php";
 require_once __DIR__ . '/../Utilities/PDFUtility.php';
+require_once __DIR__ . '/../Utilities/ExceptionHandler.php';
 
 class Admin extends Controller
 {
@@ -13,10 +17,131 @@ class Admin extends Controller
     use Model;
     use AdminDAO;
 
+    /**
+     * @var ExceptionHandler
+     * This is a global scope variable that will be used to handle exceptions.
+     * This is a utility class that will be used clean handled exceptions before sending to the client side.
+     */
+    private $sweep;
+
+    public function __construct()
+    {
+        $this->sweep = new ExceptionHandler();
+    }
+
+    private function validHttpMethod($method)
+    {
+        if ($_SERVER["REQUEST_METHOD"] !== $method) {
+            throw new Exception("Invalid request method");
+        }
+        return true;
+    }
+
+    /**
+     * @param $this->checkMethod($method) will check if the request method is valid.
+     * If the result passes it will do nothing and continue executing the program, otherwise
+     * an error message will be sent to the client side.
+     */
+    private function checkMethod($method)
+    {
+        try {
+            $this->validHttpMethod($method);
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    // private function decodeJsonArray($arr) 
+    // {
+
+    //         $new_arr = json_decode($arr, TRUE);
+    //         return $new_arr;            
+
+    // } 
+
+    private function sanitizeMeetingInputs($data)
+    {
+        try {
+            $sanitize = new Sanitation();
+            // $arr = $this->decodeJsonArray($data['participants']);
+            
+            $participantsArray = json_decode($data['participants'], true);
+
+            $sanitized_data = [
+                $sanitize->strSanitation($data['meet_date']),
+                $sanitize->strSanitation($data['meet_title']),
+                $sanitize->strSanitation($data['mess_desc']),
+                $sanitize->strSanitation($data['meet_start']),
+                $sanitize->strSanitation($data['meet_end']),
+                $sanitize->strSanitation($data['meet_link']),
+                $sanitize->strSanitation($data['platform']),
+                $sanitize->arraySanitation($participantsArray)
+            ];
+
+            $this->insertMeeting($sanitized_data);
+
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    public function createMeeting()
+    {
+        $method = $_SERVER["REQUEST_METHOD"];
+        $this->checkMethod($method);
+
+        // get the data from the request being sent.
+        $rawData = file_get_contents('php://input');
+
+        try {
+            // decode the json data
+            $data = json_decode($rawData);
+
+            $this->checkNullIncomingData($data);
+
+            $arr = $this->StrNormalize($data);
+
+            $this->sanitizeMeetingInputs($arr);
+
+            header('Content-Type: application/json');
+            echo json_encode(['status' => true, 'message' => 'Meeting created successfully']);
+            exit;
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+
+    }
 
     public function index()
     {
-        $this->view('Shared/sidenav/Admin');
+        $startMeeting = new EmployeeModel();
+        $tableView = $startMeeting->getAllEmployee();
+        $platforms = $this->fetchAllPlatform();
+        $this->view('Shared/sidenav/Admin', [
+            'tableView' => $tableView,
+            'platforms' => $platforms
+        ]);
+    }
+
+    public function breakLog()
+    {
+        $logs = new BreakLogModel();
+        $tableView = $logs->getBreakLog();
+        $this->view(
+            'Admin/BreakLog',
+            [
+                'tableView' => $tableView
+            ]
+        );
     }
 
     public function meeting()
@@ -83,11 +208,11 @@ class Admin extends Controller
         $this->meetingState($meetingStatus);
     }
 
-    // enpoint for quick notification.
-    public function notification() 
+    // endpoint for quick notification.
+    public function notification()
     {
         $mess = $_SESSION["notification"];
-        if(!empty($mess)) {
+        if (!empty($mess)) {
             header("Content-Type: application/json");
             echo json_encode(['mess' => $mess]);
             exit;
@@ -113,7 +238,7 @@ class Admin extends Controller
             // button states, preserve state even when browser closes.
             $state = $this->state();
 
-            if(!empty($state)) {
+            if (!empty($state)) {
                 $this->extractStates($state);
             }
 
@@ -128,10 +253,11 @@ class Admin extends Controller
         }
     }
 
-    public function history()
+    public function meetingLog()
     {
-        $tableView = $this->manageEmployeeTable();
-        $this->view('Admin/History', [
+        $logs = new MeetingLogModel();
+        $tableView = $logs->getMeetingLogs();
+        $this->view('Admin/MeetingLog', [
             'tableView' => $tableView,
         ]);
     }
@@ -237,7 +363,7 @@ class Admin extends Controller
 
     public function test()
     {
-        $results = $this->GetAll('DAILY_REPORT');
+        $results = $this->GetAll('credentials');
 
         $this->Delete(261, 'DAILY_REPORT', 'daily_id');
 
@@ -280,7 +406,7 @@ class Admin extends Controller
         $data = json_decode($rawData);
 
         $this->checkNullIncomingData($data);
-        
+
         $operation = $this->operations($data->state);
 
         header("Content-Type: application/json");
@@ -338,6 +464,19 @@ class Admin extends Controller
             // passing a null value to the ucwords function will result in an error.
             // null value is not supported by ucwords and is already deprecated.
             // this however is only applicable to middle name.
+            if ($key === 'checkbox') {
+                continue;
+            }
+
+            if (is_array($value)) {
+                $result[$key] = $value;
+                continue;
+            }
+
+            if (!is_string($value)) {
+                throw new Exception('Invalid input, please check the fields and try again.');
+            }
+
             if ($key === 'mname' && $value === "") {
                 $value = 'G4hT9Zr3';
             }
@@ -375,15 +514,46 @@ class Admin extends Controller
         return $content;
     }
 
+    private function checkIndividualData($data = [])
+    {
+        foreach ($data as $key => $value) {
+            if ($key === 'mname') {
+                continue;
+            }
+
+            if ($value === "" || $value === null) {
+                throw new Exception('Please fill out all fields');
+            }
+        }
+    }
+
+    private function checkBulkData($data)
+    {
+        $exception = new Exception('Please fill out all fields');
+
+        if (empty($data)) {
+            throw new $exception;
+        }
+
+        if (is_null($data)) {
+            throw new $exception;
+        }
+    }
+
+    /**
+     * @param $data
+     * This method checks incoming data for null values.
+     * No need to do anything this will handle the operations in checking data for null values.
+     */
     private function checkNullIncomingData($data)
     {
         try {
-            if (is_null($data)) {
-                throw new Exception("Something went wrong. Please try again.");
-            }
+            $this->checkBulkData($data);
+            $this->checkIndividualData($data);
         } catch (Exception $e) {
             http_response_code(400);
             header("Content-Type: application/json");
+            $this->sweep->setMessage($e->getMessage());
             echo json_encode(['error' => $e->getMessage()]);
             exit;
         }
@@ -406,18 +576,32 @@ class Admin extends Controller
     private function prepareSanitation($data)
     {
         $sanitize = new Sanitation();
-        return [
-            'fname' => $sanitize->strSanitation($data['fname']),
-            'lname' => $sanitize->strSanitation($data['lname']),
-            'mname' => $sanitize->strSanitation($data['mname']),
-            'dob' => $sanitize->strSanitation($data['dob']),
-            'hireDate' => $sanitize->strSanitation($data['hireDate']),
-            'email' => $sanitize->emailSanitation($data['email']),
-            'contact' => $sanitize->strSanitation($data['contact']),
-            'role' => $sanitize->intSanitation($data['role']),
-            'shift' => $sanitize->intSanitation($data['shift']),
-            'type' => $sanitize->intSanitation($data['type'])
-        ];
+        // planning to revert back to normal state.
+        // this should be return [ someParams ];
+        try {
+            $sanitized = [
+                'fname' => $sanitize->strSanitation($data['fname']),
+                'lname' => $sanitize->strSanitation($data['lname']),
+                'mname' => $sanitize->strSanitation($data['mname']),
+                'dob' => $sanitize->strSanitation($data['dob']),
+                'hireDate' => $sanitize->strSanitation($data['hireDate']),
+                'email' => $sanitize->emailSanitation($data['email']),
+                'contact' => $sanitize->strSanitation($data['contact']),
+                'role' => $sanitize->strSanitation($data['role']),
+                'shift' => $sanitize->intSanitation($data['shift']),
+                'type' => $sanitize->intSanitation($data['type'])
+            ];
+
+            return $sanitized;
+
+
+        } catch (Exception $e) {
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+
     }
 
     public function AddEmployee()

@@ -9,15 +9,19 @@
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet" />
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="<?=ROOT?>node_modules/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>node_modules/bootstrap/dist/css/bootstrap.css" />
     <!-- External CSS -->
-    <link rel="stylesheet" href="<?=ROOT?>css/sidebar.css">
-    <link rel="stylesheet" href="<?=ROOT?>css/Admin/admin.css" />
-    <link rel="stylesheet" href="<?=ROOT ?>css/default.css" />
-    
+    <link rel="stylesheet" href="<?= ROOT ?>css/sidebar.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/Admin/admin.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
+    <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
+
 </head>
+
 <body>
     <div>
         <div class="body-overlay"></div>
@@ -26,30 +30,50 @@
                 <h3 class="ms-3 mt-4 mb-4">
                     <img src="<?php ROOT ?>assets/img/Sidebar/logo.png" class="img-fluid ms-2" />
                     <a>
-                        <span class="ms-2" style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
+                        <span class="ms-2"
+                            style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong
+                                style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
                     </a>
                 </h3>
             </div>
             <ul class="list-unstyled component m-0">
                 <span class="nav-item-title mt-5 px-4" style="color: #64748B;">Menu</span>
-                <div class="">
+                <div class="d-flex flex-column justify-content-center align-items-start">
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=dashboard" class="nav-link text-dark rounded" style="height: 50px;">
-                            <i class="lni lni-grid-alt mt-2" style="margin-left: 4px;"></i>
+                        <a href="?page=dashboard"
+                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
+                            style="height: 50px;">
+                            <i class="lni lni-grid-alt" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=trackHistory" class="nav-link text-dark rounded" style="height: 50px;">
-                            <i class="lni lni-search-alt mt-2" style="margin-left: 4px;"></i>
-                            <span class="nav-item-title ms-2">Track History</span>
+                        <a href="?page=meeting/logs"
+                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
+                            style="height: 50px;">
+                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
+                                style="height: 20px;"></img>
+                            <span class="nav-item-title ms-2 ">Meeting Logs</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=manage/employee" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" style="margin-left: 4px;" viewBox="0 0 16 16">
+                        <a href="?page=break/logs"
+                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
+                            style="height: 50px;">
+                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
+                                style="height: 20px;"></img>
+                            <span class="nav-item-title ms-2 ">Break Logs</span>
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
+                        <a href="?page=manage/employee"
+                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
+                            style="height: 50px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                class="bi bi-person-circle" style="margin-left: 4px;" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                <path fill-rule="evenodd"
+                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                             </svg>
                             <span class="nav-item-title ms-2">Manage Employee</span>
                         </a>
@@ -60,25 +84,38 @@
                             <span class="nav-item-title ms-2" style="margin-top: -32px;">Reports</span>
                         </a>
                     </li>
-                    <li class="nav-item mb-4 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=set/meeting" class="nav-link text-dark rounded" style="height: 50px;">
+                    <li class="nav-item mb-4" style="width: 270px; margin-left: 14px;">
+                        <a href="" class="nav-link text-dark rounded" style="height: 50px;" data-bs-toggle="modal"
+                            data-bs-target="#startMeeting">
                             <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
-                            <span class="nav-item-title ms-2" style="margin-top: -32px;">Meeting</span>
+                            <span class="nav-item-title ms-2" style="margin-top: -32px;">Start a meeting</span>
                         </a>
                     </li>
-                    <hr/>
-                    <li class="nav-item mb-4 " style="width: 270px; margin-left: 14px;">
-                        <a href="#" class="nav-link text-dark rounded" style="height: 50px;">
-                            <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
-                            <span class="nav-item-title ms-2" style="margin-top: -32px;">Settings</span>
-                        </a>
-                    </li>
+                    <hr />
                 </div>
                 <div class="bottom-items">
+                    <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start" style="width: 270px; margin-left: 14px;">
+
+                        <ul class=" text-decoration-none list-unstyled">
+                            <li>
+                                <a href="#" class="nav-link text-dark rounded pt-3" style="height: 50px;">
+                                    <i class="bi bi-bell-fill style mt-2" style="margin-left: 4px;"></i>
+                                    <span class="nav-item-title ms-2 " style="margin-top: -32px;">Notifications</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" class="nav-link text-dark rounded" style="height: 50px;">
+                                    <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
+                                    <span class="nav-item-title ms-2" style="margin-top: -32px;">Settings</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <hr>
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img src="<?=ROOT ?>assets/img/Sidebar/profile.svg" class="img-fluid rounded ms-3" width="50px" alt="">
+                        <img src="<?= ROOT ?>assets/img/Sidebar/profile.svg" class="img-fluid rounded ms-3" width="50px"
+                            alt="">
                         <span class="nav-item-title">
                             <h6 class="mt-1 mb-0 ms-2">Jenny Wilson</h6>
                             <small class="ms-2 text-secondary">jen.wilson@example.com</small>
@@ -103,42 +140,183 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="startMeeting" tabindex="-1" aria-labelledby="startMeetingLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" style="background: hsl(45, 50%, 97%);">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="startMeetingLabel">Meeting Information</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body row">
+                    <div class="col">
+                        <form id="meeting_form" method="post" action="Admin/setMeeting">
+                            <!-- search mechanism -->
+                            <div class="form-outline mb-4 form-floating">
+                                <input type="search" id="search" class="form-control" placeholder="" />
+                                <label for="search" class="form-label">Search Employee</label>
+                            </div>
+
+                            <!-- Name input -->
+                            <div data-mdb-input-init class="form-outline mb-4 form-floating">
+                                <input type="text" id="meet_title" name="meet_title" class="form-control"
+                                    placeholder="" />
+                                <label class="form-label" for="meet_start">Meeting Title</label>
+                            </div>
+
+                            <!-- Email input -->
+                            <div class="form-outline mb-4">
+                                <div>
+                                    <input type="date" id="meet_date" name="meet_date" class="form-control" />
+                                    <label class="form-label" for="meet_date">Meeting Date</label>
+                                </div>
+                                <div>
+                                    <input type="datetime-local" id="meet_start" name="meet_start"
+                                        class="form-control" />
+                                    <label class="form-label" for="meet_start">Meeting Start</label>
+                                </div>
+                                <div>
+                                    <input type="datetime-local" id="meet_end" name="meet_end" class="form-control" />
+                                    <div class=""><label class="form-label" for="meet_end">MeetingEnd</label></div>
+                                </div>
+                            </div>
+
+                            <!-- Message input -->
+                            <div data-mdb-input-init class="form-outline mb-4 form-floating">
+                                <input type="text" class="form-control" id="meet_link" name="meet_link"
+                                    placeholder=""></input>
+                                <label class="form-label" for="meet_link">Link</label>
+                            </div>
+
+                            <div class="form-outline mb-4">
+                                <label class="form-label" for="members">Select Members</label>
+                                <div
+                                    style="height: 150px; overflow-y: scroll; border: 1px solid #ced4da; border-radius: .25rem; padding: .375rem .75rem;">
+                                    <select name="members" id="members" class="form-control form-select selectpicker"
+                                        multiple data-live-search="true" style="display: none;">
+                                        <!-- The select is hidden because we are manually creating the checkboxes below -->
+                                    </select>
+                                    <!-- Manually created checkboxes inside the scrollable container -->
+                                    <?php foreach ($tableView as $view): ?>
+                                        <div class="form-check user-checkbox employee-checkbox">
+
+                                            <input class="form-check-input" type="checkbox" name="checkbox"
+                                                value="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>"
+                                                id="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
+                                            <label class="form-check-label"
+                                                for="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
+                                                <?php echo htmlspecialchars($view->full_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            </label>
+                                        </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+
+                            <!-- Message input -->
+                            <div data-mdb-input-init class="form-outline mb-4">
+                                <select name="platform" id="platform" name="platform" class="form-control form-select">
+                                    <option disable checked>Select Platform</option>
+                                    <?php foreach ($platforms as $platform): ?>
+                                        <option
+                                            value="<?php echo htmlspecialchars($platform->platform_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
+                                            <?php echo htmlspecialchars($platform->platform_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                        </option>
+                                    <?php endforeach; ?>
+                                </select>
+                                <label class="form-label" for="platform">Platform</label>
+                            </div>
+
+                            <!-- Message input -->
+                            <div data-mdb-input-init class="form-floating mb-4">
+                                <textarea class="form-control form-text" id="mess_desc" name="mess_desc"
+                                    rows="4"></textarea>
+                                <label class="form-label" for="mess_desc">Message</label>
+                            </div>
+
+                            <!-- Checkbox -->
+                            <!-- <div class="form-check d-flex justify-content-center mb-4">
+                                <input class="form-check-input me-2" type="checkbox" value="" id="send_copy"
+                                    name="send_copy" checked />
+                                <label class="form-check-label" for="send_copy">
+                                    Send me a copy of this message
+                                </label>
+                            </div> -->
+
+                            <!-- Submit button -->
+                            <div class="modal-footer w-auto">
+                                <button type="button" class="btn btn-secondary w-100"
+                                    data-bs-dismiss="modal">Close</button>
+                                <button data-mdb-ripple-init type="submit" class="btn btn-primary w-100">Send</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-5" id="meeting-participants">
+                        <div class="mt-5">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <h3>Meeting participants</h3>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody id="participantTableBody">
+                                    <tr>
+                                        <td id="userTable"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <?php
-        $page = 'dashboard';
-        if (isset($_GET['page'])) {
-            $page = $_GET['page'];
-        }
+    $page = 'dashboard';
+    if (isset($_GET['page'])) {
+        $page = $_GET['page'];
+    }
 
-        $controller = new Admin();
-        switch ($page) {
-            case 'dashboard':
-                // include __DIR__ . '../../../Admin/Main.view.php';
-                $controller->main();
-                break;
-            
-            case 'trackHistory':
-                // include __DIR__ . '../../../Admin/History.view.php';
-                $controller->history();
-                break;
-            
-            case 'manage/employee':
-                // include __DIR__ . '../../../Admin/Management.view.php';
-                $controller->management();
-                break;
-            
-            case 'set/meeting':
-                // include __DIR__ . '../../../Admin/Meeting.view.php';
-                $controller->meeting();
-                break;
+    $controller = new Admin();
+    switch ($page) {
+        case 'dashboard':
+            // include __DIR__ . '../../../Admin/Main.view.php';
+            $controller->main();
+            break;
 
-            default:
-                $controller->main();
-                // include __DIR__ . '../../../Admin/Main.view.php';
-                break;
-        }
+        case 'meeting/logs':
+            // include __DIR__ . '../../../Admin/History.view.php';
+            $controller->meetingLog();
+            break;
+
+        case 'manage/employee':
+            // include __DIR__ . '../../../Admin/Management.view.php';
+            $controller->management();
+            break;
+
+        case 'set/meeting':
+            // include __DIR__ . '../../../Admin/Meeting.view.php';
+            $controller->meeting();
+            break;
+
+        case 'break/logs':
+            // include __DIR__ . '../../../Admin/BreakLog.view.php';
+            $controller->breakLog();
+            break;
+
+        default:
+            $controller->main();
+            // include __DIR__ . '../../../Admin/Main.view.php';
+            break;
+    }
     ?>
 
     <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
+    <script defer type="module" src="<?= ROOT ?>scripts/Admin/meeting.js"></script>
 </body>
+
 </html>
