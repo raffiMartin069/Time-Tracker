@@ -12,14 +12,15 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?= ROOT ?>node_modules/bootstrap/dist/css/bootstrap.css" />
     <!-- External CSS -->
     <link rel="stylesheet" href="<?= ROOT ?>css/sidebar.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/admin.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/bell.css" />
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
-
 </head>
 
 <body>
@@ -43,7 +44,7 @@
                         <a href="?page=dashboard"
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
-                            <i class="lni lni-grid-alt" style="margin-left: 4px;"></i>
+                            <i class="lni lni-grid-alt fw-bold" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2">Dashboard</span>
                         </a>
                     </li>
@@ -79,33 +80,41 @@
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="#" class="nav-link text-dark rounded" style="height: 50px;">
-                            <i class="lni lni-book mt-2" style="margin-left: 4px;"></i>
+                        <a href="?page=manage/reports/view" class="nav-link text-dark rounded" style="height: 50px;">
+                            <i class="lni lni-book mt-2 fw-bold" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2" style="margin-top: -32px;">Reports</span>
                         </a>
                     </li>
                     <li class="nav-item mb-4" style="width: 270px; margin-left: 14px;">
-                        <a href="" class="nav-link text-dark rounded" style="height: 50px;" data-bs-toggle="modal"
-                            data-bs-target="#startMeeting">
-                            <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
-                            <span class="nav-item-title ms-2" style="margin-top: -32px;">Start a meeting</span>
+                        <a href="" class="nav-link text-dark rounded justify-content-start"
+                            style="height: 50px; display: flex; align-items: center; justify-content: flex-start;"
+                            data-bs-toggle="modal" data-bs-target="#startMeeting">
+                            <i class="bi bi-briefcase-fill"></i>
+                            <span class="nav-item-title ms-2" style="margin-top: 0;">Start a meeting</span>
                         </a>
                     </li>
                     <hr />
                 </div>
                 <div class="bottom-items">
-                    <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start" style="width: 270px; margin-left: 14px;">
-
+                    <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start"
+                        style="width: 270px; margin-left: 14px;">
                         <ul class=" text-decoration-none list-unstyled">
                             <li>
-                                <a href="#" class="nav-link text-dark rounded pt-3" style="height: 50px;">
-                                    <i class="bi bi-bell-fill style mt-2" style="margin-left: 4px;"></i>
-                                    <span class="nav-item-title ms-2 " style="margin-top: -32px;">Notifications</span>
+                                <a href="?page=notification/view" class="nav-link text-dark rounded pt-3"
+                                    style="height: 50px;">
+                                    <?php
+                                    if (isset($_SESSION['notification']) && $_SESSION['notification'] > 0) {
+                                        echo '<i class="bi bi-bell-fill notification-bell" style="margin-left: 4px;"></i>';
+                                    } else {
+                                        echo '<i class="bi bi-bell-fill" style="margin-left: 4px;"></i>';
+                                    }
+                                    ?>
+                                    <span class="nav-item-title ms-2" style="margin-top: -32px;">Notifications</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="#" class="nav-link text-dark rounded" style="height: 50px;">
-                                    <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
+                                    <i class="lni lni-cog style mt-2 fw-bold" style="margin-left: 4px;"></i>
                                     <span class="nav-item-title ms-2" style="margin-top: -32px;">Settings</span>
                                 </a>
                             </li>
@@ -117,8 +126,8 @@
                         <img src="<?= ROOT ?>assets/img/Sidebar/profile.svg" class="img-fluid rounded ms-3" width="50px"
                             alt="">
                         <span class="nav-item-title">
-                            <h6 class="mt-1 mb-0 ms-2">Jenny Wilson</h6>
-                            <small class="ms-2 text-secondary">jen.wilson@example.com</small>
+                            <h6 class="mt-1 mb-0 ms-2"><?php echo $_SESSION['name'] ?? '' ?></h6>
+                            <small class="ms-2 text-secondary"><?php echo $_SESSION['email'] ?? '' ?></small>
                         </span>
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
@@ -140,10 +149,9 @@
             </div>
         </div>
     </div>
-
     <!-- Modal -->
     <div class="modal fade" id="startMeeting" tabindex="-1" aria-labelledby="startMeetingLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-fullscreen-lg-down modal-lg">
             <div class="modal-content" style="background: hsl(45, 50%, 97%);">
                 <div class="modal-header">
                     <h1 class="modal-title fs-5" id="startMeetingLabel">Meeting Information</h1>
@@ -188,7 +196,6 @@
                                     placeholder=""></input>
                                 <label class="form-label" for="meet_link">Link</label>
                             </div>
-
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="members">Select Members</label>
                                 <div
@@ -212,11 +219,10 @@
                                     <?php endforeach; ?>
                                 </div>
                             </div>
-
                             <!-- Message input -->
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <select name="platform" id="platform" name="platform" class="form-control form-select">
-                                    <option disable checked>Select Platform</option>
+                                    <option disable select value="">Select Platform</option>
                                     <?php foreach ($platforms as $platform): ?>
                                         <option
                                             value="<?php echo htmlspecialchars($platform->platform_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
@@ -242,7 +248,6 @@
                                     Send me a copy of this message
                                 </label>
                             </div> -->
-
                             <!-- Submit button -->
                             <div class="modal-footer w-auto">
                                 <button type="button" class="btn btn-secondary w-100"
@@ -251,18 +256,21 @@
                             </div>
                         </form>
                     </div>
-                    <div class="col-5" id="meeting-participants">
-                        <div class="mt-5">
+                    <style>
+                        
+                    </style>
+                    <div class="col-md-5" id="meeting-participants">
+                        <div>
                             <table>
                                 <thead>
-                                    <tr>
-                                        <th>
+                                    <tr class=" border-0">
+                                        <th style="background-color: transparent !important; color: black !important;">
                                             <h3>Meeting participants</h3>
                                         </th>
                                     </tr>
                                 </thead>
                                 <tbody id="participantTableBody">
-                                    <tr>
+                                    <tr class="border-0">
                                         <td id="userTable"></td>
                                     </tr>
                                 </tbody>
@@ -282,33 +290,36 @@
     $controller = new Admin();
     switch ($page) {
         case 'dashboard':
-            // include __DIR__ . '../../../Admin/Main.view.php';
             $controller->main();
             break;
 
         case 'meeting/logs':
-            // include __DIR__ . '../../../Admin/History.view.php';
             $controller->meetingLog();
             break;
 
         case 'manage/employee':
-            // include __DIR__ . '../../../Admin/Management.view.php';
             $controller->management();
             break;
 
         case 'set/meeting':
-            // include __DIR__ . '../../../Admin/Meeting.view.php';
+            ;
             $controller->meeting();
             break;
 
         case 'break/logs':
-            // include __DIR__ . '../../../Admin/BreakLog.view.php';
             $controller->breakLog();
             break;
 
+        case 'notification/view':
+            $controller->notificationView();
+            break;
+
+        // case 'manage/reports/view':
+        //     $controller->reports();
+        //     break;
+
         default:
             $controller->main();
-            // include __DIR__ . '../../../Admin/Main.view.php';
             break;
     }
     ?>

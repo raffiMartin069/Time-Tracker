@@ -80,6 +80,6 @@
   <script src="<?php echo ROOT?>node_modules/jquery/dist/jquery.min.js"></script>
   <script src="<?php echo ROOT?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
   <script defer src="<?php echo ROOT?>scripts/login/login.js"></script>
-  <script defer src="<?php echo ROOT?>scripts/login/fetch.js"></script>
+  <script defer type="module" src="<?php echo ROOT?>scripts/login/fetch.js"></script>
 </body>
 </html>

@@ -1,19 +1,44 @@
+import {formCheck} from "../security.js";
+
 document.addEventListener("DOMContentLoaded", function () {
   sendData();
 });
 
+const verifyForm = (formData) => {
+  try {
+    formCheck(formData);
+    return true;
+  } catch (error) {
+    Swal.fire({
+      icon: "warning",
+      title: "Forgot something?",
+      text: "Username and password cannot be blank.",
+    }).then(() => {
+      return false;
+    });
+  }
+};
+
 const sendData = async () => {
-  document.getElementById("login-form").addEventListener("submit", function(e) {
-    e.preventDefault();
-    let formData = new FormData(this);
-    httpRequest(formData); // Pass formData to httpRequest
-  });
-}
+  document
+    .getElementById("login-form")
+    .addEventListener("submit", function (e) {
+      e.preventDefault();
+      let formData = new FormData(this);
+      verifyForm(formData); // Verify form data
+
+      if(!verifyForm(formData)) {
+        return false;
+      }
+
+      httpRequest(formData); // Pass formData to httpRequest
+    });
+};
 
 const httpRequest = async (formData) => {
   // Convert FormData to JSON
   let object = {};
-  formData.forEach((value, key) => object[key] = value);
+  formData.forEach((value, key) => (object[key] = value));
   let json = JSON.stringify(object);
 
   const url = "Login/auth";
@@ -33,7 +58,8 @@ const httpRequest = async (formData) => {
         });
       }
       return response.json();
-    }).then((data) => {
+    })
+    .then((data) => {
       window.location.href = data.redirect;
     })
     .catch((error) => {
@@ -43,4 +69,4 @@ const httpRequest = async (formData) => {
         text: error.message,
       });
     });
-}
+};

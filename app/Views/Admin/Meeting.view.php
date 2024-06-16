@@ -18,12 +18,21 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/media.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
 <body>
     <div id="wrapper">
-        <div class="px-2 pt-5">
+        <div class="px-2 pt-5 ">
             <div class="container">
+                <noscript>
+                    <div class="noscript-visible"
+                        style="background-color: #ffcc00; color: black; padding: 20px; text-align: center;">
+                        Warning: JavaScript is disabled in your browser. Some features of this site will not work.
+                        Please enable
+                        JavaScript to continue.
+                    </div>
+                </noscript>
                 <form class="rounded p-5 shadow" style="background: hsl(45, 50%, 97%);">
                     <!-- Name input -->
                     <div data-mdb-input-init class="form-outline mb-4">
@@ -81,6 +90,7 @@
     </div>
 </body>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
 <script src="<?= ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
 <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
 <script type="text/javascript">

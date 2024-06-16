@@ -17,6 +17,285 @@ class Admin extends Controller
     use Model;
     use AdminDAO;
 
+    private function sanitizeUpdateEmployeePosition($data)
+    {
+        $sanitize = new Sanitation();
+        try {
+            $sanitized_data = [
+                $sanitize->intSanitation($data['update_position']),
+                $sanitize->intSanitation($data['update_role']),
+            ];
+            return $sanitized_data;
+        } catch (Exception $e) {
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    private function addUpdatePositionDB($pos_id, $emp_id)
+    {
+        /*
+         * This is supposed to be passed to model since a model of this exist.
+         * For some reason the code is a bit risky and as a work around I just
+         * directly called the the method in the DAO to passed the data directly
+         * to the database. The data have pass through validation and sanitation
+         * before reaching this point.
+         */
+        $result = $this->updateEmployeePos($emp_id, $pos_id);
+        return $result;
+    }
+
+    public function updateEmployeePosition()
+    {
+        // check if the request method is post
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+            header("Content-Type: application/json");
+            echo json_encode([
+                'status' => false,
+                'message' => 'Invalid request method'
+            ]);
+            die();
+        }
+        // get the data from the request being sent.
+        $rawData = file_get_contents('php://input');
+        $data = json_decode($rawData);
+
+        // reuse this method
+        $this->prepareUpdateEmployeeChecks($data);
+
+        
+        $arr = [];
+        foreach ($data as $key => $value) {
+            $arr[$key] = $value;
+        }
+
+        // reuse this method
+        $cleaned_data = $this->sanitizeUpdateEmployeePosition($arr);
+
+        $work_id = $cleaned_data[1];
+        $emp_id = $cleaned_data[0];
+        
+
+        // this method should be changed.
+        $result = $this->addUpdatePositionDB($work_id, $emp_id);
+
+        header("Content-Type: application/json");
+        $serverResponse = [
+            'status' => $result,
+            'msg' => 'Employee added successfully',
+        ];
+        echo json_encode($serverResponse);
+    }
+
+    private function checkSoftDeleteNull($data)
+    {
+        if (empty($data)) {
+            throw new Exception('Please fill out all fields');
+        }
+    } 
+
+    private function prepareSanitizeSoftDelete($data)
+    {
+        $sanitize = new Sanitation();
+        try {
+
+            $sanitized_data = $sanitize->intSanitation($data);
+         
+            return $sanitized_data;
+        } catch (Exception $e) {
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    private function addSoftDeleteDB($data)
+    {
+        $emp = new EmployeeModel();
+        $emp->setID($data);
+        $result = $emp->softDeleteEmployee();
+        return $result;
+    }
+
+    private function prepareCheckSoftDeleteNull($data)
+    {
+        try {
+            $this->checkSoftDeleteNull($data[0]);
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    public function softDeleteEmployee()
+    {
+        if($_SERVER["REQUEST_METHOD"] !== "POST") {
+            header("Content-Type: application/json");
+            echo json_encode([
+                'status' => false,
+                'message' => 'Invalid request method'
+            ]);
+            die();
+        }
+
+        $rawData = file_get_contents('php://input');
+
+        $data = json_decode($rawData);
+
+        $arr = [];
+
+        foreach($data as $key => $value) {
+            $arr[$key] = $value;
+        }
+
+        $this->prepareCheckSoftDeleteNull($arr['del']);
+
+        $cleaned_data = $this->prepareSanitizeSoftDelete($arr['del']);
+
+        $result = $this->addSoftDeleteDB($cleaned_data);
+
+        header("Content-Type: application/json");
+        $serverResponse = [
+            'status' => $result,
+            'msg' => 'Employee deleted successfully',
+        ];
+        echo json_encode($serverResponse);
+        exit;
+    }
+
+    private function addUpdateEmployee($work_id, $emp_id)
+    {
+        $emp = new EmployeeModel();
+
+        $emp->setWorkingHours($work_id);
+        $emp->setID($emp_id);
+
+        $result = $emp->updateEmployeeHours();
+        return $result;
+    }
+
+    private function sanitizeUpdateEmployee($data)
+    {
+        $sanitize = new Sanitation();
+        try {
+            $sanitized_data = [
+                $sanitize->strSanitation($data['search_emp']),
+                $sanitize->strSanitation($data['type']),
+            ];
+            return $sanitized_data;
+        } catch (Exception $e) {
+            http_response_code(400);
+            header("Content-Type: application/json");
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    private function prepareUpdateEmployeeChecks($data)
+    {
+        try {
+            $this->checkNullIncomingData($data);
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(400);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit;
+        }
+    }
+
+    public function updateEmployee()
+    {
+        // check if the request method is post
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+            header("Content-Type: application/json");
+            echo json_encode([
+                'status' => false,
+                'message' => 'Invalid request method'
+            ]);
+            die();
+        }
+        // get the data from the request being sent.
+        $rawData = file_get_contents('php://input');
+        $data = json_decode($rawData);
+
+        $this->prepareUpdateEmployeeChecks($data);
+
+        
+        $arr = [];
+        foreach ($data as $key => $value) {
+            $arr[$key] = $value;
+        }
+
+        $cleaned_data = $this->sanitizeUpdateEmployee($arr);
+
+        $work_id = $cleaned_data[1];
+        $emp_id = $cleaned_data[0];
+
+        $result = $this->addUpdateEmployee($work_id, $emp_id);
+
+        header("Content-Type: application/json");
+        $serverResponse = [
+            'status' => $result,
+            'msg' => 'Employee added successfully',
+        ];
+        echo json_encode($serverResponse);
+    }
+
+    private function biWeeklyReports()
+    {
+        $biWeekly = $this->fetchAllBiWeeklyReport();
+        return $biWeekly;
+    }
+
+    private function weeklyReports()
+    {
+        $weekly = $this->fetchAllWeeklyReport();
+        return $weekly;
+    }
+
+    private function dailyReports()
+    {
+        $daily = $this->fetchAllDailyReport();
+        return $daily;
+    }
+
+    /**
+     * @coversDefaultClass Admin
+     * @method mixed reports()
+     * This method will be used to generate reports to the views.
+     * Typically passing read only data.
+     */
+    public function reports()
+    {
+        $daily = $this->dailyReports();
+        $weekly = $this->weeklyReports();
+        $biWeekly = $this->biWeeklyReports();
+        $this->view('Admin/Report', [
+            'daily' => $daily,
+            'weekly' => $weekly,
+            'biWeekly' => $biWeekly
+        ]);
+    }
+
+    private function notificationViewTable()
+    {
+        $notif_array = $this->fetchAllNotification();
+        return $notif_array;
+    }
+
+    public function notificationView()
+    {
+        $notif_array = $this->notificationViewTable();
+        $this->view('Admin/Notification', [
+            'tableView' => $notif_array
+        ]);
+    }
+
     /**
      * @var ExceptionHandler
      * This is a global scope variable that will be used to handle exceptions.
@@ -54,22 +333,11 @@ class Admin extends Controller
         }
     }
 
-    // private function decodeJsonArray($arr) 
-    // {
-
-    //         $new_arr = json_decode($arr, TRUE);
-    //         return $new_arr;            
-
-    // } 
-
     private function sanitizeMeetingInputs($data)
     {
         try {
             $sanitize = new Sanitation();
-            // $arr = $this->decodeJsonArray($data['participants']);
-            
             $participantsArray = json_decode($data['participants'], true);
-
             $sanitized_data = [
                 $sanitize->strSanitation($data['meet_date']),
                 $sanitize->strSanitation($data['meet_title']),
@@ -80,9 +348,7 @@ class Admin extends Controller
                 $sanitize->strSanitation($data['platform']),
                 $sanitize->arraySanitation($participantsArray)
             ];
-
             $this->insertMeeting($sanitized_data);
-
         } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code(400);
@@ -208,13 +474,14 @@ class Admin extends Controller
         $this->meetingState($meetingStatus);
     }
 
-    // endpoint for quick notification.
+
     public function notification()
     {
         $mess = $_SESSION["notification"];
+        $popup = $_SESSION['popup_notif'];
         if (!empty($mess)) {
             header("Content-Type: application/json");
-            echo json_encode(['mess' => $mess]);
+            echo json_encode(['mess' => $mess, 'popup' => $popup]);
             exit;
         }
     }
@@ -363,9 +630,9 @@ class Admin extends Controller
 
     public function test()
     {
-        $results = $this->GetAll('credentials');
+        $results = $this->GetAll('employee');
 
-        $this->Delete(261, 'DAILY_REPORT', 'daily_id');
+        // $this->Delete(240, 'employee', 'emp_id');
 
         $this->view('Test', [
             'results' => $results,
@@ -455,9 +722,43 @@ class Admin extends Controller
         return $emp->addNewEmployee();
     }
 
+    private static function randomNumber()
+    {
+        return rand(50, 100);
+    }
+
+    private static function salt()
+    {
+        return bin2hex(random_bytes(15));
+    }
+
+    private static function pepper()
+    {
+        return 'G4hT9Zr3';
+    }
+
+    /**
+     * @return string
+     * This method will be used to generate a random string.
+     * This will be used to generate a random string for the password.
+     * This will server as a placeholder only for the checks to succeed in normalize method.
+     * This will be then disregarded after the normalization of the string.
+     */
+    private static function randomStrGenerator()
+    {
+        $data = self::randomNumber() . self::salt() . self::pepper();
+        return hash('sha256', $data);
+    }
+
+    /**
+     * @param $arr
+     * This method will be used to normalize the string.
+     * This will be used to normalize the string before inserting to the database.
+     */
     private function StrNormalize($arr)
     {
         $result = [];
+        $randomize = self::randomStrGenerator();
         foreach ($arr as $key => $value) {
             // initially if there is a null value in the array we set it to temp.
             // the reason is we need to normalize the string.
@@ -478,23 +779,29 @@ class Admin extends Controller
             }
 
             if ($key === 'mname' && $value === "") {
-                $value = 'G4hT9Zr3';
+                $value = $randomize;
             }
+
             if ($key === 'email') {
                 $result[$key] = $value;
                 continue;
             }
             $result[$key] = ucwords(strtolower($value));
 
-            if ($key === 'mname' && $value === "G4hT9Zr3") {
-                $value = null;
+            if ($key === 'mname' && $value === $randomize) {
+                $value = '';
+                $result[$key] = $value;
             }
         }
 
         return $result;
     }
 
-
+    /**
+     * @param $arr
+     * This method will be used to generate a pdf file.
+     * This will be used to generate a pdf file for the newly added employee.
+     */
     private function pdf($arr = [])
     {
         $pdf = new PDFUtility();
@@ -514,15 +821,67 @@ class Admin extends Controller
         return $content;
     }
 
+    /**
+     * @param $array
+     * This method checks if the array has null values.
+     * There is no need to call this out because this will be handled by the checkIndividualData method.
+     * This is a helper method for checkNullIncomingData.
+     * Exception will be thrown if there is a null value in the array.
+     * */
+    private static function ArrayNullCheck($array)
+    {
+
+        // perform pre checks before handling the actual looping.
+        if (empty($array) || $array === null || $array === "") {
+            throw new Exception('Please fill out all fields');
+        }
+
+        foreach ($array as $key => $value) {
+            if ($value === "") {
+                throw new Exception('Please fill out all fields');
+            }
+
+            if($value === null) {
+                throw new Exception('Please fill out all fields');
+            }
+
+            if(!isset($value)) {
+                throw new Exception('Please fill out all fields');
+            }
+        }
+    }
+
+    /**
+     * @param $data
+     * This method checks the individual data for null values.
+     * */
     private function checkIndividualData($data = [])
     {
         foreach ($data as $key => $value) {
+
+            if ($key === 'participants') {
+                $decoded_array = json_decode($value, true);
+                Admin::ArrayNullCheck($decoded_array);
+            }
+
             if ($key === 'mname') {
                 continue;
             }
 
-            if ($value === "" || $value === null) {
+            if ($value === "") {
                 throw new Exception('Please fill out all fields');
+            }
+
+            if(!isset($value)) {
+                throw new Exception('Please fill out all fields');
+            }
+
+            if($value === null) {
+                throw new Exception('Please fill out all fields');
+            }
+
+            if (is_array($value)) {
+                Admin::ArrayNullCheck($value);
             }
         }
     }
@@ -604,6 +963,7 @@ class Admin extends Controller
 
     }
 
+
     public function AddEmployee()
     {
         if ($_SERVER["REQUEST_METHOD"] !== "POST") {
@@ -620,6 +980,7 @@ class Admin extends Controller
 
         $this->checkNullIncomingData($data);
 
+
         $requiredFields = [
             'fname' => $data->fname,
             'lname' => $data->lname,
@@ -628,9 +989,9 @@ class Admin extends Controller
             'hireDate' => $data->hireDate,
             'email' => $data->email,
             'contact' => $data->contact,
-            'role' => $data->role,
-            'shift' => $data->shift,
-            'type' => $data->type
+            'role' => $data->role ?? null,
+            'shift' => $data->shift ?? null,
+            'type' => $data->type ?? null
         ];
 
         // Added logic for middle name,

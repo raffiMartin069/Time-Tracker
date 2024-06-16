@@ -10,6 +10,7 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
         rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="<?php echo ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/main-page.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/media.css" />
@@ -19,11 +20,12 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/management-form-spacing.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
 <body>
     <div id="wrapper">
-        <div class="px-2 pt-5">
+        <div class="px-2 pt-5 ">
             <div class="container">
                 <h4>Search by Employee I.D.</h4>
             </div>
@@ -36,15 +38,14 @@
                 JavaScript to continue.
             </div>
         </noscript>
-        <div class="m-2 mt-3 rounded p-2 shadow-sm">
+        <div class="m-2 mt-3 p-2 rounded shadow-sm">
             <div class="container d-lg-flex" id="search-form">
-                <div class="search-container w-100">
+                <div class="search-container">
                     <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/search.svg"
                         class="search-icon d-none d-lg-block"></img>
-                    <input class="form-control bg-light mr-sm-1 w-100 search-input" id="searchInput" type="search"
+                    <input class="form-control bg-light mr-sm-1 search-input" id="searchInput" type="search"
                         placeholder="Search" aria-label="Search">
                 </div>
-
                 <div class="mx-lg-3 filter-width">
                     <select class="h-100 rounded border filter-hover bg-light mr-sm-1 text-center">
                         <option disabled selected class="bg-light">Filter</option>
@@ -52,23 +53,34 @@
                         <option value="2" class="bg-light" style="color:black;">Newest</option>
                     </select>
                 </div>
-                <div class=" mr-sm-1 w-100 d-lg-flex justify-content-end ">
-                    <ul class="m-0 p-0 list-unstyled justify-content-center align-items-center gap-1 d-flex">
-                        <li class="p-1 px-lg-3 py-lg-1 rounded option-pane"><a href="" id="add-employee"
-                                data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+
+                <!-- <div class=" mr-sm-1 w-100 d-flex justify-content-end">
+                    <ul class="m-0 p-0 list-unstyled justify-content-center align-items-center gap-2 d-flex">
+                        <li class="p-1 px-lg-3 py-lg-1 option-pane">
+                            <a href="" id="add-employee" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                                 <img src="<?= ROOT ?>assets/img/admin/add-employee.png" alt="Add Employee" />
-                            </a></li>
+                            </a>
+                        </li>
+                        <li class="p-1 px-lg-3 py-lg-1 option-pane">
+                            <a href="" id="emp_setting" data-bs-toggle="modal" data-bs-target="#employee_setting">
+                                <i class="lni lni-cog style mt-2 fw-bold text-black" style="margin-left: 4px;"></i>
+                            </a>
+                        </li>
                     </ul>
-                </div>
+                </div> -->
+            </div>
+            <div class="container">
+                <button id="add-employee" class="btn border shadow-sm text-center filter-hover"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Employee <i class="bi bi-person-fill-add"></i></button>
+                <button id="emp_setting" class="btn border shadow-sm text-center filter-hover"  data-bs-toggle="modal" data-bs-target="#employee_setting">Employee Settings <i class="bi bi-gear-wide-connected"></i></button>
             </div>
         </div>
         <div>
             <div class="mx-2 my-4 rounded p-2 shadow" id="content-section">
                 <div class="d-flex">
                     <div class="w-100 px-4 overflow-x-auto" style="height:45rem!important;">
-                        <table class="table align-middle mb-0 bg-white text-center">
-                            <thead class="bg-light sticky-top">
-                                <tr class="table-row">
+                        <table class="table table-stripped align-middle mb-0 bg-white text-center">
+                            <thead class="bg-light">
+                                <tr>
                                     <th>I.D.</th>
                                     <th>Name</th>
                                     <th>Date of birth</th>
@@ -112,6 +124,133 @@
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="employee_setting" tabindex="-1" aria-labelledby="employee_setting"
+            aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="employee_settingLabel">Employee Settings</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="accordion accordion-flush" id="accordionFlushExample">
+                            <form method="post" id="updateEmployee">
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseOne"
+                                            aria-expanded="false" aria-controls="flush-collapseOne">
+                                            <b>Update Employee Type</b>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseOne" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionFlushExample">
+                                        <div class=" form-floating">
+                                            <input type="search" id="search_emp" name="search_emp"
+                                                class="mt-3 form-control" placeholder="" />
+                                            <label for="search_emp" class="form-label">Employee I.D.</label>
+                                        </div>
+                                        <section class="mt-2">
+                                            <div>
+                                                <h4 style="color: #595959">Employment Type</h4>
+                                                <?php foreach ($employment as $employments): ?>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="type"
+                                                            id="employmentType<?php echo $employments->getEmploymentID() ?>"
+                                                            value="<?php echo $employments->getEmploymentID() ?>">
+                                                        <label class="form-check-label"
+                                                            for="employmentType<?php echo $employments->getEmploymentID() ?>"
+                                                            style="color: #595959">
+                                                            <?php echo $employments->getEmploymentType() . " " . "( " . $employments->getWorkHours() . " Hours )" ?>
+                                                        </label>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                            </div>
+                                        </section>
+                                        <div class="modal-footer mt-3">
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form method="post" id="updatePosition">
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo"
+                                            aria-expanded="false" aria-controls="flush-collapseTwo">
+                                            <b>Update Employee Position</b>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseTwo" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
+                                            <div class=" form-floating">
+                                                <input type="text" id="update_position" name="update_position"
+                                                    class="mt-3 form-control" placeholder="" />
+                                                <label for="update_position" class="form-label">Employee I.D.</label>
+                                                <div>
+                                                    <h4 style="color: #595959" class="mt-4">Position/Title</h4>
+                                                    <?php foreach ($positions as $position): ?>
+                                                        <div class="form-check">
+                                                            <input class="form-check-input" type="radio" name="update_role"
+                                                                id="<?php echo $position->getPositionID() ?>"
+                                                                value="<?php echo $position->getPositionID() ?>">
+                                                            <label class="form-check-label"
+                                                                for="<?php echo $position->getPositionID() ?>"
+                                                                style="color: #595959">
+                                                                <?php echo $position->getPositionName() ?>
+                                                            </label>
+                                                        </div>
+                                                    <?php endforeach; ?>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer mt-3">
+                                            <button type="submit" class="btn btn-primary">Save changes</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <form method="post" id="deleteEmployeeForm">
+                                <div class="accordion-item border-0">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button"
+                                            data-bs-toggle="collapse" data-bs-target="#flush-collapseThree"
+                                            aria-expanded="false" aria-controls="flush-collapseThree">
+                                            <b>Remove Employee</b>
+                                        </button>
+                                    </h2>
+                                    <div id="flush-collapseThree" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordionFlushExample">
+                                        <div class="accordion-body">
+                                            <p><b>WARNING:</b> This action will deactivate the employee's
+                                                account. The employee's data will be archived and no longer be
+                                                accessible
+                                                for day-to-day operations. Are you sure you want to proceed?</p>
+                                        </div>
+
+                                        <div class=" form-floating">
+                                            <input type="text" id="del" name="del" class="mt-3 form-control"
+                                                placeholder="" />
+                                            <label for="del" class="form-label">Employee I.D.</label>
+                                        </div>
+
+                                        <div class="modal-footer mt-3">
+                                            <button type="submit" class="btn btn-danger">Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -227,6 +366,7 @@
     </div>
     </div>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
     <script>
         var ROOT = "<?= ROOT ?>";
     </script>
@@ -234,6 +374,9 @@
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/employee.js"></script>
     <script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
     <script defer src="<?= ROOT ?>scripts/Admin/managemenValidate.js"></script>
+    <script defer type="module" src="<?= ROOT ?>scripts/Admin/updateHours.js"></script>
+    <script defer type="module" src="<?= ROOT ?>scripts/Admin/deleteEmployee.js"></script>
+    <script defer type="module" src="<?= ROOT ?>scripts/Admin/updateEmployeePosition.js"></script>
 </body>
 
 </html>

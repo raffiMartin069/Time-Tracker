@@ -32,11 +32,11 @@
     <div id="wrapper">
         <div class="px-2 pt-5">
             <div class="container">
-                <h4>Search Meeting Logs</h4>
+                <h4>Search Meeting Log</h4>
             </div>
         </div>
-        <div class="m-2 mt-3 p-2 rounded shadow-sm">
-            <div class="container d-lg-flex" id="search-form">
+        <div class="m-2 mt-3 rounded p-2 shadow-sm">
+            <form class="container d-lg-flex" id="search-form">
                 <div class="search-container">
                     <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/search.svg"
                         class="search-icon d-none d-lg-block"></img>
@@ -50,7 +50,7 @@
                         <option value="2" class="bg-light" style="color:black;">Newest</option>
                     </select>
                 </div>
-            </div>
+            </form>
         </div>
         <noscript>
             <div class="noscript-visible"
@@ -60,37 +60,44 @@
             </div>
         </noscript>
         <div>
-            <div class="mx-2 my-4 p-2" id="content-section">
-                <div class="container">
-                    <div>
+            <div class="mx-2 my-4 rounded p-2 shadow" id="content-section">
+                <div>
+                    <div class="d-flex">
                         <div class="w-100 px-4 overflow-x-auto border rounded" style="height:45rem!important;">
-                            <table class="table table-stripped align-middle mb-0 bg-white text-center">
+                            <table class="table align-middle mb-0 bg-white text-center">
                                 <thead class="bg-light">
-                                    <tr>
-                                        <th>Meeting ID</th>
+                                    <tr class="table-row">
                                         <th>Date</th>
-                                        <th>Employee I.D.</th>
-                                        <th>Employee</th>
-                                        <th>Meeting Title</th>
-                                        <th>Meeting Start</th>
-                                        <th>Meeting End</th>
+                                        <th>Title</th>
+                                        <th>Creator I.D.</th>
+                                        <th>Creator</th>
+                                        <th>Meeting Description</th>
+                                        <th>Start</th>
+                                        <th>End</th>
+                                        <th>Platform</th>
+                                        <th>Link</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     <?php foreach ($tableView as $view): ?>
                                         <tr class="table-row">
-                                            <td><?php echo htmlspecialchars($view->meeting_id ?? "", ENT_QUOTES, 'UTF-8'); ?>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($view->date ?? "", ENT_QUOTES, 'UTF-8'); ?></td>
-                                            <td><?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8'); ?>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($view->full_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->date ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($view->meeting_title ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($view->creator_id ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($view->creator ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($view->meeting_descr ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($view->start_meeting ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($view->end_meeting ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($view->platform_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            </td>
+                                            <td><?php echo htmlspecialchars($view->meeting_link ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -105,9 +112,5 @@
 </body>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
 <script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
-
-
-
 </body>
-
 </html>

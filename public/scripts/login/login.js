@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   hideView();
   show();
   hide();
-  regEx();
+  // regEx();
 });
 
 // initial state should be hidden
@@ -35,22 +35,22 @@ const hide = () => {
 
 
 
- const regEx = () => {
-  const id = document.getElementById("idNumber");
+//  const regEx = () => {
+//   const id = document.getElementById("idNumber");
 
-  id.addEventListener("input", (event) => {
-    const input = event.target;
-    const value = input.value;
+//   id.addEventListener("input", (event) => {
+//     const input = event.target;
+//     const value = input.value;
 
-    // Create a regular expression to match allowed characters (digits and dashes)
-    const regex = /^[0-9-]*$/;
+//     // Create a regular expression to match allowed characters (digits and dashes)
+//     const regex = /^[0-9-]*$/;
 
-    if (!regex.test(value)) {
-      // If the value contains invalid characters, remove them
-      input.value = value.replace(/[^0-9-]/g, "");
+//     if (!regex.test(value)) {
+//       // If the value contains invalid characters, remove them
+//       input.value = value.replace(/[^0-9-]/g, "");
 
-      // Move the cursor to the end of the input
-      input.setSelectionRange(input.value.length, input.value.length);
-    }
-  });
-}
+//       // Move the cursor to the end of the input
+//       input.setSelectionRange(input.value.length, input.value.length);
+//     }
+//   });
+// }

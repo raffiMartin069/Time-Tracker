@@ -60,12 +60,18 @@ class Login extends Controller
             $default_pass = $value->is_default;
             $isAdmin = $value->is_admin;
             $mess = $value->message;
+            $name = $value->employee_name;
+            $email = $value->email;
+            $popup_notif = $value->notification;
         }
         return [
             'id' => $id,
             'pass' => $default_pass,
             'admin' => $isAdmin,
-            'message' => $mess
+            'message' => $mess,
+            'employee_name' => $name,
+            'email' => $email,
+            'notification' => $popup_notif
         ];
     }
 
@@ -84,11 +90,8 @@ class Login extends Controller
             header('Content-Type: application/json');
             throw new Exception("Invalid request method", 405);
         }
-
         $data = json_decode(file_get_contents("php://input"), true);
-
         $sanitized = $this->initialFilter($data['idNumber'], $data['pass']);
-
         try {
             $secondary = $this->secondaryFilter($sanitized);
 
@@ -101,23 +104,24 @@ class Login extends Controller
             echo json_encode(['error' => $e->getMessage()]);
             exit();
         }
-
         $credential = [
             'idNumber' => $sanitized[0],
             'pass' => $sanitized[1]
         ];
-
         $result = $this->insertDatabase($credential);
 
         try {
             $extract = $this->extractData($result);
             $_SESSION["userId"] = $extract['id'];
-
             $keyVerify = $this->passwordVerify($extract['pass']);
             $_SESSION["notification"] = $extract['message'];
+            $_SESSION['name'] = $extract['employee_name']; 
+            $_SESSION['email'] = $extract['email'];
             $extract['admin'];
+            $_SESSION['popup_notif'] = $extract['notification'];
             define('KEY_PROMPT',  $keyVerify);
 
+            // PLEASE REVERT THIS LOGIC, THIS IS ONLY DONE FOR TESTING PURPOSES
             if($extract['admin'] === true) {
                 header('Content-Type: application/json');
                 echo json_encode(['redirect' => '/Time-Tracker/public/admin']);

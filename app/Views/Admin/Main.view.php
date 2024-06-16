@@ -18,21 +18,14 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/media.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
-
-    <style>
-        .my-toast {
-            display: flex;
-            width: auto;
-            /* Adjust width as needed */
-        }
-    </style>
+    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
 <body>
     <div id="wrapper">
         <div class="px-2 pt-5">
             <div class="container">
-                <h4>Hello Lorem Ipsum👋🏼,</h4>
+                <h4>Hello <?php echo $_SESSION['name'] ?>👋🏼</h4>
             </div>
         </div>
         <noscript>
@@ -42,14 +35,14 @@
                 JavaScript to continue.
             </div>
         </noscript>
-        <div class=" m-2 mt-3 rounded p-2 shadow-sm ">
+        <div class=" m-2 mt-3 p-2 rounded shadow-sm">
             <div class="container d-flex justify-content-center  ">
                 <div class="row row-cols gap-5 gap-md-5   w-100 text-center">
                     <div class="col p-1 rounded-5 d-flex align-items-center justify-content-center">
 
                         <?php
                         if ($_SESSION["ClockedIn"] ?? false) {
-                            echo '<a id="timeToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
+                            echo '<a id="timeToggle" href="" class="text-decoration-none text-dark rounded" onclick="return false;"><img
                             src="' . ROOT . 'assets/img/admin/Time-out.png" class="img-fluid" /> <small
                             id="timeStatusText" class="fs-3 fw-medium">Time Out</small></a>';
                         } else {
@@ -103,9 +96,9 @@
                     </p>
                 </div>
                 <div>
-                    <table class="table align-middle mb-0 bg-white text-center">
-                        <thead class="bg-light">
-                            <tr class="table-row">
+                    <table class="table table-stripped align-middle mb-0 bg-white text-center" >
+                        <thead class="bg-light" >
+                            <tr class="table-row" >
                                 <th>Date</th>
                                 <th>Time In</th>
                                 <th>Break Status</th>
@@ -125,12 +118,12 @@
                                     <td>
                                         <div class="d-flex justify-content-center">
                                             <?php if (htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8') == 'In session'): ?>
-                                                <p class="border px-2 rounded-3"
+                                                <p class="border px-2 my-1 rounded-3"
                                                     style="background-color: hsl(0, 100%, 89%); color: hsl(0, 96%, 45%); border: 1.5px solid hsl(0, 96%, 45%) !important;">
                                                     <?php echo htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                                 </p>
                                             <?php else: ?>
-                                                <p class="border px-2 rounded-3"
+                                                <p class="border px-2 my-1 rounded-3"
                                                     style="background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%); border: 1.5px solid hsl(166, 100%, 26%) !important;">
                                                     <?php echo htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                                 </p>

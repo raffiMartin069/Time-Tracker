@@ -1,5 +1,15 @@
 import httpRequest from './request.js';
+import { formCheck, nullCheck  } from '../security.js';
 
+
+/**
+ * @function searchInput - filters the checkboxes based on the search input
+ * @returns {void}
+ * @description This function listens for changes in the search input and filters the checkboxes based on the search input.
+ * The search input is compared with the label of the checkboxes.
+ * If the label includes the search input, the checkbox is displayed.
+ * If the label does not include the search input, the checkbox is hidden.  
+ */
 const searchInput = () => {
     const searchInput = document.getElementById('search');
     const employeeCheckboxes = document.querySelectorAll('.employee-checkbox');
@@ -36,8 +46,26 @@ const searchInput = () => {
     });
 }
 
+/**
+ * @var members - array to store selected members for the meeting
+ * @type {Array}
+ * @description This array is used to store the selected members for the meeting.
+ * This array is then serialized as a JSON string and appended to the form data.
+ * 
+ */
 const members = [];
 
+/**
+ * @function printSelected - prints selected members to the table
+ * @returns {void}
+ * @description This function listens for changes in the checkboxes and prints the selected members to the table.
+ * It also adds the selected members to the members array.
+ * The members array is used to store the selected members for the meeting.
+ * This array is then serialized as a JSON string and appended to the form data.
+ * @see extractData
+ * @see prepareChecks
+ * @see httpRequest
+ */
 const printSelected = () => {
     const checkboxes = document.querySelectorAll('.form-check-input');
 
@@ -65,16 +93,67 @@ const printSelected = () => {
                     }
                 }
             }
-            console.log(members); // Moved inside the event listener callback
         });
     });
 };
 
-const memberData = (members = []) => {
-    members.forEach(member => {
-        console.log(member);
-    });
-};
+/**
+ * @param {*} formData 
+ * @returns boolean as an identifier. If true, all checks passed
+ * If false, an error was thrown and checks failed.
+ */
+const prepareChecks = (formData) => {
+    try {
+        let result = formCheck(formData);
+
+        
+        if(!result[0]) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops...',
+                text: `${map_fields[result[1]]} is required.`,
+            });
+            return false;
+        }
+        return true;
+    } catch(e) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: "Please check all fields and try again.",
+        });
+        return false;
+    }
+}
+
+const memberArrayCheck = ($members) => {
+    try {
+        let result = nullCheck($members);
+        if(result) {
+            return true;
+        }
+    } catch(e) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Oops...',
+            text: "Meeting should have at least one participant.",
+        });
+        return false;
+    }
+}
+
+/**
+ * @description this object is used to map form fields to be used for error handling.
+ */
+const map_fields = {
+    'meet_title': 'Meeting title',
+    'meet_date': 'Meeting date',
+    'meet_start': 'Meeting start date and time',
+    'meet_end': 'Meeting end date and time',
+    'meet_link': 'Meeting link',
+    'mess_desc' : 'Meeting description',
+    'platform' : 'Meeting platform'
+}
 
 const extractData = () => {
     let form = document.getElementById('meeting_form');
@@ -82,16 +161,30 @@ const extractData = () => {
         e.preventDefault();
         let formData = new FormData(form);
 
+        // check the members data first
+        let memberData = memberArrayCheck(members);
+    
         // Serialize members array as JSON string
         formData.append('participants', JSON.stringify(members));
 
-        httpRequest(formData);
+        // Prepare data for checking null values
+        // If null values are found, an error will be thrown
+        let result = prepareChecks(formData);
+        if(!result) {
+            return;
+        }
+
+        if(!memberData) {
+            return;
+        } else {
+            httpRequest(formData);
+        }
     });
 };
 
 document.addEventListener('DOMContentLoaded', (event) => {
     searchInput();
     printSelected();
-    memberData();    
+    // memberData();    
     extractData();
 });

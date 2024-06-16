@@ -21,6 +21,45 @@ final class EmployeeModel
     private $SHIFT;
     private $TYPE;
 
+
+    /**
+     * @deprecated This method is deprecated.
+     * As a work around use the method updateEmployeePos in the AdminDAO.
+     * Be sure to check for null values and sanitize the data before passing it to the method.
+     */
+    public function updateEmployeePosition()
+    {
+        try {
+            $result = $this->updateEmployeePos($this->getID(), $this->getPosition());
+            return $result;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function softDeleteEmployee()
+    {
+        try {
+            $result = $this->softDeletion($this->getID());
+            return $result;
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function updateEmployeeHours()
+    {
+       $pos_id = $this->getWorkingHours();
+       $emp_id = $this->getID();
+        try {
+            $result = $this->updateEmployeeHrs($pos_id , $emp_id);
+            return $result;
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
+
+    }
+
     public function getAllEmployee()
     {
         try {

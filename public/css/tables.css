@@ -1,0 +1,11 @@
+table thead tr th {
+    white-space: nowrap;
+    background-color: hsl(166, 72%, 33%)!important;
+    color: white !important;
+}
+
+
+table tbody tr td {
+    white-space: nowrap;
+    border: 0.5px solid #e0e0e0;
+}

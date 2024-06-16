@@ -9,6 +9,8 @@ Trait AuthDAO
         return $loader->loadSqlQuery($file);
     }
 
+    
+
     public function Authenticate($data)
     {
         try{

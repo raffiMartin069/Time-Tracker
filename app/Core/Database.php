@@ -3,18 +3,28 @@
 trait Database
 {
     /**
-     * @return PDO
-     * @throws Exception
-     * Connect to the database and return the connection
-     * 
+     * @method verifyConnectionStr()
+     * This method check if the connection string is set
      */
+     private function verifyConnectionStr()
+     {
+        if (empty(DBHOST) || empty(DBNAME) || empty(DBUSER) || empty(DBKEY) || empty(PORT)) {
+            throw new Exception('Something went wrong.');
+        }
+     }
+
     private function Connect()
     {
         $string = "pgsql:host=" . DBHOST . ";dbname=" . DBNAME . ";port=" . PORT;
         try {
+            $this->verifyConnectionStr();
             return new PDO($string, DBUSER, DBKEY);
         } catch (PDOException $e) {
-            throw new Exception('Database connection failed: ' . $e->getMessage());
+            http_response_code(500); // Set a proper HTTP response code
+            header('Content-Type: application/json');
+            $sweep = $this->errorHandler($e->getMessage());
+            echo json_encode(['error' => $sweep]);
+            exit;
         }
     }
 

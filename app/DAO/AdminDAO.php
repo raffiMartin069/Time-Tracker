@@ -9,6 +9,109 @@ trait AdminDAO
 {
     use Database;
 
+    public function updateEmployeePos($emp_id, $pos_id) 
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('UpdateEmployeePosition.sql');
+            $params = [
+                $pos_id,
+                $emp_id,
+                
+            ];
+            return !empty($this->Query($query, $params)) ? true : false;
+        } catch(Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch(PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function softDeletion($data)
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('SoftDeleteEmployee.sql');
+            $params = [
+                $data
+            ];
+            return !empty($this->Query($query, $params)) ? true : false;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function updateEmployeeHrs($pos_id, $emp_id)
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('UpdateEmployee.sql');
+            $params = [
+                $pos_id,
+                $emp_id,
+            ];
+            return !empty($this->Query($query, $params)) ? true : false;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function fetchAllBiWeeklyReport()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('AdminBiWeeklyReports.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function fetchAllWeeklyReport()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('AdminWeeklyReports.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function fetchAllDailyReport()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('AdminDailyReports.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function fetchAllNotification()
+    {
+        try {
+            $LOADER = new SQLoader();
+            $query = $LOADER->loadSqlQuery('AdminNotification.sql');
+            return $this->Query($query);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
     /**
      * @method insertMeeting(@param $data)
      * This method accepts a an array of integers to be inserted in the database.
@@ -30,6 +133,7 @@ trait AdminDAO
                 $data[4],
                 $data[5],
                 $data[6],
+                $_SESSION['userId'],
                 $arrayString
             ];
 
@@ -41,6 +145,11 @@ trait AdminDAO
         }
     }
 
+    /**
+     * @method fetchAllMeeting()
+     * This method gets all the platform from the database.
+     * i.e. Google Meet, Zoom, Microsoft Teams etc.
+     */
     public function fetchAllPlatform()
     {
         try {

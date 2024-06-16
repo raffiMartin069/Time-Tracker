@@ -40,3 +40,5 @@ Thumbs.db
 /compose.yaml
 /.dockerignore
 /README.Docker.md
+Report.view.txt
+Test.view.php

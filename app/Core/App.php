@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__.'/../Utilities/CorsUtility.php';
 class App {
     private $controller = "Login";
     private $method = "index";
@@ -10,8 +11,8 @@ class App {
     }
     
     public function loadController() {
+        CorsUtil::setCorsHeaders();
         $URL = $this->splitURL();
-
         // Check if the controller exists.
         // If the controller does not exist, call the default controller.
         $filename = "../app/Controllers/".ucfirst($URL[0]).".php";

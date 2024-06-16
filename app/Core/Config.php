@@ -22,7 +22,7 @@ function defineRoot() {
         define('DBHOST', 'localhost');
         define('DBUSER', 'root');
         define('DBKEY', '');
-        define('ROOT', 'http://www.website.com/');
+        define('ROOT', 'http://www.website.com/public/');
     }
 }
 
