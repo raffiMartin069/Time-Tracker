@@ -9,10 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/search.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
-     
+    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
 <body>
@@ -44,15 +44,14 @@
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center">
-                        <thead class="table-light">
+                        <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Weekly ID</th>
                                 <th>Report Date</th>
-                                <th>Weekly Total</th>
-                                <!-- <th>Employee ID</th>  -->
                                 <th>Status</th>
                                 <th>Acknowledged By</th>
-                                <th>Daily Stamps</th> 
+                                <th>Daily Stamps</th>
+                                <th>Weekly Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -61,11 +60,10 @@
                                     <tr>
                                         <td><?php echo $report->getWKLYID(); ?></td>
                                         <td class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
-                                        <td><div style="display: inline-block; font-size: 14px; color: #198754; background-color: #A6E7D8; border-radius: 10px; width: 6rem;"><?php echo $report->getTOTALHRS(); ?></div></td>
-                                        <!-- <td class="getmyempid"><?php echo $report->getEMPID(); ?></td> -->
-                                         <td><?php echo $report->getAPPRSTAT(); ?></td>
+                                        <td><?php echo $report->getAPPRSTAT(); ?></td>
                                         <td><?php echo $report->getACKNOWLEDGED_BY(); ?></td>
-                                        <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td> 
+                                        <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
+                                        <td> <?php echo $report->getTOTALHRS(); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -85,9 +83,8 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <table class="summary-table table align-middle mb-0 bg-white text-center">
-                <thead class="table-dark">
+                <thead style="position: sticky; top: 0;">
                     <tr>
-                        <!-- <th>Employee ID</th> -->
                         <th>Date</th>
                         <th>Clock In</th>
                         <th>Break In</th>
@@ -98,13 +95,11 @@
                     </tr>
                 </thead>
                 <tbody id="dailyReportsBody">
-                    <!-- Dynamic content will be populated here -->
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- jQuery and Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -112,9 +107,9 @@
             var modal = $("#myModal");
             var closeModal = $(".close");
 
-            $(".clickMyDots").click(function() { 
+            $(".clickMyDots").click(function() {
                 var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
-                var empId = <?php echo $_SESSION["UID"]; ?> 
+                var empId = <?php echo $_SESSION["UID"]; ?>
 
                 $.ajax({
                     url: "Employee/fetchWeeklyDailyReports",
@@ -125,7 +120,6 @@
                     },
                     dataType: 'json',
                     success: function(data) {
-                        console.log("Data received: ", data);
                         var dailyReportsBody = $("#dailyReportsBody");
                         dailyReportsBody.empty();
 
@@ -139,7 +133,7 @@
                                 <td>${report.BREAK_OUT}</td>
                                 <td>${report.BREAK_DURATION}</td> 
                                 <td>${report.CLOCK_OUT}</td>  
-                                <td><div style="display: inline-block; font-size: 14px; color: #198754; background-color: #A6E7D8; border-radius: 10px; width: 6rem;">${report.HRS_WORKED}</div></td>
+                                <td>${report.HRS_WORKED}</td>
                             </tr>
                         `;
                                 dailyReportsBody.append(row);

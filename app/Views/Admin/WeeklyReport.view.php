@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/search.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
 <body>
@@ -44,7 +44,7 @@
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
-                        <thead class="table-light">
+                    <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Weekly ID</th>
                                 <th>Date</th>
@@ -62,14 +62,12 @@
                                     <tr class="table-row">
                                         <td class="getmywklyid"><?php echo $report->getWKLYID(); ?></td>
                                         <td class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
-                                        <td>
-                                            <div style="display: inline-block; font-size: 14px; color: #198754; background-color: #A6E7D8; border-radius: 10px; width: 6rem;"><?php echo $report->getTOTALHRS(); ?></div>
-                                        </td>
+                                        <td><?php echo $report->getTOTALHRS(); ?></td>
                                         <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
                                         <td class="getmyempid"><?php echo $report->getEMPID(); ?></td>
                                         <td><?php echo $report->getEMPNAME(); ?></td>
                                         <td class="getmyapprstat"><?php echo $report->getAPPRSTAT(); ?></td>
-                                        <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
+                                        <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px;"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -89,9 +87,8 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <table class="summary-table table align-middle mb-0 bg-white text-center">
-                <thead class="table-dark">
-                    <tr>
-                        <!-- <th>Daily ID</th> -->
+                <thead>
+                    <tr> 
                         <th>Date</th>
                         <th>Clock In</th>
                         <th>Break In</th>
@@ -158,9 +155,6 @@
     <!-- jQuery and Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-
-
-
     <script>
         $(document).ready(function() {
             var dailyReportsModal = $("#myModal");
@@ -171,10 +165,8 @@
 
             $(".clickMyDots").click(function() {
                 var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
-                var empId = $(this).closest('tr').find('.getmyempid').text();
-
-                console.log("Fetching reports for EMP_ID: " + empId + ", REPORT_DATE: " + reportDate);
-
+                var empId = $(this).closest('tr').find('.getmyempid').text(); 
+ 
                 $.ajax({
                     url: "Admin/fetchWeeklyDailyReports",
                     method: 'GET',
@@ -197,7 +189,7 @@
                                         <td>${report.BREAK_OUT}</td>
                                         <td>${report.BREAK_DURATION}</td> 
                                         <td>${report.CLOCK_OUT}</td>
-                                        <td><div style="display: inline-block; font-size: 14px; color: #198754; background-color: #A6E7D8; border-radius: 10px; width: 6rem;">${report.HRS_WORKED}</div></td>
+                                        <td>${report.HRS_WORKED}</td>
                                     </tr>
                                 `;
                                 dailyReportsBody.append(row);

@@ -9,12 +9,17 @@
 function defineRoot() {
     if($_SERVER['SERVER_NAME'] == 'localhost') {
         // database configuration
-        $config = simplexml_load_file('../App.config');
-        define('DBNAME', $config->database->dbname);
-        define('DBHOST', $config->database->host);
-        define('DBUSER', $config->database->username);
-        define('DBKEY', $config->database->password);
-        define('PORT', $config->database->port);
+        // $config = simplexml_load_file('../App.config');
+        // define('DBNAME', $config->database->dbname);
+        // define('DBHOST', $config->database->host);
+        // define('DBUSER', $config->database->username);
+        // define('DBKEY', $config->database->password);
+        // define('PORT', $config->database->port);
+        define('DBNAME', 'postgres');
+        define('DBHOST', 'aws-0-ap-southeast-1.pooler.supabase.com');
+        define('DBUSER', 'postgres.rvtypwqfctwjnljbuixi');
+        define('DBKEY', 'lDZUDVrwXswnHFWKhDR9DLl1');
+        define('PORT', '6543');
         define('ROOT', 'http://localhost/Time-Tracker/public/');
         define('APP', 'http://localhost/Time-Tracker/app/');
     } else {

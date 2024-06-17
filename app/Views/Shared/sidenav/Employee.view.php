@@ -68,32 +68,15 @@
 
                         if (!empty($returnData) && !empty($returnData[0]->image)) {
                             $getProfilePhoto = $returnData[0]->image;
-                        }
-
-                        $returnNameQuery = "SELECT fname, lname FROM employee WHERE emp_id = :emp_id";
-                        $returnNameParams = [':emp_id' => $empId];
-                        $returnNameData = $this->Query($returnNameQuery, $returnNameParams);
-
-                        if (!empty($returnNameData) && !empty($returnNameData[0])) {
-                            $fname = $returnNameData[0]->fname;
-                            $lname = $returnNameData[0]->lname;
-                        }
-
-                        $returnEmailQuery = "SELECT email FROM employee_credential WHERE emp_id = :emp_id";
-                        $returnEmailParams = [':emp_id' => $empId];
-                        $returnEmailData = $this->Query($returnEmailQuery, $returnEmailParams);
-
-                        if (!empty($returnEmailData) && !empty($returnEmailData[0])) {
-                            $email = $returnEmailData[0]->email;
-                        }
+                        } 
                     }
                     ?> 
                     <span class="nav-item-title fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
                         <img id="profile-photo" class="" src="<?php echo $getProfilePhoto; ?>" style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px" alt="Profile Picture">
                         <span class="nav-item-title">
-                        <h6 class="mt-1 mb-0 ms-2" ><span id="fname"><?php echo $fname; ?></span> <span> </span> <span id="lname"><?php echo $lname; ?></span></h6>
-                        <small class="ms-2 text-secondary" id="email"><?php echo $email; ?></small>
+                            <h6 class="mt-1 mb-0 ms-2"><?php echo $_SESSION['name'] ?? '' ?></h6>
+                            <small class="ms-2 text-secondary"><?php echo $_SESSION['email'] ?? '' ?></small>
                         </span>
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">

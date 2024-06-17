@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" /> 
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/search.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
 <body>
@@ -43,7 +44,7 @@
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
-                        <thead class="table-light">
+                    <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Biweekly ID</th>
                                 <th>Date</th>
@@ -61,14 +62,12 @@
                                     <tr class="table-row">
                                         <td class="getmybiwklyid"><?php echo $report->getBIWKLYID(); ?></td>
                                         <td class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
-                                        <td >
-                                            <div style="display: inline-block; font-size: 14px; color: #198754; background-color: #A6E7D8; border-radius: 10px; width: 6rem;"><?php echo $report->getTOTALHRS(); ?></div>
-                                        </td>
+                                        <td><?php echo $report->getTOTALHRS(); ?></td>
                                          <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
                                         <td class="getmyempid"><?php echo $report->getEMPID(); ?></td>
                                         <td><?php echo $report->getEMPNAME(); ?></td> 
                                         <td class="getmyapprstat"><?php echo $report->getAPPRSTAT(); ?></td>
-                                        <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
+                                        <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px;"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -88,7 +87,7 @@
         <div class="modal-content">
             <span class="close">&times;</span>
             <table class="summary-table table align-middle mb-0 bg-white text-center">
-                <thead class="table-dark">
+                <thead>
                     <tr> 
                         <th>Date</th>
                         <th>Clock In</th>
@@ -99,8 +98,7 @@
                         <th>Daily Total</th>
                     </tr>
                 </thead>
-                <tbody id="dailyReportsBody">
-                    <!-- Dynamic content will be populated here -->
+                <tbody id="dailyReportsBody"> 
                 </tbody>
             </table>
         </div>
@@ -156,7 +154,7 @@
                                 <td>${report.BREAK_OUT}</td>
                                 <td>${report.BREAK_DURATION}</td> 
                                 <td>${report.CLOCK_OUT}</td>
-                                <td><div style="display: inline-block; font-size: 14px; color: #198754; background-color: #A6E7D8; border-radius: 10px; width: 6rem;">${report.HRS_WORKED}</div></td>
+                                <td>${report.HRS_WORKED}</td>
                             </tr>
                         `;
                                 dailyReportsBody.append(row);
