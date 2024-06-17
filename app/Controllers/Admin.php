@@ -1,6 +1,5 @@
 <?php
 require_once __DIR__ . "/../Core/Controller.php";
-require_once __DIR__ . "/../Models/AdminModels/DailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AdminOperationModel.php";
 require_once __DIR__ . "/../Models/AdminModels/MeetingLogsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/BreakLogsModel.php";
@@ -10,6 +9,13 @@ require_once __DIR__ . "/../Models/ShiftModel.php";
 require_once __DIR__ . "/../DAO/AdminDAO.php";
 require_once __DIR__ . '/../Utilities/PDFUtility.php';
 require_once __DIR__ . '/../Utilities/ExceptionHandler.php';
+require_once __DIR__ . "/../Models/AdminModels/AllDailyReportModel.php";
+require_once __DIR__ . "/../Models/AdminModels/AllWeeklyReportModel.php";
+require_once __DIR__ . "/../Models/AdminModels/AllBiweeklyReportModel.php";
+require_once __DIR__ . "/../Models/AdminModels/AllSettingsModel.php";
+require_once __DIR__ . "/../Models/AdminModels/AllManageAdminModel.php";
+require_once __DIR__ . '/../Helpers/Sanitation.php'; 
+
 
 class Admin extends Controller
 {
@@ -1021,4 +1027,555 @@ class Admin extends Controller
 
         echo json_encode($serverResponse);
     }
+
+    // airielle
+    // public function index()
+    // {
+    //     $_SESSION["UID"] = 12;
+    //     $this->view('Shared/sidenav/Admin');
+    // }
+
+    protected function ArrangeReportsResults($data)
+    {
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = [
+                'DAILY_ID' => property_exists($row, 'daily_id') ? $row->daily_id : null,
+                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'EMPLOYEE_NAME' => property_exists($row, 'employee_name') ? $row->employee_name : null,
+                'DATE' => property_exists($row, 'date') ? $row->date : null,
+                'CLOCK_IN' => property_exists($row, 'clock_in') ? $row->clock_in : null,
+                'BREAK_IN' => property_exists($row, 'break_in') ? $row->break_in : null,
+                'BREAK_OUT' => property_exists($row, 'break_out') ? $row->break_out : null,
+                'DURATION' => property_exists($row, 'duration') ? $row->duration : null,
+                'CLOCK_OUT' => property_exists($row, 'clock_out') ? $row->clock_out : null,
+                'HRS_WORKED' => property_exists($row, 'hrs_worked') ? $row->hrs_worked : null,
+            ];
+        }
+        return $results;
+    }
+
+    public function dailyreport()
+    {
+        try {
+            $data = $this->GetAll('get_daily_report_table_admin()');
+            $results = $this->ArrangeReportsResults($data);
+
+            $reportModels = [];
+            foreach ($results as $result) {
+                $reportModels[] = new AllDailyReportModel($result);
+            }
+
+            $this->view('Admin/DailyReport', [
+                'results' => $reportModels
+            ]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    protected function ArrangeWeeklyResults($data)
+    {
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = [
+                'WKLY_ID' => property_exists($row, 'wkly_id') ? $row->wkly_id : null,
+                'REPORT_DATE' => property_exists($row, 'report_date') ? $row->report_date : null,
+                'TOTAL_HOURS' => property_exists($row, 'total_hours') ? $row->total_hours : null,
+                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'EMPLOYEE_NAME' => property_exists($row, 'employee_name') ? $row->employee_name : null,
+                'APPR_STATUS' => property_exists($row, 'appr_status') ? $row->appr_status : null,
+                'ACKNOWLEDGED_BY' => property_exists($row, 'acknowledged_by') ? $row->acknowledged_by : null,
+            ];
+        }
+        return $results;
+    }
+
+    public function weeklyreport()
+    {
+        try {
+            $data = $this->GetAll('get_weekly_report_table_admin()');
+            $results = $this->ArrangeWeeklyResults($data);
+
+            $reportModels = [];
+            foreach ($results as $result) {
+                $reportModels[] = new AllWeeklyReportModel($result);
+            }
+
+            $this->view('Admin/WeeklyReport', [
+                'results' => $reportModels
+            ]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    // Daily Stamps of each employee for the week
+    public function fetchWeeklyDailyReports()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
+            $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
+
+            try {
+                $query = "select * from weekly_stamp(:report_date, :emp_id)";
+
+                $params = [
+                    'report_date' => $reportDate,
+                    'emp_id' => $empId
+                ];
+
+                $data = $this->Query($query, $params);
+                $results = $this->ArrangeReportsResults($data);
+                header("Content-Type: application/json");
+                echo json_encode($results);
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
+            }
+        } else {
+            die();
+        }
+    }
+
+    public function fetchAcknowledgementData()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $wklyId = isset($_GET['wkly_id']) ? $_GET['wkly_id'] : null;
+            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $password = isset($_GET['password']) ? $_GET['password'] : null;
+
+            try {
+                // Call the stored procedure to approve the weekly report
+                $query = "call approve_weekly_report(:emp_id, :wkly_id, :password)";
+                $params = [
+                    'emp_id' => $empId,
+                    'wkly_id' => $wklyId,
+                    'password' => $password
+                ];
+
+                $this->Query($query, $params);
+
+                $returnQuery = "SELECT acknowledged_by FROM get_weekly_report_table_admin() WHERE wkly_id = :wkly_id";
+
+                $returnParams = [
+                    'wkly_id' => $wklyId
+                ];
+
+                $returnData = $this->Query($returnQuery, $returnParams);
+
+                if (!empty($returnData) && isset($returnData[0])) {
+
+                    $returnUpdatedData = $returnData[0];
+
+                    header("Content-Type: application/json");
+                    echo json_encode([
+                        'acknowledgedBy' => $returnUpdatedData->acknowledged_by ?? null
+                    ]);
+                }
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            }
+        } else {
+            die();
+        }
+    }
+
+    public function fetchBiweeklyAcknowledgementData()
+    {
+        if (session_status() == PHP_SESSION_NONE) {
+            session_start();
+        }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $biWklyId = isset($_GET['bi_wkly_id']) ? $_GET['bi_wkly_id'] : null;
+            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $password = isset($_GET['password']) ? $_GET['password'] : null;
+
+            try {
+                // Call the stored procedure to approve the weekly report
+                $query = "call approve_bi_weekly_report(:emp_id, :bi_wkly_id, :password)";
+                $params = [
+                    'emp_id' => $empId,
+                    'bi_wkly_id' => $biWklyId,
+                    'password' => $password
+                ];
+
+                $this->Query($query, $params);
+
+                $returnQuery = "SELECT acknowledged_by FROM get_bi_weekly_report_table_admin() WHERE bi_wkly_id = :bi_wkly_id";
+                $returnParams = [
+                    'bi_wkly_id' => $biWklyId
+                ];
+
+                $returnData = $this->Query($returnQuery, $returnParams);
+
+                if (!empty($returnData) && isset($returnData[0])) {
+                    $returnUpdatedData = $returnData[0];
+
+                    header("Content-Type: application/json");
+                    echo json_encode([
+                        'acknowledgedBy' => $returnUpdatedData->acknowledged_by ?? null
+                    ]);
+                }
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            }
+        } else {
+            die();
+        }
+    } 
+    protected function ArrangeBiweeklyResults($data)
+    {
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = [
+                'BI_WKLY_ID' => property_exists($row, 'bi_wkly_id') ? $row->bi_wkly_id : null,
+                'REPORT_DATE' => property_exists($row, 'report_date') ? $row->report_date : null,
+                'TOTAL_HOURS' => property_exists($row, 'total_hours') ? $row->total_hours : null,
+                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'EMPLOYEE_NAME' => property_exists($row, 'employee_name') ? $row->employee_name : null,
+                'APPR_STATUS' => property_exists($row, 'appr_status') ? $row->appr_status : null,
+                'ACKNOWLEDGED_BY' => property_exists($row, 'acknowledged_by') ? $row->acknowledged_by : null,
+            ];
+        }
+        return $results;
+    }
+
+    public function biweeklyreport()
+    {
+        try {
+            $data = $this->GetAll('get_bi_weekly_report_table_admin()');
+            $results = $this->ArrangeBiweeklyResults($data);
+
+            $reportModels = [];
+            foreach ($results as $result) {
+                $reportModels[] = new AllBiweeklyReportModel($result);
+            }
+
+            $this->view('Admin/BiweeklyReport', [
+                'results' => $reportModels
+            ]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    // Daily Stamps of each employee for the week
+    public function fetchBiweeklyDailyReports()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
+            $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
+
+            try {
+                $query = "select * from bi_weekly_stamp(:report_date, :emp_id)";
+
+                $params = [
+                    'report_date' => $reportDate,
+                    'emp_id' => $empId
+                ];
+
+                $data = $this->Query($query, $params);
+                $results = $this->ArrangeBiweeklyResults($data);
+                header("Content-Type: application/json");
+                echo json_encode($results);
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
+            }
+        } else {
+            die();
+        }
+    }
+
+    protected function ArrangePersonalInfo($data)
+    {
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = [
+                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'FNAME' => property_exists($row, 'fname') ? $row->fname : null,
+                'MNAME' => property_exists($row, 'mname') ? $row->mname : null,
+                'LNAME' => property_exists($row, 'lname') ? $row->lname : null,
+                'BIRTH_DATE' => property_exists($row, 'birth_date') ? $row->birth_date : null,
+                'HIRED_DATE' => property_exists($row, 'hired_date') ? $row->hired_date : null,
+                'EMAIL' => property_exists($row, 'email') ? $row->email : null,
+                'ECN' => property_exists($row, 'ecn') ? $row->ecn : null,
+                'IMAGE' => property_exists($row, 'image') ? $row->image : null,
+            ];
+        }
+        return $results;
+    }
+
+    public function editProfileInformation()
+    {
+        try {
+            $data = $this->GetInfo($_SESSION["UID"], 'employee');
+            $results = $this->ArrangePersonalInfo($data);
+
+            $reportModels = [];
+            foreach ($results as $result) {
+                $reportModels[] = new AllSettingsModel($result);
+            }
+
+            $this->view('Admin/Settings', [
+                'results' => $reportModels
+            ]); 
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function manageAdminAccess()
+    {
+        try {
+            $data = $this->GetAll('get_non_admin_employees()');
+            $results = $this->ArrangePersonalInfo($data);
+
+            $reportModels = [];
+            foreach ($results as $result) {
+                $reportModels[] = new AllManageAdminModel($result);
+            }
+
+            $this->view('Admin/ManageAdmin', [
+                'results' => $reportModels
+            ]);
+        } catch (Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+
+    public function UpdateProfilePic()
+    {
+
+        // if(!$result = $user->check_is_logged_in())
+        // {
+        //     header("Location:" . ROOT . "Login");
+        //     die();
+        // }
+
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
+            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+
+            $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
+
+            if ($profilePhoto && $profilePhoto['error'] == 0 && in_array($profilePhoto['type'], $allowed)) {
+                $folder = 'uploads/';
+
+                if (!file_exists($folder)) {
+                    mkdir($folder, 0777, true);
+                }
+
+                $destination = $folder . basename($profilePhoto['name']);
+                move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
+
+                try {
+                    $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
+                    $params = [
+                        'emp_id' => $empId,
+                        'profile_photo' => $destination
+                    ];
+
+                    $this->Query($query, $params);
+                } catch (Exception $e) {
+                    echo "Error: " . $e->getMessage();
+                } catch (PDOException $e) {
+                    echo "PDO Error: " . $e->getMessage();
+                }
+            } else {
+                echo "Uploaded image is not valid!";
+            }
+        } else {
+            die();
+        }
+    } 
+
+    public function UpdateSettingsGeneralInfo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'f_name' => $_POST['f_name'] ?? null,
+                'm_name' => $_POST['m_name'] ?? null,
+                'l_name' => $_POST['l_name'] ?? null,
+                'birth_date' => $_POST['birth_date'] ?? null,
+                'emp_id' => $_SESSION["UID"] ?? null
+            ];
+
+            $sanitized_data = [
+                'f_name' => Sanitation::strSanitation($data['f_name']),
+                'm_name' => Sanitation::strSanitation($data['m_name']),
+                'l_name' => Sanitation::strSanitation($data['l_name']),
+                'birth_date' => Sanitation::strSanitation($data['birth_date']),
+                'emp_id' => Sanitation::intSanitation($data['emp_id'])
+            ];
+
+            if ($sanitized_data['emp_id'] === null) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid Tracker ID.']);
+                exit;
+            }
+
+            try {
+                $query = "CALL change_info(:emp_id, :l_name, :m_name, :f_name, :birth_date)";
+                $params = [
+                    ':emp_id' => $sanitized_data['emp_id'],
+                    ':l_name' => $sanitized_data['l_name'],
+                    ':m_name' => $sanitized_data['m_name'],
+                    ':f_name' => $sanitized_data['f_name'],
+                    ':birth_date' => $sanitized_data['birth_date']
+                ];
+
+                $this->Query($query, $params);
+
+                $returnQuery = "SELECT lname, mname, fname, birth_date FROM employee WHERE emp_id = :emp_id";
+                $returnParams = [':emp_id' => $sanitized_data['emp_id']];
+
+                $returnData = $this->Query($returnQuery, $returnParams);
+
+                if (!empty($returnData) && isset($returnData[0])) {
+                    $returnUpdatedData = $returnData[0];
+
+                    header("Content-Type: application/json");
+                    echo json_encode([
+                        'f_name' => $returnUpdatedData->fname ?? null,
+                        'm_name' => $returnUpdatedData->mname ?? null,
+                        'l_name' => $returnUpdatedData->lname ?? null,
+                        'birth_date' => $returnUpdatedData->birth_date ?? null,
+                    ]);
+                }
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed.']);
+        }
+    }
+
+    public function UpdateSettingsPasswordInfo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'curr_password' => $_POST['curr_password'] ?? null,
+                'new_password' => $_POST['new_password'] ?? null,
+                'emp_id' => $_SESSION["UID"] ?? null
+            ];
+
+            $sanitized_data = [
+                'curr_password' => Sanitation::strSanitation($data['curr_password']),
+                'new_password' => Sanitation::strSanitation($data['new_password']),
+                'emp_id' => Sanitation::intSanitation($data['emp_id'])
+            ];
+
+            if ($sanitized_data['emp_id'] === null) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid employee ID.']);
+                exit;
+            }
+
+            try {
+                $query = "CALL change_password(:emp_id, :curr_password, :new_password)";
+                $params = [
+                    ':emp_id' => $sanitized_data['emp_id'],
+                    ':curr_password' => $sanitized_data['curr_password'],
+                    ':new_password' => $sanitized_data['new_password']
+                ];
+
+                $data = $this->Query($query, $params);
+
+                if (!empty($data) && isset($data[0])) {
+                    $updatedInfo = $data[0];
+                    header("Content-Type: application/json");
+                    echo json_encode([
+                        'curr_password' => $updatedInfo['curr_password'] ?? null,
+                        'new_password' => $updatedInfo['new_password'] ?? null,
+                    ]);
+                }
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed.']);
+        }
+    }
+
+    public function UpdateSettingsContactInfo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $data = [
+                'email' => $_POST['email'] ?? null,
+                'ecn' => $_POST['ecn'] ?? null,
+                'emp_id' => $_SESSION["UID"] ?? null
+            ];
+
+            $sanitized_data = [
+                'email' => Sanitation::emailSanitation($data['email']),
+                'ecn' => Sanitation::strSanitation($data['ecn']),
+                'emp_id' => Sanitation::intSanitation($data['emp_id'])
+            ];
+
+            if ($sanitized_data['emp_id'] === null || !filter_var($sanitized_data['email'], FILTER_VALIDATE_EMAIL)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Invalid input data.']);
+                exit;
+            }
+
+            try {
+                $query = "CALL change_email_contact(:emp_id, :email, :ecn)";
+                $params = [
+                    ':emp_id' => $sanitized_data['emp_id'],
+                    ':email' => $sanitized_data['email'],
+                    ':ecn' => $sanitized_data['ecn']
+                ];
+
+                $this->Query($query, $params);
+
+                $returnQuery = "SELECT email, ecn FROM employee_credential WHERE emp_id = :emp_id";
+                $returnParams = [':emp_id' => $sanitized_data['emp_id']];
+
+                $returnData = $this->Query($returnQuery, $returnParams);
+
+                if (!empty($returnData) && isset($returnData[0])) {
+                    $returnUpdatedData = $returnData[0];
+
+                    header("Content-Type: application/json");
+                    echo json_encode([
+                        'email' => $returnUpdatedData->email ?? null,
+                        'ecn' => $returnUpdatedData->ecn ?? null,
+                    ]);
+                }
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+            }
+        } else {
+            http_response_code(405);
+            echo json_encode(['error' => 'Method not allowed.']);
+        }
+    }
+
 }

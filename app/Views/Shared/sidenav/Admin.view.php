@@ -9,9 +9,7 @@
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
-        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?= ROOT ?>node_modules/bootstrap/dist/css/bootstrap.css" />
@@ -31,9 +29,7 @@
                 <h3 class="ms-3 mt-4 mb-4">
                     <img src="<?php ROOT ?>assets/img/Sidebar/logo.png" class="img-fluid ms-2" />
                     <a>
-                        <span class="ms-2"
-                            style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong
-                                style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
+                        <span class="ms-2" style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
                     </a>
                 </h3>
             </div>
@@ -41,54 +37,40 @@
                 <span class="nav-item-title mt-5 px-4" style="color: #64748B;">Menu</span>
                 <div class="d-flex flex-column justify-content-center align-items-start">
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=dashboard"
-                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
-                            style="height: 50px;">
+                        <a href="?page=dashboard" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
                             <i class="lni lni-grid-alt fw-bold" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2">Dashboard</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=meeting/logs"
-                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
-                            style="height: 50px;">
-                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
-                                style="height: 20px;"></img>
+                        <a href="?page=meeting/logs" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
+                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg" style="height: 20px;"></img>
                             <span class="nav-item-title ms-2 ">Meeting Logs</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=break/logs"
-                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
-                            style="height: 50px;">
-                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
-                                style="height: 20px;"></img>
+                        <a href="?page=break/logs" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
+                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg" style="height: 20px;"></img>
                             <span class="nav-item-title ms-2 ">Break Logs</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=manage/employee"
-                            class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
-                            style="height: 50px;">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                class="bi bi-person-circle" style="margin-left: 4px;" viewBox="0 0 16 16">
+                        <a href="?page=manage/employee" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" style="margin-left: 4px;" viewBox="0 0 16 16">
                                 <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                <path fill-rule="evenodd"
-                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
+                                <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
                             </svg>
                             <span class="nav-item-title ms-2">Manage Employee</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=manage/reports/view" class="nav-link text-dark rounded" style="height: 50px;">
-                            <i class="lni lni-book mt-2 fw-bold" style="margin-left: 4px;"></i>
+                        <a href="?page=dailyReport" class="nav-link text-dark rounded" style="height: 50px;">
+                            <i class="lni lni-book mt-2" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2" style="margin-top: -32px;">Reports</span>
                         </a>
                     </li>
                     <li class="nav-item mb-4" style="width: 270px; margin-left: 14px;">
-                        <a href="" class="nav-link text-dark rounded justify-content-start"
-                            style="height: 50px; display: flex; align-items: center; justify-content: flex-start;"
-                            data-bs-toggle="modal" data-bs-target="#startMeeting">
+                        <a href="" class="nav-link text-dark rounded justify-content-start" style="height: 50px; display: flex; align-items: center; justify-content: flex-start;" data-bs-toggle="modal" data-bs-target="#startMeeting">
                             <i class="bi bi-briefcase-fill"></i>
                             <span class="nav-item-title ms-2" style="margin-top: 0;">Start a meeting</span>
                         </a>
@@ -96,12 +78,10 @@
                     <hr />
                 </div>
                 <div class="bottom-items">
-                    <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start"
-                        style="width: 270px; margin-left: 14px;">
+                    <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start" style="width: 270px; margin-left: 14px;">
                         <ul class=" text-decoration-none list-unstyled">
                             <li>
-                                <a href="?page=notification/view" class="nav-link text-dark rounded pt-3"
-                                    style="height: 50px;">
+                                <a href="?page=notification/view" class="nav-link text-dark rounded pt-3" style="height: 50px;">
                                     <?php
                                     if (isset($_SESSION['notification']) && $_SESSION['notification'] > 0) {
                                         echo '<i class="bi bi-bell-fill notification-bell" style="margin-left: 4px;"></i>';
@@ -112,19 +92,39 @@
                                     <span class="nav-item-title ms-2" style="margin-top: -32px;">Notifications</span>
                                 </a>
                             </li>
-                            <li>
-                                <a href="#" class="nav-link text-dark rounded" style="height: 50px;">
-                                    <i class="lni lni-cog style mt-2 fw-bold" style="margin-left: 4px;"></i>
+                            <li class="nav-item mb-4 " style="width: 270px; margin-left: 14px;">
+                                <a href="?page=editProfile" class="nav-link text-dark rounded" style="height: 50px;">
+                                    <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
                                     <span class="nav-item-title ms-2" style="margin-top: -32px;">Settings</span>
                                 </a>
                             </li>
                         </ul>
                     </div>
                     <hr>
+
+                    <?php
+                    if (session_status() == PHP_SESSION_NONE) {
+                        session_start();
+                    }
+
+                    $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                    $getProfilePhoto = $defaultPhoto;
+
+                    if ($empId) {
+                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                        $returnParams = [':emp_id' => $empId];
+                        $returnData = $this->Query($returnQuery, $returnParams);
+
+                        if (!empty($returnData) && !empty($returnData[0]->image)) {
+                            $getProfilePhoto = $returnData[0]->image;
+                        }
+                    }
+                    ?>
+
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img src="<?= ROOT ?>assets/img/Sidebar/profile.svg" class="img-fluid rounded ms-3" width="50px"
-                            alt="">
+                        <img id="profile-photo" src="<?php echo $getProfilePhoto; ?>" style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px" alt="Profile Picture">
                         <span class="nav-item-title">
                             <h6 class="mt-1 mb-0 ms-2"><?php echo $_SESSION['name'] ?? '' ?></h6>
                             <small class="ms-2 text-secondary"><?php echo $_SESSION['email'] ?? '' ?></small>
@@ -168,8 +168,7 @@
 
                             <!-- Name input -->
                             <div data-mdb-input-init class="form-outline mb-4 form-floating">
-                                <input type="text" id="meet_title" name="meet_title" class="form-control"
-                                    placeholder="" />
+                                <input type="text" id="meet_title" name="meet_title" class="form-control" placeholder="" />
                                 <label class="form-label" for="meet_start">Meeting Title</label>
                             </div>
 
@@ -180,8 +179,7 @@
                                     <label class="form-label" for="meet_date">Meeting Date</label>
                                 </div>
                                 <div>
-                                    <input type="datetime-local" id="meet_start" name="meet_start"
-                                        class="form-control" />
+                                    <input type="datetime-local" id="meet_start" name="meet_start" class="form-control" />
                                     <label class="form-label" for="meet_start">Meeting Start</label>
                                 </div>
                                 <div>
@@ -192,27 +190,21 @@
 
                             <!-- Message input -->
                             <div data-mdb-input-init class="form-outline mb-4 form-floating">
-                                <input type="text" class="form-control" id="meet_link" name="meet_link"
-                                    placeholder=""></input>
+                                <input type="text" class="form-control" id="meet_link" name="meet_link" placeholder=""></input>
                                 <label class="form-label" for="meet_link">Link</label>
                             </div>
                             <div class="form-outline mb-4">
                                 <label class="form-label" for="members">Select Members</label>
-                                <div
-                                    style="height: 150px; overflow-y: scroll; border: 1px solid #ced4da; border-radius: .25rem; padding: .375rem .75rem;">
-                                    <select name="members" id="members" class="form-control form-select selectpicker"
-                                        multiple data-live-search="true" style="display: none;">
+                                <div style="height: 150px; overflow-y: scroll; border: 1px solid #ced4da; border-radius: .25rem; padding: .375rem .75rem;">
+                                    <select name="members" id="members" class="form-control form-select selectpicker" multiple data-live-search="true" style="display: none;">
                                         <!-- The select is hidden because we are manually creating the checkboxes below -->
                                     </select>
                                     <!-- Manually created checkboxes inside the scrollable container -->
-                                    <?php foreach ($tableView as $view): ?>
+                                    <?php foreach ($tableView as $view) : ?>
                                         <div class="form-check user-checkbox employee-checkbox">
 
-                                            <input class="form-check-input" type="checkbox" name="checkbox"
-                                                value="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>"
-                                                id="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
-                                            <label class="form-check-label"
-                                                for="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
+                                            <input class="form-check-input" type="checkbox" name="checkbox" value="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>" id="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
+                                            <label class="form-check-label" for="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
                                                 <?php echo htmlspecialchars($view->full_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </label>
                                         </div>
@@ -223,9 +215,8 @@
                             <div data-mdb-input-init class="form-outline mb-4">
                                 <select name="platform" id="platform" name="platform" class="form-control form-select">
                                     <option disable select value="">Select Platform</option>
-                                    <?php foreach ($platforms as $platform): ?>
-                                        <option
-                                            value="<?php echo htmlspecialchars($platform->platform_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
+                                    <?php foreach ($platforms as $platform) : ?>
+                                        <option value="<?php echo htmlspecialchars($platform->platform_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
                                             <?php echo htmlspecialchars($platform->platform_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -235,8 +226,7 @@
 
                             <!-- Message input -->
                             <div data-mdb-input-init class="form-floating mb-4">
-                                <textarea class="form-control form-text" id="mess_desc" name="mess_desc"
-                                    rows="4"></textarea>
+                                <textarea class="form-control form-text" id="mess_desc" name="mess_desc" rows="4"></textarea>
                                 <label class="form-label" for="mess_desc">Message</label>
                             </div>
 
@@ -250,14 +240,13 @@
                             </div> -->
                             <!-- Submit button -->
                             <div class="modal-footer w-auto">
-                                <button type="button" class="btn btn-secondary w-100"
-                                    data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-secondary w-100" data-bs-dismiss="modal">Close</button>
                                 <button data-mdb-ripple-init type="submit" class="btn btn-primary w-100">Send</button>
                             </div>
                         </form>
                     </div>
                     <style>
-                        
+
                     </style>
                     <div class="col-md-5" id="meeting-participants">
                         <div>
@@ -301,8 +290,7 @@
             $controller->management();
             break;
 
-        case 'set/meeting':
-            ;
+        case 'set/meeting':;
             $controller->meeting();
             break;
 
@@ -314,9 +302,29 @@
             $controller->notificationView();
             break;
 
-        // case 'manage/reports/view':
-        //     $controller->reports();
-        //     break;
+            case 'dailyReport':
+                $controller->dailyreport();
+                break;
+    
+            case 'weeklyReport':
+                $controller->weeklyreport();
+                break;
+    
+            case 'biweeklyReport':
+                $controller->biweeklyreport();
+                break;
+    
+            case 'editProfile':
+                $controller->editProfileInformation();
+                break;
+    
+            case 'manageAdmin':
+                $controller->manageAdminAccess();
+                break;
+
+            // case 'manage/reports/view':
+            //     $controller->reports();
+            //     break;
 
         default:
             $controller->main();
