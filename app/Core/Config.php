@@ -8,21 +8,23 @@
  */
 function defineRoot() {
     if($_SERVER['SERVER_NAME'] == 'localhost') {
-        // database configuration
         $config = simplexml_load_file('../App.config');
-        define('DBNAME', $config->database->dbname);
-        define('DBHOST', $config->database->host);
-        define('DBUSER', $config->database->username);
-        define('DBKEY', $config->database->password);
-        define('PORT', $config->database->port);
-        define('ROOT', 'http://localhost/Time-Tracker/public/');
-        define('APP', 'http://localhost/Time-Tracker/app/');
+        define('DBNAME', $config->database->dbname ?? null);
+        define('DBHOST', $config->database->host ?? null);
+        define('DBUSER', $config->database->username ?? null);
+        define('DBKEY', $config->database->password ?? null);
+        define('PORT', $config->database->port ?? null);
+        define('ROOT', 'http://localhost/public/');
+        define('APP', 'http://localhost/app/');
     } else {
-        define('DBNAME', 'test');
-        define('DBHOST', 'localhost');
-        define('DBUSER', 'root');
-        define('DBKEY', '');
-        define('ROOT', 'http://www.website.com/public/');
+        $config = simplexml_load_file('../App.config');
+        define('DBNAME', $config->database->dbname ?? null);
+        define('DBHOST', $config->database->host ?? null);
+        define('DBUSER', $config->database->username ?? null);
+        define('DBKEY', $config->database->password ?? null);
+        define('PORT', $config->database->port ?? null);
+        define('ROOT', 'https://wheretomed.azurewebsites.net/public/');
+        define('APP', 'https://wheretomed.azurewebsites.net/app/');
     }
 }
 
@@ -37,7 +39,7 @@ function standardErrors()
  * We can use this for debugging purposes 
  */
 function TestingDebugger() {
-    define('DEBUG', true);
+    define('DEBUG', false);
 }
 
 /*

@@ -63,6 +63,7 @@ const notificationQueue = [];
     };
 
     window.onload = () => {
+      httpRequest();
       if (!localStorage.getItem('hasSeenNotification')) {
         httpRequest();
         localStorage.setItem('hasSeenNotification', true);

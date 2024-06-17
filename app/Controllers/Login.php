@@ -121,14 +121,16 @@ class Login extends Controller
             $_SESSION['popup_notif'] = $extract['notification'];
             define('KEY_PROMPT',  $keyVerify);
 
-            // PLEASE REVERT THIS LOGIC, THIS IS ONLY DONE FOR TESTING PURPOSES
+
+            // This is for hosting.
+            // Do not revert the URL.
             if($extract['admin'] === true) {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/Time-Tracker/public/admin']);
+                echo json_encode(['redirect' => '/public/admin']);
                 exit();
             } else {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/Time-Tracker/public']);
+                echo json_encode(['redirect' => '/public']);
                 exit();
             }
         } catch(Exception $e) {

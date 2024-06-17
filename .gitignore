@@ -36,9 +36,9 @@ Thumbs.db
 
 /App.config
 
-/Dockerfile
-/compose.yaml
-/.dockerignore
-/README.Docker.md
+# /Dockerfile
+# /compose.yaml
+# /.dockerignore
+# /README.Docker.md
 Report.view.txt
 Test.view.php
