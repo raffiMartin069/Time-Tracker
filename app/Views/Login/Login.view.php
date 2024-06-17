@@ -31,7 +31,7 @@
       </div>
       <!-- ID input -->
       <div class="form-outline mb-4 position-relative">
-        <input type="number" id="idNumber" name="idNumber" class="form-control" placeholder="Employee I.D." />
+        <input type="text" id="idNumber" name="idNumber" class="form-control" placeholder="Employee I.D." />
         <img id="login-img" src="<?php echo ROOT?>assets/img/login/person.png" alt="..." style="
               max-width: 1.3rem;
               position: absolute;
@@ -79,6 +79,7 @@
   </div>
   <script src="<?php echo ROOT?>node_modules/jquery/dist/jquery.min.js"></script>
   <script src="<?php echo ROOT?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
-  <script src="<?php echo ROOT?>scripts/login/login.js"></script>
+  <script defer src="<?php echo ROOT?>scripts/login/login.js"></script>
+  <script defer type="module" src="<?php echo ROOT?>scripts/login/fetch.js"></script>
 </body>
 </html>

@@ -1,0 +1,67 @@
+.search{
+    position: relative;     
+    }
+
+    .search input{
+     height: 60px;
+     text-indent: 25px;
+     border: 2px solid #d6d4d4;
+    }
+
+
+    .search input:focus{
+     box-shadow: none;
+     border: 2px solid hsl(166, 79%, 42%);
+    }
+
+    .search .fa-search{
+     position: absolute;
+     top: 20px;
+     left: 16px;
+    }
+
+    .search button{
+     position: absolute;
+     top: 5px;
+     right: 5px;
+     height: 50px;
+     width: 110px;
+     background: hsl(166, 79%, 42%);
+    }
+
+    .gray {
+        filter: grayscale(100%);
+    }
+
+    @media only screen and (min-width:1024px) {
+        .filter-width {
+            width: 23% !important;
+        }
+    }
+
+    @media only screen and (min-width:1440px) {
+        .filter-width {
+            width: 11% !important;
+        }
+    }
+
+    .option-pane {
+        transition: all 0.3s ease-in-out;
+    }
+    
+    .option-pane:hover {
+        color: #FFF !important;
+        background: #3B9FD8;
+    }
+
+    .option-pane:active {
+        background: #29729c; /* Change this to the desired background color */
+    }
+
+    .filter-hover {
+        transition: all 0.3s ease-in-out;
+    }
+    .filter-hover:hover {
+        color: #FFF !important;
+        background: #3B9FD8 !important;
+    }

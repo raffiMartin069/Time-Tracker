@@ -1,7 +1,9 @@
 <?php
 require '../Core/Model.php';
 
-class User extends Model {
+class User {
+
+    use Model;
 
     protected $table = 'Account';
     protected $allowedColumns = [

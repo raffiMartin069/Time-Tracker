@@ -1,42 +1,56 @@
-$(document).ready(function() {
+document.addEventListener("DOMContentLoaded", () => {
+  hideView();
+  show();
+  hide();
+  // regEx();
+});
 
-  // basic hide and view of password.
-  // it is important to note that this is not tide to a password field which would reveal a text.
-  $("#view").hide();
-  $("#view-pass").on("click", function() {
-      $(this).hide();
-      $("#view").show();
+// initial state should be hidden
+const hideView = () => {
+  const view = document.getElementById("view");
+  view.hidden = true;
+};
+
+// show when toggled
+const show = () => {
+  const view = document.getElementById("view-pass");
+  view.addEventListener("click", () => {
+    view.hidden = true;
+    document.getElementById("view").hidden = false;
+    let password = document.getElementById("pass");
+    password = password.setAttribute("type", "text");
   });
+};
 
-  $("#view").on("click", function() {
-      $(this).hide();
-      $("#view-pass").show();
+// hide when toggled
+const hide = () => {
+  const view = document.getElementById("view");
+  view.addEventListener("click", () => {
+    view.hidden = true;
+    document.getElementById("view-pass").hidden = false;
+    let password = document.getElementById("pass");
+    password = password.setAttribute("type", "password");
   });
-  
-  // RegEx does not allow any characters other than numbers to be inputted.
-  // Though type number can be added to the input field, it is not recommended as it can cause issues with the input field.
-  // This function is used to suppress any characters that are not numbers.
-  const restrictToNumbers = () => {
-    $('#idNumber').on('input', function() {
-      this.value = this.value.replace(/[^0-9]/g, '');
-    });
-  }
+}
 
 
-  // Modify alert when user inputs the data.
-  const buttonClick = () => {
-    $('#submitBtn').on('click', (e) => {
-      e.preventDefault();
-      Swal.fire({
-        title: "Signed In",
-        text: "Welcome!",
-        icon: "success"
-      });
-    });
-  }
 
-  // Call the function to apply the restriction
-  restrictToNumbers();
-  buttonClick();
-  
-})
+//  const regEx = () => {
+//   const id = document.getElementById("idNumber");
+
+//   id.addEventListener("input", (event) => {
+//     const input = event.target;
+//     const value = input.value;
+
+//     // Create a regular expression to match allowed characters (digits and dashes)
+//     const regex = /^[0-9-]*$/;
+
+//     if (!regex.test(value)) {
+//       // If the value contains invalid characters, remove them
+//       input.value = value.replace(/[^0-9-]/g, "");
+
+//       // Move the cursor to the end of the input
+//       input.setSelectionRange(input.value.length, input.value.length);
+//     }
+//   });
+// }

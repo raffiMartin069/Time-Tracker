@@ -1,0 +1,16 @@
+{
+    "name": "rafael/public",
+    "autoload": {
+        "psr-4": {
+            "Rafael\\Public\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Rafael"
+        }
+    ],
+    "require": {
+        "setasign/fpdf": "^1.8"
+    }
+}

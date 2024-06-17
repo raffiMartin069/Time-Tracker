@@ -1,0 +1,19 @@
+.notification-bell {
+    position: relative;
+    /* Ensure the bell icon is the reference point for the dot */
+}
+
+.notification-bell::after {
+    content: "";
+    position: absolute;
+    top: -1px;
+    /* Adjust the value to move the dot above the bell */
+    right: -3px;
+    /* Adjust the value as needed to position the dot horizontally */
+    width: 10px;
+    /* Size of the dot */
+    height: 10px;
+    /* Size of the dot */
+    background-color: red;
+    border-radius: 50%;
+}

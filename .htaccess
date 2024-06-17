@@ -1,0 +1,8 @@
+RewriteEngine On
+# Redirect all traffic to the public directory
+RewriteRule ^(.*)$ public/$1 [L,QSA]
+
+<FilesMatch "\.(gitignore|dockerignore|config|yaml|md)$|Dockerfile">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

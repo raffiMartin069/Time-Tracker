@@ -11,6 +11,9 @@ function requirements() {
     require 'Model.php';
     require 'Controller.php';
     require 'App.php';
+    require 'SQLoader.php';
+    require __DIR__.'/../Utilities/ExceptionHandler.php';
+    require __DIR__.'/../Utilities/Sanitation.php';
 }
 
 requirements();
