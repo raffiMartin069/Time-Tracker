@@ -1,21 +1,55 @@
 <?php
-
 require_once __DIR__ . "/../Core/Controller.php";
 require_once __DIR__ . "/../Models/DailyReportModel.php";
 require_once __DIR__ . '/../Models/WeeklyReportModel.php';
 require_once __DIR__ . '/../Models/BiweeklyReportModel.php';
 require_once __DIR__ . '/../Models/SettingsModel.php';
 require_once __DIR__ . '/../Helpers/Sanitation.php';
+require_once __DIR__. '/../Models/EmployeeDailyReportModel.php';
+require_once __DIR__ . '/Admin.php';
 
 
 class Employee extends Controller
 {
-
     use Model;
+    // This is used to create a single instance of the admin class in order to reuse some of its methods.
+    protected $admin_call;
+
+    protected function employeeRoute()
+    {
+        return [
+            '/Time-Tracker/public/employee?page=dashboard',
+            '/Time-Tracker/public/employee?page=dailyReport',
+            '/Time-Tracker/public/employee?page=settings',
+            '/Time-Tracker/public/employee?page=employee/notification/view',
+            '/Time-Tracker/public/employee',
+        ];
+    }
+
+    private function routeValidation()
+    {
+        foreach ($this->employeeRoute() as $route) {
+            if ($_SERVER['REQUEST_URI'] === $route) {
+                $this->checkEmployee();
+            }
+        }
+    }
+
+    public function __construct()
+    {
+        $this->routeValidation();
+        // $this->checkEmployee();
+        /**
+         * This is the constructor of the Employee controller.
+         * It initializes the Admin class to call the main method.
+         * This is to serve the dashboard contents specifically for employee.
+         */
+        $this->admin_call = new Admin();
+    }
 
     public function index()
     {
-        $_SESSION["UID"] = 2;
+        $_SESSION["userId"];
         $this->view('Shared/sidenav/Employee');
     }
 
@@ -23,32 +57,32 @@ class Employee extends Controller
     {
         $results = [];
         foreach ($data as $row) {
+            // Check for each property's existence before accessing it
             $results[] = [
                 'DAILY_ID' => property_exists($row, 'daily_id') ? $row->daily_id : null,
-                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
                 'DATE' => property_exists($row, 'date') ? $row->date : null,
                 'CLOCK_IN' => property_exists($row, 'clock_in') ? $row->clock_in : null,
+                'CLOCK_OUT' => property_exists($row, 'clock_out') ? $row->clock_out : null,
                 'BREAK_IN' => property_exists($row, 'break_in') ? $row->break_in : null,
                 'BREAK_OUT' => property_exists($row, 'break_out') ? $row->break_out : null,
-                'DURATION' => property_exists($row, 'duration') ? $row->duration : null,
-                'CLOCK_OUT' => property_exists($row, 'clock_out') ? $row->clock_out : null,
                 'HRS_WORKED' => property_exists($row, 'hrs_worked') ? $row->hrs_worked : null,
-                // 'APPR_STATUS' => property_exists($row, 'appr_status') ? $row->appr_status : null,
-                // 'ACKNOWLEDGED_BY' => property_exists($row, 'acknowledged_by') ? $row->acknowledged_by : null,
+                'DURATION' => property_exists($row, 'duration') ? $row->duration : null,
+                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
             ];
         }
         return $results;
     }
 
+
     public function dailyreport()
     {
         try {
-            $data = $this->Get($_SESSION["UID"], 'get_daily_report_table');
+            $data = $this->Get($_SESSION["userId"], 'get_daily_report_table');
             $results = $this->ArrangeResults($data);
 
             $reportModels = [];
             foreach ($results as $result) {
-                $reportModels[] = new DailyReportModel($result);
+                $reportModels[] = new EmployeeDailyReportModel($result);
             }
 
             $this->view('Employee/DailyReport', [
@@ -79,7 +113,7 @@ class Employee extends Controller
     public function weeklyreport()
     {
         try {
-            $data = $this->Get($_SESSION["UID"], 'get_weekly_report_table');
+            $data = $this->Get($_SESSION["userId"], 'get_weekly_report_table');
             $results = $this->ArrangeWeeklyResults($data);
 
             $reportModels = [];
@@ -157,7 +191,7 @@ class Employee extends Controller
     public function biweeklyreport()
     {
         try {
-            $data = $this->Get($_SESSION["UID"], 'get_bi_weekly_report_table');
+            $data = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
             $results = $this->ArrangeBiweeklyResults($data);
 
             $reportModels = [];
@@ -211,25 +245,13 @@ class Employee extends Controller
         }
     }
 
+    /**
+     * This method is a copy of the main method in the Admin controller.
+     * The purpose is to serve the dashboard contents specifically for employee.
+     */
     public function main()
     {
-        try {
-            // id should be replaced with id stored in a session.
-            // in this way we can identify who the user was.
-            $data = $this->Get($_SESSION["UID"], 'get_daily_report_table');
-            $results = $this->ArrangeResults($data);
-
-            $reportModels = [];
-            foreach ($results as $result) {
-                $reportModels[] = new DailyReportModel($result);
-            }
-
-            $this->view('Admin/Main', [
-                'results' => $reportModels
-            ]);
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
+        $this->admin_call->main();
     }
 
     protected function ArrangePersonalInfo($data)
@@ -253,7 +275,7 @@ class Employee extends Controller
     public function settings()
     {
         try {
-            $data = $this->GetInfo($_SESSION["UID"], 'employee');
+            $data = $this->Get($_SESSION["userId"], 'employee');
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
@@ -280,7 +302,7 @@ class Employee extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
 
             $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
 
@@ -327,10 +349,10 @@ class Employee extends Controller
             ];
 
             $sanitized_data = [
-                'f_name' => Sanitation::strSanitation($data['f_name']),
-                'm_name' => Sanitation::strSanitation($data['m_name']),
-                'l_name' => Sanitation::strSanitation($data['l_name']),
-                'birth_date' => Sanitation::strSanitation($data['birth_date']),
+                'f_name' => Sanitize::strSanitation($data['f_name']),
+                'm_name' => Sanitize::strSanitation($data['m_name']),
+                'l_name' => Sanitize::strSanitation($data['l_name']),
+                'birth_date' => Sanitize::strSanitation($data['birth_date']),
                 'emp_id' => Sanitation::intSanitation($data['emp_id'])
             ];
 
@@ -391,9 +413,9 @@ class Employee extends Controller
             ];
 
             $sanitized_data = [
-                'curr_password' => Sanitation::strSanitation($data['curr_password']),
-                'new_password' => Sanitation::strSanitation($data['new_password']),
-                'emp_id' => Sanitation::intSanitation($data['emp_id'])
+                'curr_password' => Sanitize::strSanitation($data['curr_password']),
+                'new_password' => Sanitize::strSanitation($data['new_password']),
+                'emp_id' => Sanitize::intSanitation($data['emp_id'])
             ];
 
             if ($sanitized_data['emp_id'] === null) {
@@ -443,8 +465,8 @@ class Employee extends Controller
             ];
 
             $sanitized_data = [
-                'email' => Sanitation::emailSanitation($data['email']),
-                'ecn' => Sanitation::strSanitation($data['ecn']),
+                'email' => Sanitize::emailSanitation($data['email']),
+                'ecn' => Sanitize::strSanitation($data['ecn']),
                 'emp_id' => Sanitation::intSanitation($data['emp_id'])
             ];
 
@@ -490,5 +512,18 @@ class Employee extends Controller
             echo json_encode(['error' => 'Method not allowed.']);
         }
     }
-  
+
+    private function employeeNotificationViewTable()
+    {
+        $notif_array = $this->fetchAllEmployeeNotification($_SESSION['userId']);
+        return $notif_array;
+    }
+
+    public function employeeNotificationView()
+    {
+        $notif_array = $this->employeeNotificationViewTable();
+        $this->view('Employee/EmployeeNotification', [
+            'tableView' => $notif_array
+        ]);
+    }
 }

@@ -151,7 +151,5 @@
 </script>
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/dashboard.js"></script>
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/events.js"></script>
-<script defer type="module" src="<?= ROOT ?>scripts/Admin/notification.js"></script>
 </body>
-
 </html>

@@ -62,8 +62,8 @@
                                         <td><?php echo $report->getDURATION(); ?></td>
                                         <td><?php echo $report->getCLOCKOUT(); ?></td>
                                         <td><?php echo $report->getHRSWORKED(); ?></td>
-                                        <!-- <td><?php echo $report->getAPPRSTAT(); ?></td>
-                                        <td><?php echo $report->getACKNOWLEDGEDBY(); ?></td> -->
+                                        <td><?php // echo $report->getAPPRSTAT(); ?></td>
+                                        <td><?php // echo $report->getACKNOWLEDGEDBY(); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
