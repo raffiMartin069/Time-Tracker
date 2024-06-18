@@ -15,23 +15,13 @@ class Employee extends Controller
     // This is used to create a single instance of the admin class in order to reuse some of its methods.
     protected $admin_call;
 
-    protected function employeeRoute()
-    {
-        return [
-            '/Time-Tracker/public/employee?page=dashboard',
-            '/Time-Tracker/public/employee?page=dailyReport',
-            '/Time-Tracker/public/employee?page=settings',
-            '/Time-Tracker/public/employee?page=employee/notification/view',
-            '/Time-Tracker/public/employee',
-        ];
-    }
 
     private function routeValidation()
     {
-        foreach ($this->employeeRoute() as $route) {
-            if ($_SERVER['REQUEST_URI'] === $route) {
-                $this->checkEmployee();
-            }
+        $key = '/employee';
+        if (strpos($_SERVER['REQUEST_URI'], $key) !== false) {
+            // If it does, call the checkAdmin method to validate the user
+            $this->checkEmployee();
         }
     }
 
@@ -275,7 +265,7 @@ class Employee extends Controller
     public function settings()
     {
         try {
-            $data = $this->Get($_SESSION["userId"], 'employee');
+            $data = $this->GetInfo($_SESSION["userId"]);
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
@@ -345,7 +335,7 @@ class Employee extends Controller
                 'm_name' => $_POST['m_name'] ?? null,
                 'l_name' => $_POST['l_name'] ?? null,
                 'birth_date' => $_POST['birth_date'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [
@@ -409,7 +399,7 @@ class Employee extends Controller
             $data = [
                 'curr_password' => $_POST['curr_password'] ?? null,
                 'new_password' => $_POST['new_password'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [
@@ -461,7 +451,7 @@ class Employee extends Controller
             $data = [
                 'email' => $_POST['email'] ?? null,
                 'ecn' => $_POST['ecn'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [

@@ -31,26 +31,17 @@ class Admin extends Controller
      */
     private $sweep;
 
-    protected function adminRoutes()
-    {
-        return [
-            '/Time-Tracker/public/admin?page=dashboard',
-            '/Time-Tracker/public/admin?page=meeting/logs',
-            '/Time-Tracker/public/admin?page=break/logs',
-            '/Time-Tracker/public/admin?page=manage/employee',
-            '/Time-Tracker/public/admin?page=dailyReport',
-            '/Time-Tracker/public/admin?page=notification/view',
-            '/Time-Tracker/public/admin?page=editProfile',
-            '/Time-Tracker/public/admin',
-        ];
-    }
-
+    /**
+     * @method void routeValidation()
+     * This method will be used to validate the route.
+     * This will be used to validate the route before executing the program.
+     */
     private function routeValidation()
     {
-        foreach ($this->adminRoutes() as $route) {
-            if ($_SERVER['REQUEST_URI'] === $route) {
-                $this->checkAdmin();
-            }
+        $key = '/admin';
+        if (strpos($_SERVER['REQUEST_URI'], $key) !== false) {
+            // If it does, call the checkAdmin method to validate the user
+            $this->checkAdmin();
         }
     }
 
@@ -663,8 +654,8 @@ class Admin extends Controller
 
     public function test()
     {
-        
-        $results = $this->GetAll('admin');
+
+        $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
 
         // $this->Delete(240, 'employee', 'emp_id');
 
@@ -1175,7 +1166,7 @@ class Admin extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $wklyId = isset($_GET['wkly_id']) ? $_GET['wkly_id'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
             $password = isset($_GET['password']) ? $_GET['password'] : null;
 
             try {
@@ -1224,7 +1215,7 @@ class Admin extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $biWklyId = isset($_GET['bi_wkly_id']) ? $_GET['bi_wkly_id'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
             $password = isset($_GET['password']) ? $_GET['password'] : null;
 
             try {
@@ -1349,7 +1340,7 @@ class Admin extends Controller
     public function editProfileInformation()
     {
         try {
-            $data = $this->Get($_SESSION["userId"], 'employee');
+            $data = $this->GetInfo($_SESSION["userId"]);
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
@@ -1395,7 +1386,7 @@ class Admin extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
 
             $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
 
@@ -1554,7 +1545,7 @@ class Admin extends Controller
             $data = [
                 'email' => $_POST['email'] ?? null,
                 'ecn' => $_POST['ecn'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [
