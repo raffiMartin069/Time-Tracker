@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'rafael/public',
-        'pretty_version' => 'dev-main',
-        'version' => 'dev-main',
-        'reference' => '3ee83090a36ffd3133fce419bbaf8f47176dbe64',
+        'pretty_version' => 'dev-airielle',
+        'version' => 'dev-airielle',
+        'reference' => '668922de09b2bf5f1c01af7c9a0814f8e3c84c8a',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'rafael/public' => array(
-            'pretty_version' => 'dev-main',
-            'version' => 'dev-main',
-            'reference' => '3ee83090a36ffd3133fce419bbaf8f47176dbe64',
+            'pretty_version' => 'dev-airielle',
+            'version' => 'dev-airielle',
+            'reference' => '668922de09b2bf5f1c01af7c9a0814f8e3c84c8a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

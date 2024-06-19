@@ -64,7 +64,6 @@
   };
   
   window.onload = () => {
-    
     if (!localStorage.getItem('hasSeenNotification')) {
       httpRequest();
       localStorage.setItem('hasSeenNotification', true);
