@@ -370,7 +370,7 @@
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/meeting.js"></script>
-    <script defer type="module" src="<?= ROOT ?>scripts/Admin/notification.js"></script>
+    
 </body>
 
 </html>
