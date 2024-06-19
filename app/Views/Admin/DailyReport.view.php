@@ -10,8 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" /> 
     <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
+    
 </head>
 
 <body>
@@ -26,18 +28,18 @@
                     <h4 style="margin: 0;">Daily Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                         </a>
                     </div>
                 </div>
                 <div>
-                    <table class="table align-middle mb-0 bg-white text-center">
+                    <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                         <thead style="position: sticky; top: 0;">
                             <tr>
                                 <!-- <th>Daily ID</th> -->

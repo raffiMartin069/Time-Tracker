@@ -103,10 +103,12 @@
     if (isset($_GET['page'])) {
         $page = $_GET['page'];
     }
+    
     $controller = new Employee();
+    $adminController = new Admin();
     switch ($page) {
         case 'dashboard':
-            $controller->main();
+            $adminController->main();
             break;
 
         case 'dailyReport':
@@ -126,7 +128,7 @@
             break; 
 
         default:
-            $controller->main();
+            $adminController->main();
             break;
     }
     ?>

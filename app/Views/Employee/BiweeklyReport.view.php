@@ -27,13 +27,13 @@
                     <h4 style="margin: 0;">Biweekly Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                         </a>
                     </div>
 
@@ -43,7 +43,7 @@
 
                 </div>
                 <div>
-                    <table class="table align-middle mb-0 bg-white text-center">
+                    <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                         <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Biweekly ID</th>
@@ -81,8 +81,7 @@
     <!-- Modal -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <table class="summary-table table align-middle mb-0 bg-white text-center">
+             <table class="summary-table table align-middle mb-0 bg-white text-center">
                 <thead>
                     <tr> 
                         <th>Date</th>
@@ -104,8 +103,7 @@
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         $(document).ready(function() {
-            var modal = $("#myModal");
-            var closeModal = $(".close");
+            var modal = $("#myModal"); 
 
             $(".clickMyDots").click(function() {
                 var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
@@ -169,10 +167,6 @@
                         row.style.display = rowDisplay;
                     }
                 });
-            });
-
-            closeModal.click(function() {
-                modal.hide();
             });
 
             $(window).click(function(event) {

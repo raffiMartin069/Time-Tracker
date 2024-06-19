@@ -9,9 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/search.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
 
@@ -27,31 +27,31 @@
                     <h4 style="margin: 0;">Biweekly Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                         </a>
                     </div>
 
                     <div class="search">
                         <input type="number" id="searchInput" class="searchWeeklyId" placeholder="Search Biweekly ID">
                     </div>
-                    
+
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
-                    <thead style="position: sticky; top: 0;">
+                        <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Biweekly ID</th>
                                 <th>Date</th>
                                 <th>Biweekly Total</th>
                                 <th>Daily Stamps</th>
                                 <th>Tracker ID</th>
-                                <th>Employee Name</th> 
+                                <th>Employee Name</th>
                                 <th>Status</th>
                                 <th>Acknowledged By</th>
                             </tr>
@@ -63,9 +63,9 @@
                                         <td class="getmybiwklyid"><?php echo $report->getBIWKLYID(); ?></td>
                                         <td class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
                                         <td><?php echo $report->getTOTALHRS(); ?></td>
-                                         <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
+                                        <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
                                         <td class="getmyempid"><?php echo $report->getEMPID(); ?></td>
-                                        <td><?php echo $report->getEMPNAME(); ?></td> 
+                                        <td><?php echo $report->getEMPNAME(); ?></td>
                                         <td class="getmyapprstat"><?php echo $report->getAPPRSTAT(); ?></td>
                                         <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px;"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
                                     </tr>
@@ -85,10 +85,9 @@
     <!-- Modal -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <table class="summary-table table align-middle mb-0 bg-white text-center">
                 <thead>
-                    <tr> 
+                    <tr>
                         <th>Date</th>
                         <th>Clock In</th>
                         <th>Break In</th>
@@ -98,7 +97,7 @@
                         <th>Daily Total</th>
                     </tr>
                 </thead>
-                <tbody id="dailyReportsBody"> 
+                <tbody id="dailyReportsBody">
                 </tbody>
             </table>
         </div>
@@ -126,7 +125,6 @@
         $(document).ready(function() {
             var dailyReportsModal = $("#myModal");
             var passwordModal = $("#passwordModal");
-            var closeModal = $(".close");
 
             $(".clickMyDots").click(function() {
                 var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
@@ -201,7 +199,6 @@
                         var button = passwordModal.data('button');
                         button.closest('tr').find('.getmyapprstat').text("Approved");
                         button.text(data.acknowledgedBy);
-                        alert("You have successfully acknowledged this report!");
                         passwordModal.hide();
                     },
                     error: function(xhr, status, error) {
@@ -227,10 +224,8 @@
                 });
             });
 
-            closeModal.click(function() {
-                dailyReportsModal.hide();
-                passwordModal.hide();
-            });
+            dailyReportsModal.hide();
+            passwordModal.hide(); 
 
             $(window).click(function(event) {
                 if (event.target === dailyReportsModal[0]) {

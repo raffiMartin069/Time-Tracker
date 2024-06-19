@@ -27,13 +27,13 @@
                     <h4 style="margin: 0;">Weekly Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                         </a>
                     </div>
 
@@ -44,7 +44,7 @@
                 </div>
                 <div>
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
-                    <thead style="position: sticky; top: 0;">
+                        <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Weekly ID</th>
                                 <th>Date</th>
@@ -85,10 +85,9 @@
     <!-- Modal for daily reports -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <table class="summary-table table align-middle mb-0 bg-white text-center">
                 <thead>
-                    <tr> 
+                    <tr>
                         <th>Date</th>
                         <th>Clock In</th>
                         <th>Break In</th>
@@ -117,40 +116,7 @@
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
-    </div>
-
-    <!-- Error Modal -->
-    <!-- <div id="errorModal" class="modal modal-message modal-warning fade" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <i class="fa fa-warning"></i>
-                </div>
-                <div class="modal-title">Error</div>
-
-                <div class="modal-body">Your password is incorrect. Please try again.</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" id="closeError" data-dismiss="modal">OK</button>
-                </div>
-            </div>  
-        </div>  
-    </div> -->
-
-
-    <!-- Acknowledgement Modal -->
-    <!-- <div class="modal fade" id="acknowledgementModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div class="modal-body">
-                    Employee report has been successfully acknowledged!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="closeAcknowledgementModal" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
+    </div>  
 
     <!-- jQuery and Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -159,14 +125,11 @@
         $(document).ready(function() {
             var dailyReportsModal = $("#myModal");
             var passwordModal = $("#passwordModal");
-            // var errorModal = $("#errorModal");
-            // var acknowledgementModal = $("#acknowledgementModal");
-            var closeModal = $(".close");
-
+             
             $(".clickMyDots").click(function() {
                 var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
-                var empId = $(this).closest('tr').find('.getmyempid').text(); 
- 
+                var empId = $(this).closest('tr').find('.getmyempid').text();
+
                 $.ajax({
                     url: "Admin/fetchWeeklyDailyReports",
                     method: 'GET',
@@ -217,11 +180,6 @@
                     passwordModal.data('wkly-id', wklyId).data('button', $(this)).show();
                 } else {
                     alert("This report has already been approved and cannot be changed.");
-                    // $('.modal-body').replaceWith("This report has already been approved and cannot be changed.");
-                    // $('#errorModal').modal('show');
-                    // $('#closeError').click(function() {
-                    //     $('#errorModal').modal('hide');
-                    // })
                 }
             });
 
@@ -240,19 +198,10 @@
                     success: function(data) {
                         var button = passwordModal.data('button');
                         button.closest('tr').find('.getmyapprstat').text("Approved");
-                        button.text(data.acknowledgedBy);
-                        alert("You have successfully acknowledged this report!");
-                        // $('#acknowledgementModal').modal('show');
-                        // $('#closeAcknowledgementModal').click(function() {
-                        //     $('#acknowledgementModal').modal('hide');
-                        // })
+                        button.text(data.acknowledgedBy); 
                         passwordModal.hide();
                     },
-                    error: function(xhr, status, error) {
-                        // $('#modal-warning').modal('show');
-                        // $('#closeError').click(function() {
-                        //     $('#modal-warning').modal('hide');
-                        // })
+                    error: function(xhr, status, error) { 
                         alert("Failed to acknowledge this report. Please try again.");
                     }
                 });
@@ -275,12 +224,8 @@
                 });
             });
 
-            closeModal.click(function() {
-                dailyReportsModal.hide();
-                passwordModal.hide();
-                // errorModal.hide();
-                // acknowledgementModal.hide();
-            });
+            dailyReportsModal.hide();
+            passwordModal.hide();
 
             $(window).click(function(event) {
                 if (event.target === dailyReportsModal[0]) {
@@ -288,13 +233,7 @@
                 }
                 if (event.target === passwordModal[0]) {
                     passwordModal.hide();
-                }
-                // if (event.target === errorModal[0]) {
-                //     errorModal.hide();
-                // }
-                // if (event.target === acknowledgementModal[0]) {
-                //     acknowledgementModal.hide();
-                // }
+                } 
             });
         });
     </script>

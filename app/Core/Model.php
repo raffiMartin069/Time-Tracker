@@ -39,6 +39,18 @@ Trait Model {
         }
     }
 
+    public function checkId($id) {
+        try {
+            $checkExistsQuery = "SELECT COUNT(*) as count FROM employee WHERE emp_id = :emp_id";
+            $checkExistsParams = ['emp_id' => $id];
+            return $this->Query($checkExistsQuery, $checkExistsParams);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
     public function GetAll($table) {
         try {
             $query = "SELECT * FROM {$table};";

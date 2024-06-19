@@ -9,7 +9,7 @@
     overflow: auto;
     background-color: rgba(0, 0, 0, 0.4);
 }
-
+ 
 .modal-content {
     position: absolute;
     left: 50%;
@@ -23,23 +23,7 @@
     border-radius: 10px;
     box-sizing: border-box;
     background-color: #fff;
-}
-
-.close {
-    color: #aaa;
-    position: absolute;
-    top: 5px;
-    right: 10px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-.close:hover,
-.close:focus {
-    color: black;
-    text-decoration: none;
-}
+} 
 
 .summary-table {
     margin-top: .2rem;

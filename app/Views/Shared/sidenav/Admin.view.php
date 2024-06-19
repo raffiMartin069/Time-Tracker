@@ -24,7 +24,7 @@
 <body>
     <div>
         <div class="body-overlay"></div>
-        <div class="sidebar">
+        <div class="sidebar" style="z-index: 1000;">
             <div class="logo">
                 <h3 class="ms-3 mt-4 mb-4">
                     <img src="<?php ROOT ?>assets/img/Sidebar/logo.png" class="img-fluid ms-2" />
@@ -50,7 +50,7 @@
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
                         <a href="?page=break/logs" class="nav-link text-dark rounded d-flex align-items-center justify-content-start" style="height: 50px;">
-                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg" style="height: 20px;"></img>
+                            <img src="<?=ROOT?>node_modules/bootstrap-icons/icons/person-video3.svg" style="height: 20px;"></img>
                             <span class="nav-item-title ms-2 ">Break Logs</span>
                         </a>
                     </li>
@@ -102,11 +102,7 @@
                     </div>
                     <hr>
 
-                    <?php
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-
+                    <?php 
                     $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
                     $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
                     $getProfilePhoto = $defaultPhoto;
@@ -317,14 +313,14 @@
             case 'editProfile':
                 $controller->editProfileInformation();
                 break;
-    
+
             case 'manageAdmin':
                 $controller->manageAdminAccess();
-                break;
+                break; 
 
-            // case 'manage/reports/view':
-            //     $controller->reports();
-            //     break;
+            case 'recycleBin':
+                $controller->manageRecycleBin();
+                break;  
 
         default:
             $controller->main();
