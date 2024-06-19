@@ -36,6 +36,8 @@ Thumbs.db
 
 /App.config
 
+/public/vendor/
+
 /Dockerfile
 /compose.yaml
 /.dockerignore

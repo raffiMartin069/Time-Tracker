@@ -14,6 +14,7 @@ function requirements() {
     require 'SQLoader.php';
     require __DIR__.'/../Utilities/ExceptionHandler.php';
     require __DIR__.'/../Utilities/Sanitation.php';
+    
 }
 
 requirements();

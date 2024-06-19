@@ -3,6 +3,26 @@ Trait Model {
 
     use Database;
 
+    /**
+     * @param string $query
+     * Added this intended for employees display since there are no display in his/her dashboard
+     */
+    public function fetchAllEmployeeNotification($id)
+    {
+        try {
+            $query = "select * from get_meeting_notification(:id)";
+            $params = [
+                'id' => $id
+            ];
+            return $this->Query($query, $params);
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+
     public function Get($id, $table) { 
         try {
             // $this->validate($table);

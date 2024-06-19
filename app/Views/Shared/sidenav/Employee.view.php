@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,14 +9,18 @@
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+        rel="stylesheet" />
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="<?= ROOT ?>node_modules/bootstrap/dist/css/bootstrap.css" />
     <!-- External CSS -->
     <link rel="stylesheet" href="<?= ROOT ?>css/sidebar.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/admin.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/bell.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
 </head>
+
 <body>
     <div>
         <div class="body-overlay"></div>
@@ -24,7 +29,9 @@
                 <h3 class="ms-3 mt-4 mb-4">
                     <img src="<?php ROOT ?>assets/img/Sidebar/logo.png" class="img-fluid ms-2" />
                     <a>
-                        <span class="ms-2" style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
+                        <span class="ms-2"
+                            style="letter-spacing:0.05em; font-size: 20px; color: #5B5C70; font-weight: 600;">WhereTo<strong
+                                style="letter-spacing:0.05em;font-size: 20px; color: #299FF5; font-weight: 600;">Med</strong></span>
                     </a>
                 </h3>
             </div>
@@ -51,39 +58,50 @@
                     </li>
                 </div>
                 <div class="bottom-items">
+                    <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start"
+                        style="width: 270px; margin-left: 14px;">
+                        <ul class=" text-decoration-none list-unstyled">
+                            <li>
+                                <a href="?page=employee/notification/view" class="nav-link text-dark rounded pt-3"
+                                    style="height: 50px;">
+                                    <i class="bi bi-bell-fill notification-bell"></i>
+                                    <span class="nav-item-title ms-2" style="margin-top: -32px;">Notifications</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                     <hr>
                     <?php
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
+                        $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
+                        $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                        $getProfilePhoto = $defaultPhoto;
+                        if ($empId) {
+                            $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                            $returnParams = [':emp_id' => $empId];
+                            $returnData = $this->Query($returnQuery, $returnParams);
 
-                    $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
-                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
-                    $getProfilePhoto = $defaultPhoto;
-
-                    if ($empId) {
-                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
-                        $returnParams = [':emp_id' => $empId];
-                        $returnData = $this->Query($returnQuery, $returnParams);
-
-                        if (!empty($returnData) && !empty($returnData[0]->image)) {
-                            $getProfilePhoto = $returnData[0]->image;
-                        } 
-                    }
-                    ?> 
+                            if (!empty($returnData) && !empty($returnData[0]->image)) {
+                                $getProfilePhoto = $returnData[0]->image;
+                            }
+                        }
+                    ?>
                     <span class="nav-item-title fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img id="profile-photo" class="" src="<?php echo $getProfilePhoto; ?>" style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px" alt="Profile Picture">
+                        <img id="profile-photo" class="" src="<?php echo $getProfilePhoto; ?>"
+                            style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px"
+                            alt="Profile Picture">
                         <span class="nav-item-title">
                             <h6 class="mt-1 mb-0 ms-2"><?php echo $_SESSION['name'] ?? '' ?></h6>
                             <small class="ms-2 text-secondary"><?php echo $_SESSION['email'] ?? '' ?></small>
                         </span>
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
-                        <a href="#" class="nav-link text-center text-dark rounded" style="height: 50px;">
-                            <i class="lni lni-exit mt-2" style="margin-left: -15px;"></i>
-                            <span class="nav-item-title ms-2">Logout</span>
-                        </a>
+                        <form action="Login/logout" method="post">
+                            <button type="submit" class="btn btn-primary shadow-sm text-center rounded w-100">
+                                <!-- <i class="lni lni-exit fs-4"></i> -->
+                                Logout
+                            </button>
+                        </form>
                     </li>
                 </div>
             </ul>
@@ -125,7 +143,11 @@
 
         case 'settings':
             $controller->settings();
-            break; 
+            break;
+
+        case 'employee/notification/view':
+            $controller->employeeNotificationView();
+            break;
 
         default:
             $adminController->main();
@@ -133,7 +155,8 @@
     }
     ?>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-     
+    <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 </body>

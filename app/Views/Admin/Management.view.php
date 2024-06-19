@@ -77,7 +77,7 @@
         <div>
             <div class="mx-2 my-4 rounded p-2 shadow" id="content-section">
                 <div class="d-flex">
-                    <div class="w-100 px-4 overflow-x-auto" style="height:45rem!important;">
+                    <div class="w-100 px-4 overflow-x-auto" style="height:43rem!important;">
                         <table class="table table-stripped align-middle mb-0 bg-white text-center">
                             <thead class="bg-light">
                                 <tr>
