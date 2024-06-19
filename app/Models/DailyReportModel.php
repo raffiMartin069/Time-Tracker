@@ -1,63 +1,42 @@
 <?php
 final class DailyReportModel
-
 {
-    private $DAILY_ID;
-    private $EMP_ID;
+    private $ID;
     private $DATE;
-    private $CLOCK_IN; 
+    private $CLOCK_IN;
+    private $CLOCK_OUT;
     private $BREAK_IN;
     private $BREAK_OUT;
-    private $CLOCK_OUT;
-    private $DURATION;
-    private $HRS_WORKED;  
-    // private $APPR_STATUS;
-    // private $ACKNOWLEDGED_BY;
+    private $HRS_WORKED;
+    private $MEETING_STATUS;
+    private $BREAK_STATUS;
 
     public function __construct($data) {
-        $this->DAILY_ID = $data['DAILY_ID'];
-        $this->EMP_ID = $data['EMP_ID'];
+        $this->ID = $data['ID'];
         $this->DATE = $data['DATE'];
         $this->CLOCK_IN = $data['CLOCK_IN'];
-        $this->BREAK_IN = $data['BREAK_IN'];
-        $this->BREAK_OUT = $data['BREAK_OUT'];
-        $this->DURATION = $data['DURATION'];
-        $this->CLOCK_OUT = $data['CLOCK_OUT'];    
+        $this->CLOCK_OUT = $data['CLOCK_OUT'];  
+        // $this->BREAK_IN = $data['BREAK_IN'];
+        // $this->BREAK_OUT = $data['BREAK_OUT'];
+        $this->BREAK_STATUS = $data['BREAK_STATUS'];
         $this->HRS_WORKED = $data['HRS_WORKED'];
-        // $this->APPR_STATUS = $data['APPR_STATUS'];
-        // $this->ACKNOWLEDGED_BY = $data['ACKNOWLEDGED_BY'];
-     }
-
-     /**
-     * @return mixed
-     */
-    public function getDAILYID()
-    {
-        return $this->DAILY_ID;
-    }
-
-    /**
-     * @param mixed $DAILY_ID
-     */
-    public function setDAILYID($DAILY_ID)
-    {
-        $this->DAILY_ID = $DAILY_ID;
+        $this->MEETING_STATUS = $data['MEETING_STATUS'];
     }
 
     /**
      * @return mixed
      */
-    public function getEMPID()
+    public function getID()
     {
-        return $this->EMP_ID;
+        return $this->ID;
     }
 
     /**
-     * @param mixed $EMP_ID
+     * @param mixed $ID
      */
-    public function setEMPID($EMP_ID)
+    public function setID($ID)
     {
-        $this->EMP_ID = $EMP_ID;
+        $this->ID = $ID;
     }
 
     /**
@@ -143,22 +122,6 @@ final class DailyReportModel
     /**
      * @return mixed
      */
-    public function getDURATION()
-    {
-        return $this->DURATION;
-    }
-
-    /**
-     * @param mixed $DURATION
-     */
-    public function setDURATION($DURATION)
-    {
-        $this->DURATION = $DURATION;
-    }
-
-    /**
-     * @return mixed
-     */
     public function getHRSWORKED()
     {
         return $this->HRS_WORKED;
@@ -172,35 +135,35 @@ final class DailyReportModel
         $this->HRS_WORKED = $HRS_WORKED;
     }
 
-      /**
+    /**
      * @return mixed
      */
-    // public function getAPPRSTAT()
-    // {
-    //     return $this->APPR_STATUS;
-    // }
- 
+    public function getMEETINGSTATUS()
+    {
+        return $this->MEETING_STATUS;
+    }
+
     /**
-     * @param mixed $APPR_STATUS
+     * @param mixed $MEETING_STATUS
      */
-    // public function setAPPRSTAT($APPR_STATUS)
-    // {
-    //     $this->APPR_STATUS = $APPR_STATUS;
-    // }
+    public function setMEETINGSTATUS($MEETING_STATUS)
+    {
+        $this->MEETING_STATUS = $MEETING_STATUS;
+    }
 
     /**
      * @return mixed
      */
-    // public function getACKNOWLEDGEDBY()
-    // {
-    //     return $this->ACKNOWLEDGED_BY;
-    // }
- 
+    public function getBREAKSTATUS()
+    {
+        return $this->BREAK_STATUS;
+    }
+
     /**
-     * @param mixed $ACKNOWLEDGED_BY
+     * @param mixed $BREAK_STATUS
      */
-    // public function setACKNOWLEDGEDBY($ACKNOWLEDGED_BY)
-    // {
-    //     $this->ACKNOWLEDGED_BY = $ACKNOWLEDGED_BY;
-    // }
+    public function setBREAKSTATUS($BREAK_STATUS)
+    {
+        $this->BREAK_STATUS = $BREAK_STATUS;
+    }
 }

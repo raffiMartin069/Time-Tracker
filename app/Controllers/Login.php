@@ -9,6 +9,38 @@ class Login extends Controller
 
     use AuthDAO;
 
+    public function logout()
+    {
+        if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
+            header('Content-Type: application/json');
+            throw new Exception("Invalid request method", 405);
+        }
+
+        $_SESSION = array();
+
+        // If it's desired to kill the session, also delete the session cookie.
+        // Note: This will destroy the session, and not just the session data!
+        if (ini_get("session.use_cookies")) {
+            $params = session_get_cookie_params();
+            setcookie(
+                session_name(),
+                '',
+                time() - 42000,
+                $params["path"],
+                $params["domain"],
+                $params["secure"],
+                $params["httponly"]
+            );
+        }
+
+
+        session_unset();
+        session_destroy();
+
+        header('Location: /Time-Tracker/public/login');
+        exit();
+    }
+
     public function index()
     {
         $this->view('Login/Login');
@@ -51,11 +83,11 @@ class Login extends Controller
 
     private function extractData($data)
     {
-        if(!isset($data) && empty($data)) {
+        if (!isset($data) && empty($data)) {
             throw new Exception("Something went wrong, please try again later", 404);
         }
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $id = $value->employee_id;
             $default_pass = $value->is_default;
             $isAdmin = $value->is_admin;
@@ -78,7 +110,7 @@ class Login extends Controller
     private function passwordVerify($pass)
     {
         $prompt = '';
-        if($pass === true) {
+        if ($pass === true) {
             $prompt = 'Please change your password';
         }
         return $prompt;
@@ -115,23 +147,23 @@ class Login extends Controller
             $_SESSION["userId"] = $extract['id'];
             $keyVerify = $this->passwordVerify($extract['pass']);
             $_SESSION["notification"] = $extract['message'];
-            $_SESSION['name'] = $extract['employee_name']; 
+            $_SESSION['name'] = $extract['employee_name'];
             $_SESSION['email'] = $extract['email'];
             $extract['admin'];
+            $_SESSION['role'] = $extract['admin'] === true ? 'admin' : 'employee';
             $_SESSION['popup_notif'] = $extract['notification'];
-            define('KEY_PROMPT',  $keyVerify);
+            define('KEY_PROMPT', $keyVerify);
 
-            // PLEASE REVERT THIS LOGIC, THIS IS ONLY DONE FOR TESTING PURPOSES
-            if($extract['admin'] === true) {
+            if ($extract['admin'] === true) {
                 header('Content-Type: application/json');
                 echo json_encode(['redirect' => '/Time-Tracker/public/admin']);
                 exit();
             } else {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/Time-Tracker/public']);
+                echo json_encode(['redirect' => '/Time-Tracker/public/employee']);
                 exit();
             }
-        } catch(Exception $e) {
+        } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code($e->getCode());
             echo json_encode(['error' => $e->getMessage()]);

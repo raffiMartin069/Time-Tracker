@@ -95,7 +95,7 @@
                         <?php echo htmlspecialchars($_SESSION["userId"] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                 </div>
-                <div>
+                <div class="w-100 px-4 overflow-x-auto" style="height:43rem!important;">
                     <table class="table table-stripped align-middle mb-0 bg-white text-center" >
                         <thead class="bg-light" >
                             <tr class="table-row" >
@@ -153,5 +153,4 @@
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/events.js"></script>
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/notification.js"></script>
 </body>
-
 </html>

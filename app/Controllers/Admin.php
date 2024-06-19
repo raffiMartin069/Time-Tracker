@@ -9,12 +9,13 @@ require_once __DIR__ . "/../Models/ShiftModel.php";
 require_once __DIR__ . "/../DAO/AdminDAO.php";
 require_once __DIR__ . '/../Utilities/PDFUtility.php';
 require_once __DIR__ . '/../Utilities/ExceptionHandler.php';
+require_once __DIR__ . "/../Models/DailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllDailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllWeeklyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllBiweeklyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllSettingsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageAdminModel.php";
-require_once __DIR__ . '/../Helpers/Sanitation.php'; 
+require_once __DIR__ . '/../Helpers/Sanitation.php';
 
 
 class Admin extends Controller
@@ -22,6 +23,34 @@ class Admin extends Controller
 
     use Model;
     use AdminDAO;
+
+    /**
+     * @var ExceptionHandler
+     * This is a global scope variable that will be used to handle exceptions.
+     * This is a utility class that will be used clean handled exceptions before sending to the client side.
+     */
+    private $sweep;
+
+    /**
+     * @method void routeValidation()
+     * This method will be used to validate the route.
+     * This will be used to validate the route before executing the program.
+     */
+    private function routeValidation()
+    {
+        $key = '/admin';
+        if (strpos($_SERVER['REQUEST_URI'], $key) !== false) {
+            // If it does, call the checkAdmin method to validate the user
+            $this->checkAdmin();
+        }
+    }
+
+    public function __construct()
+    {
+        $this->routeValidation();
+        $this->sweep = new ExceptionHandler();
+    }
+
 
     private function sanitizeUpdateEmployeePosition($data)
     {
@@ -71,7 +100,7 @@ class Admin extends Controller
         // reuse this method
         $this->prepareUpdateEmployeeChecks($data);
 
-        
+
         $arr = [];
         foreach ($data as $key => $value) {
             $arr[$key] = $value;
@@ -82,7 +111,7 @@ class Admin extends Controller
 
         $work_id = $cleaned_data[1];
         $emp_id = $cleaned_data[0];
-        
+
 
         // this method should be changed.
         $result = $this->addUpdatePositionDB($work_id, $emp_id);
@@ -100,7 +129,7 @@ class Admin extends Controller
         if (empty($data)) {
             throw new Exception('Please fill out all fields');
         }
-    } 
+    }
 
     private function prepareSanitizeSoftDelete($data)
     {
@@ -108,7 +137,7 @@ class Admin extends Controller
         try {
 
             $sanitized_data = $sanitize->intSanitation($data);
-         
+
             return $sanitized_data;
         } catch (Exception $e) {
             http_response_code(400);
@@ -140,7 +169,7 @@ class Admin extends Controller
 
     public function softDeleteEmployee()
     {
-        if($_SERVER["REQUEST_METHOD"] !== "POST") {
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             header("Content-Type: application/json");
             echo json_encode([
                 'status' => false,
@@ -155,7 +184,7 @@ class Admin extends Controller
 
         $arr = [];
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $arr[$key] = $value;
         }
 
@@ -231,7 +260,7 @@ class Admin extends Controller
 
         $this->prepareUpdateEmployeeChecks($data);
 
-        
+
         $arr = [];
         foreach ($data as $key => $value) {
             $arr[$key] = $value;
@@ -300,18 +329,6 @@ class Admin extends Controller
         $this->view('Admin/Notification', [
             'tableView' => $notif_array
         ]);
-    }
-
-    /**
-     * @var ExceptionHandler
-     * This is a global scope variable that will be used to handle exceptions.
-     * This is a utility class that will be used clean handled exceptions before sending to the client side.
-     */
-    private $sweep;
-
-    public function __construct()
-    {
-        $this->sweep = new ExceptionHandler();
     }
 
     private function validHttpMethod($method)
@@ -518,6 +535,7 @@ class Admin extends Controller
 
             ob_end_flush();
 
+
             $this->view('Admin/Main', [
                 'results' => $reportModels
             ]);
@@ -636,11 +654,12 @@ class Admin extends Controller
 
     public function test()
     {
-        $results = $this->GetAll('employee');
+
+        $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
 
         // $this->Delete(240, 'employee', 'emp_id');
 
-        $this->view('Test', [
+        $this->view('Admin/Test', [
             'results' => $results,
         ]);
     }
@@ -847,11 +866,11 @@ class Admin extends Controller
                 throw new Exception('Please fill out all fields');
             }
 
-            if($value === null) {
+            if ($value === null) {
                 throw new Exception('Please fill out all fields');
             }
 
-            if(!isset($value)) {
+            if (!isset($value)) {
                 throw new Exception('Please fill out all fields');
             }
         }
@@ -878,11 +897,11 @@ class Admin extends Controller
                 throw new Exception('Please fill out all fields');
             }
 
-            if(!isset($value)) {
+            if (!isset($value)) {
                 throw new Exception('Please fill out all fields');
             }
 
-            if($value === null) {
+            if ($value === null) {
                 throw new Exception('Please fill out all fields');
             }
 
@@ -1147,7 +1166,7 @@ class Admin extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $wklyId = isset($_GET['wkly_id']) ? $_GET['wkly_id'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
             $password = isset($_GET['password']) ? $_GET['password'] : null;
 
             try {
@@ -1196,7 +1215,7 @@ class Admin extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $biWklyId = isset($_GET['bi_wkly_id']) ? $_GET['bi_wkly_id'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
             $password = isset($_GET['password']) ? $_GET['password'] : null;
 
             try {
@@ -1233,7 +1252,7 @@ class Admin extends Controller
         } else {
             die();
         }
-    } 
+    }
     protected function ArrangeBiweeklyResults($data)
     {
         $results = [];
@@ -1321,7 +1340,7 @@ class Admin extends Controller
     public function editProfileInformation()
     {
         try {
-            $data = $this->GetInfo($_SESSION["UID"], 'employee');
+            $data = $this->GetInfo($_SESSION["userId"]);
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
@@ -1331,7 +1350,7 @@ class Admin extends Controller
 
             $this->view('Admin/Settings', [
                 'results' => $reportModels
-            ]); 
+            ]);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
@@ -1367,7 +1386,7 @@ class Admin extends Controller
 
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
 
             $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
 
@@ -1400,7 +1419,7 @@ class Admin extends Controller
         } else {
             die();
         }
-    } 
+    }
 
     public function UpdateSettingsGeneralInfo()
     {
@@ -1410,14 +1429,14 @@ class Admin extends Controller
                 'm_name' => $_POST['m_name'] ?? null,
                 'l_name' => $_POST['l_name'] ?? null,
                 'birth_date' => $_POST['birth_date'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [
-                'f_name' => Sanitation::strSanitation($data['f_name']),
-                'm_name' => Sanitation::strSanitation($data['m_name']),
-                'l_name' => Sanitation::strSanitation($data['l_name']),
-                'birth_date' => Sanitation::strSanitation($data['birth_date']),
+                'f_name' => Sanitize::strSanitation($data['f_name']),
+                'm_name' => Sanitize::strSanitation($data['m_name']),
+                'l_name' => Sanitize::strSanitation($data['l_name']),
+                'birth_date' => Sanitize::strSanitation($data['birth_date']),
                 'emp_id' => Sanitation::intSanitation($data['emp_id'])
             ];
 
@@ -1474,12 +1493,12 @@ class Admin extends Controller
             $data = [
                 'curr_password' => $_POST['curr_password'] ?? null,
                 'new_password' => $_POST['new_password'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [
-                'curr_password' => Sanitation::strSanitation($data['curr_password']),
-                'new_password' => Sanitation::strSanitation($data['new_password']),
+                'curr_password' => Sanitize::strSanitation($data['curr_password']),
+                'new_password' => Sanitize::strSanitation($data['new_password']),
                 'emp_id' => Sanitation::intSanitation($data['emp_id'])
             ];
 
@@ -1526,12 +1545,12 @@ class Admin extends Controller
             $data = [
                 'email' => $_POST['email'] ?? null,
                 'ecn' => $_POST['ecn'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
+                'emp_id' => $_SESSION["userId"] ?? null
             ];
 
             $sanitized_data = [
-                'email' => Sanitation::emailSanitation($data['email']),
-                'ecn' => Sanitation::strSanitation($data['ecn']),
+                'email' => Sanitize::emailSanitation($data['email']),
+                'ecn' => Sanitize::strSanitation($data['ecn']),
                 'emp_id' => Sanitation::intSanitation($data['emp_id'])
             ];
 
@@ -1577,5 +1596,4 @@ class Admin extends Controller
             echo json_encode(['error' => 'Method not allowed.']);
         }
     }
-
 }
