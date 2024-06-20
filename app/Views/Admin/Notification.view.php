@@ -32,7 +32,7 @@
     <div id="wrapper">
         <div class="px-2 pt-5">
             <div class="container">
-                <h4>Search Meeting Log</h4>
+                <h4>Notifications</h4>
             </div>
         </div>
         <div class="m-2 mt-3 rounded p-2 shadow-sm">
@@ -60,10 +60,10 @@
             </div>
         </noscript>
         <div>
-            <div class="mx-2 my-4 rounded p-2 shadow" id="content-section">
+            <div class="my-4 rounded p-2 shadow" id="content-section">
                 <div>
                     <div class="d-flex">
-                        <div class="w-100 px-4 overflow-x-auto border rounded" style="height:45rem!important;">
+                        <div class="w-100 overflow-x-auto border rounded" style="height:45rem!important;">
                             <table class="table align-middle mb-0 bg-white text-center">
                                 <thead class="bg-light">
                                     <tr class="table-row">

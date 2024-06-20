@@ -61,7 +61,7 @@
   flex-wrap: wrap;
 }
 
-.btn {
+/* .btn {
   width: 3rem;
   height: 2rem;
   border: none;
@@ -70,7 +70,7 @@
   display: inline-flex;
   justify-content: center;
   align-items: center;
-}
+} */
 
 .tabs {
   display: flex;

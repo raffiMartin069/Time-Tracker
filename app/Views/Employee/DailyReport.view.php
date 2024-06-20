@@ -32,7 +32,7 @@
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 7.3rem !important;">Bi-weekly</button>
                         </a>
                     </div>
                 </div>
@@ -47,8 +47,6 @@
                                 <th>Break Duration</th>
                                 <th>Clock Out</th>
                                 <th>Daily Total</th>
-                                <!-- <th>Status</th>
-                                <th>Acknowledged By</th> -->
                             </tr>
                         </thead>
                         <tbody>
@@ -78,6 +76,7 @@
 
     <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="<?= ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </body>
 

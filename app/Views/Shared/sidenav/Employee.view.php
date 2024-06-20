@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WTN Time Tracker</title>
+    <link rel="icon" type="image/x-icon" href="<?php ROOT ?>assets/img/login/logo.png">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -97,7 +98,7 @@
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
                         <form action="Login/logout" method="post">
-                            <button type="submit" class="btn btn-primary shadow-sm text-center rounded w-100">
+                            <button type="submit" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
                                 <!-- <i class="lni lni-exit fs-4"></i> -->
                                 Logout
                             </button>

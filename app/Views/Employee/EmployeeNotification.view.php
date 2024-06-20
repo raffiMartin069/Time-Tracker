@@ -32,7 +32,7 @@
     <div id="wrapper">
         <div class="px-2 pt-5">
             <div class="container">
-                <h4>Search Meeting Log</h4>
+                <h4>Notifications</h4>
             </div>
         </div>
         <div class="m-2 mt-3 rounded p-2 shadow-sm">

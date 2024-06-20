@@ -33,7 +33,7 @@
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 7.3rem !important;">Bi-weekly</button>
                         </a>
                     </div>
 

@@ -1,20 +1,20 @@
 const extractData = (formData) => {
-    let jsonData = {};
-    formData.forEach((value, key) => {
-        jsonData[key] = value;
-    });
-    return jsonData;
-}
+  let jsonData = {};
+  formData.forEach((value, key) => {
+    jsonData[key] = value;
+  });
+  return jsonData;
+};
 
 const httpRequest = (formData) => {
-
   const url = "Admin/createMeeting";
   let jsonData = extractData(formData);
-  
+
   const data = {
     method: "POST",
-    headers: { // Correct placement of headers
-      "Content-Type": "application/json"
+    headers: {
+      // Correct placement of headers
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(jsonData), // Directly pass jsonData
   };
@@ -37,16 +37,21 @@ const httpRequest = (formData) => {
         window.location.reload(); // Reload the page after the alert is closed
       });
     })
-    .catch(
-        error => {
-            Swal.fire({
-                title: "Oops.",
-                text: error.toString().replace("Error: ", ""),
-                icon: "error",
-            });
-        }
-    );
+    .catch((error) => {
+      if (error.toString().includes("violates unique constraint")) {
+        Swal.fire({
+          title: "Oops.",
+          text: "A meeting with the same title already exists.",
+          icon: "warning",
+        });
+      } else {
+        Swal.fire({
+          title: "Oops.",
+          text: error.toString().replace("Error: ", ""),
+          icon: "error",
+        });
+      }
+    });
 };
-
 
 export default httpRequest;

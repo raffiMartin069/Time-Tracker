@@ -38,8 +38,8 @@
                         </div>
                         <div class="accordion-body" id="recoverEmployeeBody">
                             <form id="recoverForm">
-                                <div class="form-group"> 
-                                    <input type="number" placeholder="Enter employee ID" class="form-control" id="empIdRecover" required min="1">
+                                <div class="form-group">
+                                    <input type="number" placeholder="Enter Tracker ID" class="form-control" id="empIdRecover" required min="1">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Recover</button>
                                 <div id="recoverMessage" class="error-message"></div>
@@ -53,8 +53,8 @@
                         </div>
                         <div class="accordion-body" id="permanentDeleteBody">
                             <form id="permanentDeleteForm">
-                                <div class="form-group"> 
-                                    <input type="number" placeholder="Enter employee ID" class="form-control" id="empIdDelete" required min="1">
+                                <div class="form-group">
+                                    <input type="number" placeholder="Enter Tracker ID" class="form-control" id="empIdDelete" required min="1">
                                 </div>
                                 <button type="submit" class="btn btn-danger">Delete</button>
                                 <div id="deleteMessage" class="error-message"></div>
@@ -65,78 +65,9 @@
             </div>
         </div>
     </div>
-
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            function preventInvalidInputs(event) {
-                if (event.key === '.' || event.key === 'e' || event.key === '-' || event.key === '+') {
-                    event.preventDefault();
-                }
-            }
-
-            $('#empIdRecover').on('keypress', preventInvalidInputs);
-            $('#empIdDelete').on('keypress', preventInvalidInputs);
-
-
-            $('#recoverForm').submit(function(event) {
-                event.preventDefault();
-                var empId = $('#empIdRecover').val();
-
-                $.ajax({
-                    url: "Admin/RecoverAccount",
-                    method: 'POST',
-                    dataType: 'json',
-                    data: {
-                        empId: empId
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#recoverMessage').html('<p class="text-success">' + response.message + '</p>');
-                        } else {
-                            $('#recoverMessage').html('<p class="text-danger">' + response.message + '</p>');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        $('#recoverMessage').html('<p class="text-danger">Employee does not exists. Try again.</p>');
-                    }
-                });
-            });
-
-            $('#permanentDeleteForm').submit(function(event) {
-                event.preventDefault();
-                var empId = $('#empIdDelete').val();
-
-                $.ajax({
-                    url: "Admin/DeleteAccount",
-                    method: 'POST',
-                    dataType: 'json',
-                    data: {
-                        empId: empId
-                    },
-                    success: function(response) {
-                        if (response.success) {
-                            $('#deleteMessage').html('<p class="text-success">' + response.message + '</p>');
-                        } else {
-                            $('#deleteMessage').html('<p class="text-danger">' + response.message + '</p>');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Error:', error);
-                        $('#deleteMessage').html('<p class="text-danger">Employee does not exists. Try again.</p>');
-                    }
-                });
-            });
-
-            $('.accordion-header').click(function() {
-                $(this).next('.accordion-body').slideToggle();
-            });
-        });
-    </script>
-
+    <script defer type="module" src="<?= ROOT ?>scripts/Admin/admin_recyclebin.js"></script>
 </body>
-
 </html>

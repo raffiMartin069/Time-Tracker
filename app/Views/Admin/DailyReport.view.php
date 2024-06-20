@@ -19,7 +19,6 @@
 <body>
     <div id="wrapper">
         <div class="px-2" style="padding-top: 2.5rem;">
-            <div class="container"></div>
         </div>
         <div class="mx-2 my-4 rounded p-2 shadow reports-body" style="margin-top: -2rem !important;">
             <div class="container">
@@ -34,11 +33,11 @@
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 7.3rem !important;">Bi-weekly</button>
                         </a>
                     </div>
                 </div>
-                <div>
+                <div class="w-100 overflow-x-auto" style="height:53rem !important;">
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                         <thead style="position: sticky; top: 0;">
                             <tr>
@@ -81,8 +80,6 @@
             </div>
         </div>
     </div>
-
-    <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </body> 

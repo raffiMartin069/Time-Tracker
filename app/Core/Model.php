@@ -3,6 +3,24 @@ Trait Model {
 
     use Database;
 
+    public function getEmpStatus($id) {
+        try {
+            $query = "SELECT status FROM employee WHERE emp_id = :emp_id";
+            $params = ['emp_id' => $id];
+            $result = $this->Query($query, $params);
+    
+            if (isset($result[0]) && is_object($result[0])) {
+                return $result[0]->status;
+            } else {
+                return null;  
+            }
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
     /**
      * @param string $query
      * Added this intended for employees display since there are no display in his/her dashboard

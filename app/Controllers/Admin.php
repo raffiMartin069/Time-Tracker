@@ -1458,23 +1458,38 @@ class Admin extends Controller
             try {
                 $result = $this->checkId($empId);
 
-                if ($result[0]['count'] != 0) {
-                    $query = "UPDATE employee SET status = TRUE WHERE emp_id = :emp_id";
-                    $params = [
-                        'emp_id' => $empId
-                    ];
-                    $this->UpdateQuery($query, $params);
-                    $message = 'Employee account has been successfully recovered.';
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => $message]);
+                if (isset($result[0]) && is_object($result[0])) {
+                    if ($result[0]->count > 0) {
+                        $currentStatus = $this->getEmpStatus($empId);
+
+                        if ($currentStatus === false) {
+                            $query = "UPDATE employee SET status = TRUE WHERE emp_id = :emp_id";
+                            $params = [
+                                'emp_id' => $empId
+                            ];
+                            $this->UpdateQuery($query, $params);
+                            $message = 'Employee account has been successfully recovered.';
+                            header('Content-Type: application/json');
+                            echo json_encode(['success' => true, 'message' => $message]);
+                        } else {
+                            $message = 'Employee account cannot be recovered because it is not deleted.';
+                            header('Content-Type: application/json');
+                            echo json_encode(['success' => false, 'message' => $message]);
+                        }
+                    } else {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => false, 'message' => 'The Entered ID was not found.']);
+                    }
                 } else {
                     header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'message' => 'Entered ID does not exist.']);
-                    return;
+                    echo json_encode(['success' => false, 'message' => 'The Entered ID was not found.']);
                 }
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
             }
+        } else {
+            die();
         }
     }
 
@@ -1486,23 +1501,28 @@ class Admin extends Controller
             try {
                 $result = $this->checkId($empId);
 
-                if ($result[0]['count'] != 0) {
-                    $query = "DELETE FROM employee WHERE emp_id = :emp_id";
-                    $params = [
-                        'emp_id' => $empId
-                    ];
-                    $this->DeleteQuery($query, $params);
-                    $message = 'Employee account has been permanently deleted.';
-                    header('Content-Type: application/json');
-                    echo json_encode(['success' => true, 'message' => $message]);
+                if (isset($result[0]) && is_object($result[0])) {
+                    if ($result[0]->count > 0) {
+                        $query = "DELETE FROM employee WHERE emp_id = :emp_id AND status = FALSE";
+                        $params = [
+                            'emp_id' => $empId
+                        ];
+                        $this->DeleteQuery($query, $params);
+                        $message = 'Employee account has been permanently deleted.';
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => true, 'message' => $message]);
+                    } else {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => false, 'message' => 'The entered ID does not exist. It may have already been deleted.']);
+                    }
                 } else {
                     header('Content-Type: application/json');
-                    echo json_encode(['success' => false, 'message' => 'Entered ID does not exist.']);
-                    return;
+                    echo json_encode(['success' => false, 'message' => 'The Entered ID was not found.']);
                 }
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            } 
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+            }
         }
     }
 

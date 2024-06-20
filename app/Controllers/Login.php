@@ -15,11 +15,9 @@ class Login extends Controller
             header('Content-Type: application/json');
             throw new Exception("Invalid request method", 405);
         }
-
         $_SESSION = array();
-
-        // If it's desired to kill the session, also delete the session cookie.
-        // Note: This will destroy the session, and not just the session data!
+        session_unset();
+        session_destroy();
         if (ini_get("session.use_cookies")) {
             $params = session_get_cookie_params();
             setcookie(
@@ -32,12 +30,7 @@ class Login extends Controller
                 $params["httponly"]
             );
         }
-
-
-        session_unset();
-        session_destroy();
-
-        header('Location: /Time-Tracker/public/login');
+        header('Location: /deployment/Time-Tracker/public');
         exit();
     }
 
@@ -156,11 +149,11 @@ class Login extends Controller
 
             if ($extract['admin'] === true) {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/Time-Tracker/public/admin']);
+                echo json_encode(['redirect' => '/deployment/Time-Tracker/public/admin']);
                 exit();
             } else {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/Time-Tracker/public/employee']);
+                echo json_encode(['redirect' => '/deployment/Time-Tracker/public/employee']);
                 exit();
             }
         } catch (Exception $e) {

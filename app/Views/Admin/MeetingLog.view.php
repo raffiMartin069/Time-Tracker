@@ -60,10 +60,10 @@
             </div>
         </noscript>
         <div>
-            <div class="mx-2 my-4 p-2" id="content-section">
+            <div class="my-4" id="content-section">
                 <div class="container">
                     <div>
-                        <div class="w-100 px-4 overflow-x-auto border rounded" style="height:45rem!important;">
+                        <div class="w-100 overflow-x-auto rounded" style="height:45rem!important;">
                             <table class="table table-stripped align-middle mb-0 bg-white text-center">
                                 <thead class="bg-light">
                                     <tr>

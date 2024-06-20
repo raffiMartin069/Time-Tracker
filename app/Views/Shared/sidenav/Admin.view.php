@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 
@@ -6,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>WTN Time Tracker</title>
+    <link rel="icon" type="image/x-icon" href="<?php ROOT ?>assets/img/login/logo.png">
     <link rel="stylesheet" href="https://cdn.lineicons.com/4.0/lineicons.css" />
     <!-- Google fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -53,8 +53,9 @@
                         <a href="?page=meeting/logs"
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
-                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
-                                style="height: 20px;"></img>
+                            <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
+                            <!-- <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
+                                style="height: 20px;"></img> -->
                             <span class="nav-item-title ms-2 ">Meeting Logs</span>
                         </a>
                     </li>
@@ -62,8 +63,9 @@
                         <a href="?page=break/logs"
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
-                            <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
-                                style="height: 20px;"></img>
+                            <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
+                            <!-- <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
+                                style="height: 20px;" ></img> -->
                             <span class="nav-item-title ms-2 ">Break Logs</span>
                         </a>
                     </li>
@@ -80,21 +82,40 @@
                             <span class="nav-item-title ms-2">Manage Employee</span>
                         </a>
                     </li>
-                    <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
-                        <a href="?page=dailyReport" class="nav-link text-dark rounded" style="height: 50px;">
+                    <?php
+                    $pages = ['dailyReport', 'weeklyReport', 'biweeklyReport', 'editProfile', 'manageAdmin', 'recycleBin'];
+                    $showStartMeeting = true;
+                    foreach($pages as $page) {
+                        if (isset($_GET['page']) && $_GET['page'] === $page) {
+                            $showStartMeeting = false;
+                            break;
+                        }
+                    }
+                    
+                    ?>
+
+                    <!-- Reports list item -->
+                    <li class="nav-item mb-2 <?= $showStartMeeting ? '' : 'mb-4' ?>"
+                        style="width: 270px; margin-left: 14px;">
+                        <a href="?page=dailyReport" class="nav-link text-dark rounded" style="height: 50px;"
+                            id="reports">
                             <i class="lni lni-book mt-2" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2" style="margin-top: -32px;">Reports</span>
                         </a>
                     </li>
-                    <li class="nav-item mb-4" style="width: 270px; margin-left: 14px;">
-                        <a href="" class="nav-link text-dark rounded justify-content-start"
-                            style="height: 50px; display: flex; align-items: center; justify-content: flex-start;"
-                            data-bs-toggle="modal" data-bs-target="#startMeeting">
-                            <i class="bi bi-briefcase-fill"></i>
-                            <span class="nav-item-title ms-2" style="margin-top: 0;">Start a meeting</span>
-                        </a>
-                    </li>
-                    <hr />
+
+                    <?php if ($showStartMeeting): ?>
+                        <!-- Start a meeting list item -->
+                        <li class="nav-item mb-4" style="width: 270px; margin-left: 14px;">
+                            <a href="" class="nav-link text-dark rounded justify-content-start"
+                                style="height: 50px; display: flex; align-items: center; justify-content: flex-start;"
+                                data-bs-toggle="modal" data-bs-target="#startMeeting" id="meeting_start">
+                                <i class="bi bi-briefcase-fill"></i>
+                                <span class="nav-item-title ms-2" style="margin-top: 0;">Start a meeting</span>
+                            </a>
+                        </li>
+                    <?php endif; ?>
+                    <!-- <hr /> -->
                 </div>
                 <div class="bottom-items">
                     <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start"
@@ -103,13 +124,12 @@
                             <li>
                                 <a href="?page=notification/view" class="nav-link text-dark rounded pt-3"
                                     style="height: 50px;">
-                                        <i class="bi bi-bell-fill notification-bell"></i>
+                                    <i class="bi bi-bell-fill notification-bell"></i>
                                     <span class="nav-item-title ms-2" style="margin-top: -32px;">Notifications</span>
                                 </a>
                             </li>
                             <li class="nav-item mb-4 " style="width: 270px;">
-                                <a href="?page=editProfile" class="nav-link text-dark rounded"
-                                    style="height: 50px;">
+                                <a href="?page=editProfile" class="nav-link text-dark rounded" style="height: 50px;">
                                     <div style="display: flex; align-items: center;">
                                         <i class="lni lni-cog mt-2 fs-5 fw-semibold"></i>
                                         <span class="nav-item-title ms-2 mt-2">Settings</span>
@@ -152,8 +172,7 @@
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
                         <form action="Login/logout" method="post">
-                            <button type="submit" class="btn btn-primary shadow-sm rounded w-100">
-                                <!-- <i class="lni lni-exit fs-4"></i> -->
+                            <button type="submit" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
                                 Logout
                             </button>
                         </form>
@@ -356,21 +375,19 @@
             $controller->manageAdminAccess();
             break;
 
-        // case 'manage/reports/view':
-        //     $controller->reports();
-        //     break;
+        case 'recycleBin':
+            $controller->manageRecycleBin();
+            break;
     
         default:
             $controller->main();
             break;
     }
     ?>
-
     <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/meeting.js"></script>
-    
 </body>
 
 </html>

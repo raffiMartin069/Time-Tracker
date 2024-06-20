@@ -56,10 +56,10 @@
             </div>
         </noscript>
         <div>
-            <div class="mx-2 my-4 rounded p-2 shadow" id="content-section">
+            <div class="my-4 rounded p-2 shadow" id="content-section">
                 <div class="container">
                     <div class="d-flex">
-                        <div class="w-100 px-4 overflow-x-auto rounded" style="height:45rem!important;">
+                        <div class="w-100 overflow-x-auto rounded" style="height:45rem!important;">
                             <table class="table align-middle mb-0 bg-white text-center" >
                                 <thead class="bg-light">
                                     <tr>
