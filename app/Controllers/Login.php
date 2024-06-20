@@ -30,7 +30,7 @@ class Login extends Controller
                 $params["httponly"]
             );
         }
-        header('Location: /deployment/Time-Tracker/public');
+        header('Location: /public');
         exit();
     }
 
@@ -149,11 +149,11 @@ class Login extends Controller
 
             if ($extract['admin'] === true) {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/deployment/Time-Tracker/public/admin']);
+                echo json_encode(['redirect' => '/public/admin']);
                 exit();
             } else {
                 header('Content-Type: application/json');
-                echo json_encode(['redirect' => '/deployment/Time-Tracker/public/employee']);
+                echo json_encode(['redirect' => '/public/employee']);
                 exit();
             }
         } catch (Exception $e) {

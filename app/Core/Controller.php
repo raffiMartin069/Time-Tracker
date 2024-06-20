@@ -26,12 +26,12 @@ class Controller {
         if (isset($_SESSION["role"])) {
             // Redirect if the role is not admin
             if ($_SESSION["role"] !== "admin") {
-                header('Location: /deployment/Time-Tracker/public/employee');
+                header('Location: /public/employee');
                 exit(); // Ensure no further code is executed
             }
         } else {
             // Handle the case where "role" is not set
-            header('Location: /deployment/Time-Tracker/public'); // Redirect to login or appropriate page
+            header('Location: /public'); // Redirect to login or appropriate page
             exit();
         }
     }
@@ -48,19 +48,19 @@ class Controller {
         if (isset($_SESSION["role"])) {
             // Redirect if the role is not admin
             if ($_SESSION["role"] !== "employee") {
-                header('Location: /deployment/Time-Tracker/public/admin');
+                header('Location: /public/admin');
                 exit(); // Ensure no further code is executed
             }
         } else {
             // Handle the case where "role" is not set
-            header('Location: /deployment/Time-Tracker/public'); // Redirect to login or appropriate page
+            header('Location: /public'); // Redirect to login or appropriate page
             exit();
         }
     }
 
     public function checkLoggedIn() {
         if (!isset($_SESSION["userId"])) {
-            header('Location: /deployment/Time-Tracker/public');
+            header('Location: /public');
             exit();
         }
     }
