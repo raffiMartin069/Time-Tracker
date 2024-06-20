@@ -38,6 +38,42 @@ Trait Model {
         }
     }
 
+    public function checkId($id) {
+        try {
+            $checkExistsQuery = "SELECT COUNT(*) as count FROM employee WHERE emp_id = :emp_id";
+            $checkExistsParams = ['emp_id' => $id];
+            $result = $this->Query($checkExistsQuery, $checkExistsParams);
+            
+             if (!is_array($result)) {
+                return [];
+            }
+    
+            return $result;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function getEmpStatus($id) {
+        try {
+            $query = "SELECT status FROM employee WHERE emp_id = :emp_id";
+            $params = ['emp_id' => $id];
+            $result = $this->Query($query, $params);
+    
+            if (isset($result[0]) && is_object($result[0])) {
+                return $result[0]->status;
+            } else {
+                return null;  
+            }
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
     public function GetInfo($id) {
         try {
             $query = "
