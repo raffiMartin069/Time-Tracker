@@ -14,7 +14,7 @@ require_once __DIR__ . "/../Models/AdminModels/AllWeeklyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllBiweeklyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllSettingsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageAdminModel.php";
-require_once __DIR__ . '/../Helpers/Sanitation.php'; 
+require_once __DIR__ . '/../Helpers/Sanitation.php';
 
 
 class Admin extends Controller
@@ -71,7 +71,7 @@ class Admin extends Controller
         // reuse this method
         $this->prepareUpdateEmployeeChecks($data);
 
-        
+
         $arr = [];
         foreach ($data as $key => $value) {
             $arr[$key] = $value;
@@ -82,7 +82,7 @@ class Admin extends Controller
 
         $work_id = $cleaned_data[1];
         $emp_id = $cleaned_data[0];
-        
+
 
         // this method should be changed.
         $result = $this->addUpdatePositionDB($work_id, $emp_id);
@@ -100,7 +100,7 @@ class Admin extends Controller
         if (empty($data)) {
             throw new Exception('Please fill out all fields');
         }
-    } 
+    }
 
     private function prepareSanitizeSoftDelete($data)
     {
@@ -108,7 +108,7 @@ class Admin extends Controller
         try {
 
             $sanitized_data = $sanitize->intSanitation($data);
-         
+
             return $sanitized_data;
         } catch (Exception $e) {
             http_response_code(400);
@@ -140,7 +140,7 @@ class Admin extends Controller
 
     public function softDeleteEmployee()
     {
-        if($_SERVER["REQUEST_METHOD"] !== "POST") {
+        if ($_SERVER["REQUEST_METHOD"] !== "POST") {
             header("Content-Type: application/json");
             echo json_encode([
                 'status' => false,
@@ -155,7 +155,7 @@ class Admin extends Controller
 
         $arr = [];
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $arr[$key] = $value;
         }
 
@@ -231,7 +231,7 @@ class Admin extends Controller
 
         $this->prepareUpdateEmployeeChecks($data);
 
-        
+
         $arr = [];
         foreach ($data as $key => $value) {
             $arr[$key] = $value;
@@ -390,7 +390,6 @@ class Admin extends Controller
             echo json_encode(['error' => $e->getMessage()]);
             exit;
         }
-
     }
 
     public function index()
@@ -571,7 +570,6 @@ class Admin extends Controller
             echo $e->getMessage();
             return [];
         }
-
     }
 
     private function managementTable()
@@ -847,11 +845,11 @@ class Admin extends Controller
                 throw new Exception('Please fill out all fields');
             }
 
-            if($value === null) {
+            if ($value === null) {
                 throw new Exception('Please fill out all fields');
             }
 
-            if(!isset($value)) {
+            if (!isset($value)) {
                 throw new Exception('Please fill out all fields');
             }
         }
@@ -878,11 +876,11 @@ class Admin extends Controller
                 throw new Exception('Please fill out all fields');
             }
 
-            if(!isset($value)) {
+            if (!isset($value)) {
                 throw new Exception('Please fill out all fields');
             }
 
-            if($value === null) {
+            if ($value === null) {
                 throw new Exception('Please fill out all fields');
             }
 
@@ -958,15 +956,12 @@ class Admin extends Controller
             ];
 
             return $sanitized;
-
-
         } catch (Exception $e) {
             http_response_code(400);
             header("Content-Type: application/json");
             echo json_encode(['error' => $e->getMessage()]);
             exit;
         }
-
     }
 
 
@@ -1233,7 +1228,7 @@ class Admin extends Controller
         } else {
             die();
         }
-    } 
+    }
     protected function ArrangeBiweeklyResults($data)
     {
         $results = [];
@@ -1331,40 +1326,233 @@ class Admin extends Controller
 
             $this->view('Admin/Settings', [
                 'results' => $reportModels
-            ]); 
-        } catch (Exception $e) {
-            echo $e->getMessage();
-        }
-    }
-
-    public function manageAdminAccess()
-    {
-        try {
-            $data = $this->GetAll('get_non_admin_employees()');
-            $results = $this->ArrangePersonalInfo($data);
-
-            $reportModels = [];
-            foreach ($results as $result) {
-                $reportModels[] = new AllManageAdminModel($result);
-            }
-
-            $this->view('Admin/ManageAdmin', [
-                'results' => $reportModels
             ]);
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
+    protected function ArrangeManageAccess($data)
+    {
+        $results = [];
+        foreach ($data as $row) {
+            $results[] = [
+                'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'EMPLOYEE' => property_exists($row, 'employee') ? $row->employee : null,
+            ];
+        }
+        return $results;
+    }
+
+    public function manageAdminAccess()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            try {
+                $data = $this->GetAll('get_admin_employees()');
+                if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit;
+                }
+
+                $admins = $this->ArrangeManageAccess($data);
+
+                $adminModels = [];
+                foreach ($admins as $admin) {
+                    $adminModels[] = new AllManageAdminModel($admin);
+                }
+
+                $this->view('Admin/ManageAdmin', [
+                    'admins' => $adminModels
+                ]);
+            } catch (Exception $e) {
+                http_response_code(500);
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $empId = isset($_POST['empId']) ? $_POST['empId'] : [];
+                if (!is_array($empId)) {
+                    $empId = [$empId];
+                }
+                $empId = array_map('intval', $empId);
+
+                if (empty($empId)) {
+                    throw new Exception('No employee IDs provided');
+                }
+
+                $idsArray = implode(',', $empId);
+                $query = "SELECT remove_admins(ARRAY[" . $idsArray . "])";
+
+                $this->Query($query);
+
+                header("Content-Type: application/json");
+                echo json_encode(['success' => true]);
+            } catch (Exception $e) {
+                http_response_code(500);
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            } catch (PDOException $e) {
+                http_response_code(500);
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+            }
+        } else {
+            die();
+        }
+    }
+
+    public function manageRecycleBin()
+    {
+        try {
+            $data = $this->GetAll('get_admin_employees()');
+
+
+            $admins = $this->ArrangeManageAccess($data);
+
+            $adminModels = [];
+            foreach ($admins as $admin) {
+                $adminModels[] = new AllManageAdminModel($admin);
+            }
+
+            $this->view('Admin/RecycleBin', [
+                'admins' => $adminModels
+            ]);
+        } catch (Exception $e) {
+            echo "Error: " . $e->getMessage();
+        } catch (PDOException $e) {
+            echo "PDO Error: " . $e->getMessage();
+        }
+    }
+
+    public function RecoverAccount()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+            $empId = isset($_POST['empId']) ? $_POST['empId'] : null;
+
+            try {
+                $result = $this->checkId($empId);
+
+                 if (isset($result[0]) && is_object($result[0])) {
+                    if ($result[0]->count > 0) {
+                        $currentStatus = $this->getEmpStatus($empId);
+
+                        if ($currentStatus === false) {
+                            $query = "UPDATE employee SET status = TRUE WHERE emp_id = :emp_id";
+                            $params = [
+                                'emp_id' => $empId
+                            ];
+                            $this->UpdateQuery($query, $params);
+                            $message = 'Employee account has been successfully recovered.';
+                            header('Content-Type: application/json');
+                            echo json_encode(['success' => true, 'message' => $message]);
+                        } else {
+                            $message = 'Employee account cannot be recovered because it is not deleted.';
+                            header('Content-Type: application/json');
+                            echo json_encode(['success' => false, 'message' => $message]);
+                        }
+                     } 
+                    else {
+                        header('Content-Type: application/json');
+                        echo json_encode(['success' => false, 'message' => 'The Entered ID was not found.']);
+                    }
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'The Entered ID was not found.']);
+                }
+            } catch (Exception $e) {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+            }
+        } else {
+            die();  
+        }
+    }
+
+
+
+    public function DeleteAccount()
+{
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $empId = isset($_POST['empId']) ? $_POST['empId'] : null;
+
+        try {
+            // Assuming checkId method returns an array of objects with a 'count' property
+            $result = $this->checkId($empId);
+
+            if (isset($result[0]) && is_object($result[0])) {
+                if ($result[0]->count > 0) {
+                    $query = "DELETE FROM employee WHERE emp_id = :emp_id";
+                    $params = [
+                        'emp_id' => $empId
+                    ];
+                    $this->DeleteQuery($query, $params);
+                    $message = 'Employee account has been permanently deleted.';
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => true, 'message' => $message]);
+                } else {
+                    header('Content-Type: application/json');
+                    echo json_encode(['success' => false, 'message' => 'The entered ID does not exist. It may have already been deleted.']);
+                }
+            } else {
+                header('Content-Type: application/json');
+                echo json_encode(['success' => false, 'message' => 'The Entered ID was not found.']);
+            }
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);
+        }
+    }
+}
+
+
+    public function manageNoneAdminAccess()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+            try {
+                $data = $this->GetAll('get_non_admin_employees()');
+                $results = $this->ArrangeManageAccess($data);
+
+                header("Content-Type: application/json");
+                echo json_encode($results);
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
+            }
+        } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            try {
+                $empId = isset($_POST['empId']) ? $_POST['empId'] : [];
+                if (!is_array($empId)) {
+                    $empId = [$empId];
+                }
+                $empId = array_map('intval', $empId);
+
+                $idsArray = implode(',', $empId);
+                $query = "SELECT add_admins(ARRAY[" . $idsArray . "])";
+
+                $this->Query($query);
+
+                header("Content-Type: application/json");
+                echo json_encode(['success' => true]);
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
+            }
+        } else {
+            die();
+        }
+    }
+
     public function UpdateProfilePic()
     {
-
-        // if(!$result = $user->check_is_logged_in())
-        // {
-        //     header("Location:" . ROOT . "Login");
-        //     die();
-        // }
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
             $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
@@ -1400,7 +1588,7 @@ class Admin extends Controller
         } else {
             die();
         }
-    } 
+    }
 
     public function UpdateSettingsGeneralInfo()
     {
@@ -1456,15 +1644,12 @@ class Admin extends Controller
                     ]);
                 }
             } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+                echo "Error: " . $e->getMessage();
             } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
             }
         } else {
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed.']);
+            die();
         }
     }
 
@@ -1508,15 +1693,12 @@ class Admin extends Controller
                     ]);
                 }
             } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+                echo "Error: " . $e->getMessage();
             } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
             }
         } else {
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed.']);
+            die();
         }
     }
 
@@ -1566,16 +1748,12 @@ class Admin extends Controller
                     ]);
                 }
             } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+                echo "Error: " . $e->getMessage();
             } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
             }
         } else {
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed.']);
+            die();
         }
     }
-
 }
