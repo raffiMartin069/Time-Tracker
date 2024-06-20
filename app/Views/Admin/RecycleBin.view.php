@@ -38,10 +38,10 @@
                         </div>
                         <div class="accordion-body" id="recoverEmployeeBody">
                             <form id="recoverForm">
-                                <div class="form-group"> 
-                                    <input type="number" placeholder="Enter employee ID" class="form-control" id="empIdRecover" required min="1">
+                                <div class="form-group">
+                                    <input type="number" placeholder="Enter Tracker ID" class="form-control" id="empIdRecover" required min="1">
                                 </div>
-                                <button type="submit" class="btn btn-primary">Recover</button>
+                                <button type="submit" class="btn btn-primary" style="min-width: 6rem; padding-bottom: 2rem; border: none">Recover</button>
                                 <div id="recoverMessage" class="error-message"></div>
                             </form>
                         </div>
@@ -53,10 +53,10 @@
                         </div>
                         <div class="accordion-body" id="permanentDeleteBody">
                             <form id="permanentDeleteForm">
-                                <div class="form-group"> 
-                                    <input type="number" placeholder="Enter employee ID" class="form-control" id="empIdDelete" required min="1">
+                                <div class="form-group">
+                                    <input type="number" placeholder="Enter Tracker ID" class="form-control" id="empIdDelete" required min="1">
                                 </div>
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger" style="min-width: 6rem; padding-bottom: 2rem; border: none">Delete</button>
                                 <div id="deleteMessage" class="error-message"></div>
                             </form>
                         </div>
@@ -92,7 +92,7 @@
                     data: {
                         empId: empId
                     },
-                    success: function(response) {
+                    success: function(response) { 
                         if (response.success) {
                             $('#recoverMessage').html('<p class="text-success">' + response.message + '</p>');
                         } else {
@@ -101,7 +101,8 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
-                        $('#recoverMessage').html('<p class="text-danger">Employee does not exists. Try again.</p>');
+                        console.log('Response:', xhr.responseText);
+                        $('#recoverMessage').html('<p class="text-danger">Not found. Try again.</p>');
                     }
                 });
             });
@@ -126,7 +127,7 @@
                     },
                     error: function(xhr, status, error) {
                         console.error('Error:', error);
-                        $('#deleteMessage').html('<p class="text-danger">Employee does not exists. Try again.</p>');
+                        $('#deleteMessage').html('<p class="text-danger">Not found. Try again.</p>');
                     }
                 });
             });
@@ -136,7 +137,5 @@
             });
         });
     </script>
-
 </body>
-
 </html>
