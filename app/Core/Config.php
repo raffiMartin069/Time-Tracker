@@ -15,8 +15,8 @@ function defineRoot() {
         define('DBUSER', $config->database->username ?? null);
         define('DBKEY', $config->database->password ?? null);
         define('PORT', $config->database->port ?? null);
-        define('ROOT', 'http://localhost/public/');
-        define('APP', 'http://localhost/app/');
+        define('ROOT', 'http://localhost/Time-Tracker/public/');
+        define('APP', 'http://localhost/Time-Tracker/app/');
     } else {
         $config = simplexml_load_file('../App.config');
         define('DBNAME', $config->database->dbname ?? null);
