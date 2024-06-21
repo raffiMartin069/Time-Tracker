@@ -53,21 +53,6 @@
                         <option value="2" class="bg-light" style="color:black;">Newest</option>
                     </select>
                 </div>
-
-                <!-- <div class=" mr-sm-1 w-100 d-flex justify-content-end">
-                    <ul class="m-0 p-0 list-unstyled justify-content-center align-items-center gap-2 d-flex">
-                        <li class="p-1 px-lg-3 py-lg-1 option-pane">
-                            <a href="" id="add-employee" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-                                <img src="<?= ROOT ?>assets/img/admin/add-employee.png" alt="Add Employee" />
-                            </a>
-                        </li>
-                        <li class="p-1 px-lg-3 py-lg-1 option-pane">
-                            <a href="" id="emp_setting" data-bs-toggle="modal" data-bs-target="#employee_setting">
-                                <i class="lni lni-cog style mt-2 fw-bold text-black" style="margin-left: 4px;"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </div> -->
             </div>
             <div class="container">
                 <button id="add-employee" class="btn border shadow-sm text-center filter-hover"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">Add Employee <i class="bi bi-person-fill-add"></i></button>
@@ -75,9 +60,9 @@
             </div>
         </div>
         <div>
-            <div class="mx-2 my-4 rounded p-2 shadow" id="content-section">
+            <div class="my-4 rounded p-2 shadow" id="content-section">
                 <div class="d-flex">
-                    <div class="w-100 px-4 overflow-x-auto" style="height:45rem!important;">
+                    <div class="w-100 overflow-x-auto" style="height:43rem!important;">
                         <table class="table table-stripped align-middle mb-0 bg-white text-center">
                             <thead class="bg-light">
                                 <tr>
@@ -372,7 +357,7 @@
     </script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/employee.js"></script>
-    <script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
+    <script defer src="<?= ROOT ?>scripts/Admin/manage_sort.js"></script>
     <script defer src="<?= ROOT ?>scripts/Admin/managemenValidate.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/updateHours.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/deleteEmployee.js"></script>

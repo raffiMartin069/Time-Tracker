@@ -28,6 +28,7 @@ function defineRoot() {
     }
 }
 
+
 function standardErrors() 
 {
     define("DEFAULT_ERR", "Something went wrong. Please try again later");

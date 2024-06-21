@@ -60,37 +60,34 @@
             </div>
         </noscript>
         <div>
-            <div class="mx-2 my-4 p-2" id="content-section">
+            <div class="my-4" id="content-section">
                 <div class="container">
                     <div>
-                        <div class="w-100 px-4 overflow-x-auto border rounded" style="height:45rem!important;">
+                        <div class="w-100 overflow-x-auto rounded" style="height:45rem!important;">
                             <table class="table table-stripped align-middle mb-0 bg-white text-center">
                                 <thead class="bg-light">
                                     <tr>
-                                        <th>Meeting ID</th>
                                         <th>Date</th>
                                         <th>Employee I.D.</th>
                                         <th>Employee</th>
-                                        <th>Meeting Title</th>
                                         <th>Meeting Start</th>
                                         <th>Meeting End</th>
+                                        <th>Duration</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tableBody">
                                     <?php foreach ($tableView as $view): ?>
                                         <tr class="table-row">
-                                            <td><?php echo htmlspecialchars($view->meeting_id ?? "", ENT_QUOTES, 'UTF-8'); ?>
-                                            </td>
                                             <td><?php echo htmlspecialchars($view->date ?? "", ENT_QUOTES, 'UTF-8'); ?></td>
                                             <td><?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($view->full_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($view->meeting_title ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->meeting_in ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($view->start_meeting ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->meeting_out ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($view->end_meeting ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->duration ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

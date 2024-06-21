@@ -16,4 +16,8 @@
 - Make sure that the Config.php is set to production environment.
 - Make sure that the database is set to production environment.
 
-`By: WTM Devs`
+
+# By: WTM Devs
+## Jade Formentera
+## Airielle Arnado
+## Rafael Martinez
