@@ -8,7 +8,6 @@
  */
 function defineRoot() {
     if($_SERVER['SERVER_NAME'] == 'localhost') {
-        // database configuration
         $config = simplexml_load_file('../App.config');
         define('DBNAME', $config->database->dbname ?? null);
         define('DBHOST', $config->database->host ?? null);
@@ -41,7 +40,7 @@ function standardErrors()
  * We can use this for debugging purposes 
  */
 function TestingDebugger() {
-    define('DEBUG', true);
+    define('DEBUG', false);
 }
 
 /*

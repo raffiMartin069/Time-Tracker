@@ -146,7 +146,6 @@ class Login extends Controller
             $_SESSION['role'] = $extract['admin'] === true ? 'admin' : 'employee';
             $_SESSION['popup_notif'] = $extract['notification'];
             define('KEY_PROMPT', $keyVerify);
-
             if ($extract['admin'] === true) {
                 header('Content-Type: application/json');
                 echo json_encode(['redirect' => '/public/admin']);

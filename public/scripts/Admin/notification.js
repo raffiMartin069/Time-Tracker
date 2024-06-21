@@ -51,7 +51,7 @@
     }
 
     const responseData = await response.json();
-
+    
     if (responseData.mess) {
       notificationQueue.push(responseData.mess);
     }
@@ -59,7 +59,6 @@
     if (responseData.popup) {
       notificationQueue.push(responseData.popup);
     }
-
     processQueue();
   };
   

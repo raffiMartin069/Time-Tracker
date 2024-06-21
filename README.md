@@ -17,7 +17,6 @@
 - Make sure that the database is set to production environment.
 
 
-
 # By: WTM Devs
 ## Jade Formentera
 ## Airielle Arnado

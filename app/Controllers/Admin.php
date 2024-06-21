@@ -499,6 +499,16 @@ class Admin extends Controller
 
     public function notification()
     {
+
+        if($_SERVER["REQUEST_METHOD"] !== "GET") {
+            header("Content-Type: application/json");
+            echo json_encode([
+                'status' => false,
+                'message' => 'Invalid request method'
+            ]);
+            die();
+        }
+
         $mess = $_SESSION["notification"];
         $popup = $_SESSION['popup_notif'];
         if (!empty($mess)) {

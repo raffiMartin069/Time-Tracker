@@ -23,10 +23,12 @@ Thumbs.db
 # Ignore log files and databases
 *.log
 *.sql
-*.sqlite
+
 
 # Ignore build files
 /build/
+
+/public/vendor/
 
 # Ignore workspace
 /workspace/
@@ -34,13 +36,13 @@ Thumbs.db
 # Ignore node_modules
 /public/node_modules/
 
-/App.config
+*.config
 
-/public/vendor/
+/Time-Tracker/App.config/
 
-/Dockerfile
-/compose.yaml
-/.dockerignore
-/README.Docker.md
+# /Dockerfile
+# /compose.yaml
+# /.dockerignore
+# /README.Docker.md
 Report.view.txt
 Test.view.php
