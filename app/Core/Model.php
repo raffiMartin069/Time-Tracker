@@ -3,6 +3,7 @@ Trait Model {
 
     use Database;
 
+
     public function getEmpStatus($id) {
         try {
             $query = "SELECT status FROM employee WHERE emp_id = :emp_id";

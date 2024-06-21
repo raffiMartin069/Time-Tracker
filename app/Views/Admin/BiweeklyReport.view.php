@@ -122,6 +122,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script defer src="<?= ROOT ?>scripts/Admin/admin_biweekly_report.js"></script>
+    <script defer src="<?= ROOT ?>scripts/Admin/search_biweekly.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
 </body>
 

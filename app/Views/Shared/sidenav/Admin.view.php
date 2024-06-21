@@ -106,7 +106,7 @@
 
                     <?php if ($showStartMeeting): ?>
                         <!-- Start a meeting list item -->
-                        <li class="nav-item mb-4" style="width: 270px; margin-left: 14px;">
+                        <li class="nav-item mb-4 d-none" style="width: 270px; margin-left: 14px;">
                             <a href="" class="nav-link text-dark rounded justify-content-start"
                                 style="height: 50px; display: flex; align-items: center; justify-content: flex-start;"
                                 data-bs-toggle="modal" data-bs-target="#startMeeting" id="meeting_start">
@@ -121,13 +121,13 @@
                     <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start"
                         style="width: 270px; margin-left: 14px;">
                         <ul class=" text-decoration-none list-unstyled">
-                            <li>
+                            <!-- <li>
                                 <a href="?page=notification/view" class="nav-link text-dark rounded pt-3"
                                     style="height: 50px;">
                                     <i class="bi bi-bell-fill notification-bell"></i>
                                     <span class="nav-item-title ms-2" style="margin-top: -32px;">Notifications</span>
                                 </a>
-                            </li>
+                            </li> -->
                             <li class="nav-item mb-4 " style="width: 270px;">
                                 <a href="?page=editProfile" class="nav-link text-dark rounded" style="height: 50px;">
                                     <div style="display: flex; align-items: center;">

@@ -650,17 +650,17 @@ class Admin extends Controller
         ]);
     }
 
-    public function test()
-    {
+    // public function test()
+    // {
 
-        $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
+    //     $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
 
-        // $this->Delete(240, 'employee', 'emp_id');
+    //     // $this->Delete(240, 'employee', 'emp_id');
 
-        $this->view('Admin/Test', [
-            'results' => $results,
-        ]);
-    }
+    //     $this->view('Admin/Test', [
+    //         'results' => $results,
+    //     ]);
+    // }
 
     private function operations($action)
     {

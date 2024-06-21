@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="search">
-                        <input type="number" id="searchInput" class="searchWeeklyId" placeholder="Search Weekly ID">
+                        <input type="number" id="searchInput" class="searchWeeklyId searchInput" placeholder="Search Weekly ID">
                     </div>
 
                 </div>

@@ -357,7 +357,7 @@
     </script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/employee.js"></script>
-    <script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
+    <script defer src="<?= ROOT ?>scripts/Admin/manage_sort.js"></script>
     <script defer src="<?= ROOT ?>scripts/Admin/managemenValidate.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/updateHours.js"></script>
     <script defer type="module" src="<?= ROOT ?>scripts/Admin/deleteEmployee.js"></script>

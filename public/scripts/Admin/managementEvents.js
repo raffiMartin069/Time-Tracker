@@ -45,15 +45,15 @@ const managementSorting = () => {
             let rows = Array.from(tableBody.querySelectorAll('tr'));
             if (this.value === '1') { // Oldest First
                 rows.sort((a, b) => {
-                    let dateA = new Date(a.cells[4].textContent.trim());
-                    let dateB = new Date(b.cells[4].textContent.trim());
-                    return dateA - dateB;
+                    let dateTimeA = new Date(a.cells[0].textContent.trim() + ' ' + a.cells[3].textContent.trim());
+                    let dateTimeB = new Date(b.cells[0].textContent.trim() + ' ' + b.cells[3].textContent.trim());
+                    return dateTimeA - dateTimeB;
                 });
             } else if (this.value === '2') { // Newest First
                 rows.sort((a, b) => {
-                    let dateA = new Date(a.cells[4].textContent.trim());
-                    let dateB = new Date(b.cells[4].textContent.trim());
-                    return dateB - dateA;
+                    let dateTimeA = new Date(a.cells[0].textContent.trim() + ' ' + a.cells[3].textContent.trim());
+                    let dateTimeB = new Date(b.cells[0].textContent.trim() + ' ' + b.cells[3].textContent.trim());
+                    return dateTimeB - dateTimeA;
                 });
             }
             // Remove existing rows from the table body
