@@ -136,10 +136,15 @@ const httpRequest = async (state, action) => {
         window.location.reload(); // Reload the page after the alert is closed
       });
     })
-    .catch((error) => {      
+    .catch((error) => { 
+      let filtered_error = '';
+      if(error.toString().includes("Error. ") || error.toString().includes("Error: ")){
+        filtered_error = error.toString().replace("Error. ", "").replace("Error: ", "");
+
+      }
       Swal.fire({
         title: "Oops.",
-        text: error.toString().replace("Error: ", ""),
+        text: filtered_error,
         icon: "error",
       });
     });

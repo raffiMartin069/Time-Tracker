@@ -1,0 +1,104 @@
+.search {
+    margin-left: 320px; /* Adjust to the width of the sidebar */
+    position: relative;
+    z-index: 1; /* Ensure it's behind the sidebar */
+}
+
+.search input[type="number"] {
+    width: 250px;
+    padding: 10px;
+    border-radius: 25px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    transition: width 0.4s ease-in-out;
+}
+
+.search input[type="number"]:focus {
+    width: 300px;
+    outline: none;
+}
+
+@media (max-width: 600px) {
+    .search {
+        width: 100%;
+        margin-top: 1rem;
+        text-align: center;
+        margin-left: 0; /* Reset margin on small screens */
+    }
+
+    .search input[type="number"] {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .search input[type="number"]:focus {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .reports-header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h4 {
+        flex: 1 1 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .button-container {
+        flex: 1 1 100%;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .search {
+        width: 100%;
+        margin-top: 1rem;
+        text-align: center;
+        margin-left: 0; /* Reset margin on small screens */
+    }
+
+    .search input[type="number"] {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .search input[type="number"]:focus {
+        max-width: 300px;
+    }
+}
+
+@media (max-width: 820px) {
+    h4 {
+        flex: 1 1 100%;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .button-container {
+        flex: 1 1 100%;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .search {
+        width: 100%;
+        margin-top: 1rem;
+        text-align: center;
+        margin-left: 0; /* Reset margin on small screens */
+    }
+
+    .search input[type="number"] {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .search input[type="number"]:focus {
+        max-width: 300px;
+    }
+}

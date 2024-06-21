@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhereToNext | Admin</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -20,7 +21,6 @@
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
-
 <body>
     <div id="wrapper">
         <div class="px-2 pt-5">
@@ -51,14 +51,12 @@
                             id="timeStatusText" class="fs-3 fw-medium">Time In</small></a>';
                         }
                         ?>
-
                     </div>
                     <div class=" col p-1 rounded-5 d-flex align-items-center justify-content-center">
                         <a id="breakToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
                                 src="<?= ROOT ?>assets/img/admin/break.png" class="img-fluid" /> <small
                                 class="fs-3 fw-medium"><?php echo $_SESSION['BreakIn'] ?? false ? 'Break Out' : 'Break In'; ?></small></a>
                     </div>
-
                     <div class=" col   p-1 rounded-5 d-flex align-items-center justify-content-center">
                         <a id="meetingToggle" href="" class="text-decoration-none text-dark"
                             onclick="return false;"><img src="<?= ROOT ?>assets/img/admin/meeting.png"
@@ -95,7 +93,7 @@
                         <?php echo htmlspecialchars($_SESSION["userId"] ?? '', ENT_QUOTES, 'UTF-8'); ?>
                     </p>
                 </div>
-                <div>
+                <div class="w-100 overflow-x-auto" style="height:43rem!important;">
                     <table class="table table-stripped align-middle mb-0 bg-white text-center" >
                         <thead class="bg-light" >
                             <tr class="table-row" >
@@ -153,5 +151,4 @@
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/events.js"></script>
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/notification.js"></script>
 </body>
-
 </html>

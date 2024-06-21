@@ -1,4 +1,5 @@
-// for hover effect
+(() => {
+  // for hover effect
 const sidebarTabs = document.querySelectorAll('.sidebar .nav-item a');
 
 sidebarTabs.forEach(tab => {
@@ -25,3 +26,4 @@ document.addEventListener("DOMContentLoaded", function () {
   menuBtn.forEach(item => item.addEventListener('click', showSidebar));
   bodyOverlay.addEventListener('click', showSidebar);
 });
+})();

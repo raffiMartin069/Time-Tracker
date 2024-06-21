@@ -1,0 +1,98 @@
+@media only screen and (min-width: 993px) {
+    #wrapper {
+        margin-left: 18.7rem;
+    }
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+table tr {
+    border-bottom: 1px solid #d3d3d3;
+}
+
+/* Responsive table in smaller screen */
+@media only screen and (max-width: 1248px) {
+    #reportsTable {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    table td,
+    table th {
+        padding: 0.5rem;
+    }
+}
+
+.btn {
+    margin-top: -0.2rem;
+    margin-right: 1rem;
+    width: 7rem;
+}
+
+.btn:hover,
+.btn:focus {
+    background-color: #A6E7D8 !important;
+}
+
+.button-container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (max-width: 1199.98px) {
+    .btn {
+        width: 100%;
+        margin-top: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .reports-header {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+    }
+
+    h4 {
+        text-align: center;
+        margin-bottom: 1rem;
+        flex: 0 0 100%;
+    }
+
+    .button-container {
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .btn {
+        width: auto;
+        margin: 0.5rem 0;
+    }
+
+}
+
+@media (max-width: 445px) {
+    h4 {
+        margin-left: .8rem !important;
+    }
+
+    .button-container {
+        flex-direction: row;
+        display: grid;
+    }
+
+    .btn {
+        width: 100%;
+        margin: 0.5rem 0;
+    }
+}
+
+ 

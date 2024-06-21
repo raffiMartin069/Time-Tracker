@@ -1,46 +1,24 @@
-oo# PHP-MVC-STABLE-VERSION
+# Documentation 
 
-This is a simple PHP MVC framework using PDO for database interaction.
+- This branch is for production code only.
 
-## Project Structure
+## Requirements
+- A code must run without any problems in main where is considered as the bleeding edge of the code.
+- Make sure to update before pushing the code to the main branch.
 
-- `app/` - Contains the core files, controllers, models, and views.
+## Production Environment
+- As of now we are running the application inside a docker container which is then deployed to the cloud.
+- Azure is the cloud provider for the application. Which means that in th Config.php routing is set for Azure environment.
+- The application will be running via apache2 on a Linux machine as well as configuration are done in `/etc/apache2/sites-available/000-default.conf`.
 
-    - `Controllers/` - Contains the controller files. Each controller corresponds to a specific route.
-
-    - `Core/` - Contains the core files of the application.
-
-        - `App.php` - Handles the application logic, including loading controllers and methods based on the URL.
-        - `Config.php` - Contains the application configuration, including database credentials.
-        - `Controller.php` - Base controller class.
-        - `Database.php` - Handles database connection and operations.
-        - `Functions.php` - Contains utility functions used across the application.
-        - `init.php` - Initializes the application by loading the necessary files and starting the application.
-        - `Model.php` - Base model class.
-
-    - `Models/` - Contains the model files. Each model corresponds to a specific database table.
-
-    - `Views/` - Contains the view files. Each view corresponds to a specific page or component on the website.
-
-- `public/` - Contains the public-facing files, including the entry point of the application (`index.php`), assets, and scripts.
-
-- `README.md` - This file, which contains documentation about the project.
-
-- `PHP-PDO.code-workspace` - The Visual Studio Code workspace file for this project.
-
-- `.gitignore` - Specifies which files and directories to ignore in Git version control.
-
-## Running the Project
-
-To run the project, navigate to the `public/` directory and start a PHP server:
+## Things to do before deployment
+- Make sure that the dockerfile, index.php (root of folder) are located in the root of the project.
+- Make sure that the Config.php is set to production environment.
+- Make sure that the database is set to production environment.
 
 
-`php -S localhost:8000 or by using XAMPP`
 
-## Downloading Dependencies
-
-After cloning the project from GitHub, you will need to download the necessary dependencies. This project uses npm for package management.
-
-1. Open a terminal in the project public directory.
-2. Run the following command to install the project's dependencies:
-`npm install`
+# By: WTM Devs
+## Jade Formentera
+## Airielle Arnado
+## Rafael Martinez
