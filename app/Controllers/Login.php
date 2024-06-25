@@ -137,14 +137,16 @@ class Login extends Controller
 
         try {
             $extract = $this->extractData($result);
-            $_SESSION["userId"] = $extract['id'];
+            $extract['admin'];
             $keyVerify = $this->passwordVerify($extract['pass']);
+
+            $_SESSION["userId"] = $extract['id'];
             $_SESSION["notification"] = $extract['message'];
             $_SESSION['name'] = $extract['employee_name'];
             $_SESSION['email'] = $extract['email'];
-            $extract['admin'];
             $_SESSION['role'] = $extract['admin'] === true ? 'admin' : 'employee';
             $_SESSION['popup_notif'] = $extract['notification'];
+
             define('KEY_PROMPT', $keyVerify);
 
             if ($extract['admin'] === true) {

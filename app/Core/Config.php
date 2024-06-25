@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . "/../../public/vendor/autoload.php";
 /*
  * This file contains configuration settings for the application. 
  * If there is a necessity to change the configuration, this is the place to do it.
@@ -9,23 +9,28 @@
 function defineRoot() {
     if($_SERVER['SERVER_NAME'] == 'localhost') {
         // database configuration
-        $config = simplexml_load_file('../App.config');
-        define('DBNAME', $config->database->dbname ?? null);
-        define('DBHOST', $config->database->host ?? null);
-        define('DBUSER', $config->database->username ?? null);
-        define('DBKEY', $config->database->password ?? null);
-        define('PORT', $config->database->port ?? null);
+        // $config = simplexml_load_file('../App.config');
+        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+        // $dotenv->safeLoad();
+        $dotenv->load();
+        define('DBNAME', $_ENV['DB_NAME'] ?? null);
+        define('DBHOST', $_ENV['DB_HOST'] ?? null);
+        define('DBUSER', $_ENV['DB_USER'] ?? null);
+        define('DBKEY', $_ENV['DB_KEY'] ?? null);
+        define('PORT', $_ENV['DB_PORT'] ?? null);
         define('ROOT', 'http://localhost/Time-Tracker/public/');
         define('APP', 'http://localhost/Time-Tracker/app/');
+        define('RECOVERY_REDIRECT', 'http://localhost/Time-Tracker/public/recovery/reconfirm');
     } else {
         $config = simplexml_load_file('../App.config');
-        define('DBNAME', $config->database->dbname ?? null);
-        define('DBHOST', $config->database->host ?? null);
-        define('DBUSER', $config->database->username ?? null);
-        define('DBKEY', $config->database->password ?? null);
-        define('PORT', $config->database->port ?? null);
+        define('DBNAME', $_ENV['DB_NAME'] ?? null);
+        define('DBHOST', $_ENV['DB_HOST'] ?? null);
+        define('DBUSER', $_ENV['DB_USER'] ?? null);
+        define('DBKEY', $_ENV['DB_KEY'] ?? null);
+        define('PORT', $_ENV['DB_PORT'] ?? null);
         define('ROOT', 'https://wheretomed.azurewebsites.net/public/');
         define('APP', 'https://wheretomed.azurewebsites.net/app/');
+        define('RECOVERY_REDIRECT', 'https://wheretomed.azurewebsites.net/public/recovery/reconfirm');
     }
 }
 
