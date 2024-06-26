@@ -67,7 +67,7 @@
         </div>
         <div class="text-end">
           <!-- Simple link -->
-          <a href="#!">Forgot password?</a>
+          <a href="<?php echo FORGOT_PASS ?>">Forgot password?</a>
         </div>
       </div>
       <div>

@@ -21,6 +21,7 @@ function defineRoot() {
         define('ROOT', 'http://localhost/Time-Tracker/public/');
         define('APP', 'http://localhost/Time-Tracker/app/');
         define('RECOVERY_REDIRECT', 'http://localhost/Time-Tracker/public/recovery/reconfirm');
+        define('FORGOT_PASS', 'http://localhost/Time-Tracker/public/recovery/');
     } else {
         $config = simplexml_load_file('../App.config');
         define('DBNAME', $_ENV['DB_NAME'] ?? null);
@@ -31,6 +32,7 @@ function defineRoot() {
         define('ROOT', 'https://wheretomed.azurewebsites.net/public/');
         define('APP', 'https://wheretomed.azurewebsites.net/app/');
         define('RECOVERY_REDIRECT', 'https://wheretomed.azurewebsites.net/public/recovery/reconfirm');
+        define('FORGOT_PASS', 'https://wheretomed.azurewebsites.net/public/recovery/');
     }
 }
 

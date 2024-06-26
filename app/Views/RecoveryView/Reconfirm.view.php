@@ -11,14 +11,13 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="<?php echo ROOT?>node_modules/bootstrap/dist/css/bootstrap.css" />
-  <link rel="stylesheet" href="<?php echo ROOT?>css/login/login.css" />
-  <link rel="stylesheet" href="<?php echo ROOT?>css/login/login-media.css" />
+  <link rel="stylesheet" href="<?php echo ROOT?>css/recover/reconfirm.css" />
   <link rel="stylesheet" href="<?php echo ROOT?>css/default.css" />
   <link rel="stylesheet" href="<?php echo ROOT?>node_modules/sweetalert2/dist/sweetalert2.css" />
 </head>
 <body>
   <div id="form-wrapper" class="d-flex align-items-center justify-content-center vh-100 text-center p-3">
-    <form id="login-form" method="POST">
+    <form id="reconfirm_form" method="POST">
       <?php if (isset($error)) : ?>
         <p class="error"><?= htmlspecialchars($error) ?></p>
       <?php endif; ?>
@@ -50,5 +49,6 @@
     </form>
   </div>
   <script src="<?php echo ROOT?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
+  <script defer type="module" src="<?php echo ROOT ?>scripts/Recovery/secondary_check.js"></script>
 </body>
 </html>

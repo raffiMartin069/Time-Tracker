@@ -109,6 +109,9 @@ class Login extends Controller
         return $prompt;
     }
 
+    /**
+     * * This method authenticates user and sets session variables.
+     */
     public function auth()
     {
         if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
