@@ -24,6 +24,7 @@ Thumbs.db
 *.log
 *.sql
 *.sqlite
+!/app/SQL/*.sql
 
 # Ignore build files
 /build/

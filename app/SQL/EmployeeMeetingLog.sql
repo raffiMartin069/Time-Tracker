@@ -1,0 +1,1 @@
+SELECT * FROM get_meeting_logs_new(?)
