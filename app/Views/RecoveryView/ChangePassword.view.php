@@ -22,7 +22,7 @@
 
 <body>
     <div id="form-wrapper" class="d-flex align-items-center justify-content-center vh-100 text-center p-3">
-        <form id="login-form" method="POST">
+        <form id="change-pass" method="POST">
             <?php if (isset($error)): ?>
                 <p class="error"><?= htmlspecialchars($error) ?></p>
             <?php endif; ?>
@@ -35,45 +35,19 @@
                     WTN Time Tracker
                 </h1>
             </div>
-            <!-- ID input -->
-            <div class="form-outline mb-4 position-relative">
-                <input type="password" id="oldPass" name="oldPass" class="form-control" placeholder="Old Password" />
-                <img id="view-pass" src="<?php echo ROOT ?>assets/img/login/view-pass.png" alt="..." style="
-              max-width: 1.3rem;
-              position: absolute;
-              right: 10px;
-              top: 0%;
-              transform: translateY(-100%);
-            " />
-                <img id="view" src="<?php echo ROOT ?>assets/img/login/view.png" alt="..."
-                    style="position: absolute; right: 8px; top: 30%; max-width: 1.6rem" />
-            </div>
 
             <div class="form-outline mb-4 position-relative">
                 <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" />
-                <img id="view-pass" src="<?php echo ROOT ?>assets/img/login/view-pass.png" alt="..." style="
-              max-width: 1.3rem;
-              position: absolute;
-              right: 10px;
-              top: 0%;
-              transform: translateY(-100%);
-            " />
-                <img id="view" src="<?php echo ROOT ?>assets/img/login/view.png" alt="..."
-                    style="position: absolute; right: 8px; top: 30%; max-width: 1.6rem" />
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4 position-relative">
-                <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" />
-                <img id="view-pass" src="<?php echo ROOT ?>assets/img/login/view-pass.png" alt="..." style="
-              max-width: 1.3rem;
-              position: absolute;
-              right: 10px;
-              top: 0%;
-              transform: translateY(-100%);
-            " />
-                <img id="view" src="<?php echo ROOT ?>assets/img/login/view.png" alt="..."
-                    style="position: absolute; right: 8px; top: 30%; max-width: 1.6rem" />
+                <input type="password" id="confirm_pass" name="confirm_pass" class="form-control" placeholder="Confirm Password" />
+            </div>
+
+            <div>
+                <input type="checkbox" id="showPass" name="showPass" class="form-check-input" />
+                <label for="showPass" class="form-check-label">Show Password</label>
             </div>
             <div>
                 <!-- Submit button -->
@@ -86,6 +60,6 @@
     </div>
     <script src="<?php echo ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
+    <script defer src="<?php echo ROOT ?>scripts/Recovery/change_pass.js"></script>
 </body>
-
 </html>

@@ -71,8 +71,18 @@ import { formCheck } from "../security.js";
                     warning('Error', 'Something went wrong.');
                     return;
                 }
-                location.href = window.location.href + '/changePassword';
-                return;
+                // location.href = window.location.href + '/changePassword';
+                // return;
+
+
+                // TODO: Get back to this and fix this.
+                // TODO: There are no integrations to backend currently.
+                // reveal modal 
+                const modal = document.getElementById('exampleModal');
+                modal.style.display = 'block';
+
+
+
             }).catch(error => {
                 warning('Error', error.error);
             });

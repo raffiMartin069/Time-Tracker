@@ -413,10 +413,13 @@ class Admin extends Controller
     {
         $startMeeting = new EmployeeModel();
         $tableView = $startMeeting->getAllEmployee();
-        $platforms = $this->fetchAllPlatform();
+        // $platforms = $this->fetchAllPlatform();
+        // $this->view('Shared/sidenav/Admin', [
+        //     'tableView' => $tableView,
+        //     'platforms' => $platforms
+        // ]);
         $this->view('Shared/sidenav/Admin', [
             'tableView' => $tableView,
-            'platforms' => $platforms
         ]);
     }
 

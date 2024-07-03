@@ -54,8 +54,6 @@
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
                             <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
-                            <!-- <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
-                                style="height: 20px;"></img> -->
                             <span class="nav-item-title ms-2 ">Meeting Logs</span>
                         </a>
                     </li>
@@ -64,8 +62,6 @@
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
                             <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
-                            <!-- <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
-                                style="height: 20px;" ></img> -->
                             <span class="nav-item-title ms-2 ">Break Logs</span>
                         </a>
                     </li>
@@ -191,137 +187,7 @@
         </div>
     </div>
     <!-- Modal -->
-    <div class="modal fade" id="startMeeting" tabindex="-1" aria-labelledby="startMeetingLabel" aria-hidden="true">
-        <div class="modal-dialog modal-fullscreen-lg-down modal-lg">
-            <div class="modal-content" style="background: hsl(45, 50%, 97%);">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="startMeetingLabel">Meeting Information</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body row">
-                    <div class="col">
-                        <form id="meeting_form" method="post" action="Admin/setMeeting">
-                            <!-- search mechanism -->
-                            <div class="form-outline mb-4 form-floating">
-                                <input type="search" id="search" class="form-control" placeholder="" />
-                                <label for="search" class="form-label">Search Employee</label>
-                            </div>
 
-                            <!-- Name input -->
-                            <div data-mdb-input-init class="form-outline mb-4 form-floating">
-                                <input type="text" id="meet_title" name="meet_title" class="form-control"
-                                    placeholder="" />
-                                <label class="form-label" for="meet_start">Meeting Title</label>
-                            </div>
-
-                            <!-- Email input -->
-                            <div class="form-outline mb-4">
-                                <div>
-                                    <input type="date" id="meet_date" name="meet_date" class="form-control" />
-                                    <label class="form-label" for="meet_date">Meeting Date</label>
-                                </div>
-                                <div>
-                                    <input type="datetime-local" id="meet_start" name="meet_start"
-                                        class="form-control" />
-                                    <label class="form-label" for="meet_start">Meeting Start</label>
-                                </div>
-                                <div>
-                                    <input type="datetime-local" id="meet_end" name="meet_end" class="form-control" />
-                                    <div class=""><label class="form-label" for="meet_end">MeetingEnd</label></div>
-                                </div>
-                            </div>
-
-                            <!-- Message input -->
-                            <div data-mdb-input-init class="form-outline mb-4 form-floating">
-                                <input type="text" class="form-control" id="meet_link" name="meet_link"
-                                    placeholder=""></input>
-                                <label class="form-label" for="meet_link">Link</label>
-                            </div>
-                            <div class="form-outline mb-4">
-                                <label class="form-label" for="members">Select Members</label>
-                                <div
-                                    style="height: 150px; overflow-y: scroll; border: 1px solid #ced4da; border-radius: .25rem; padding: .375rem .75rem;">
-                                    <select name="members" id="members" class="form-control form-select selectpicker"
-                                        multiple data-live-search="true" style="display: none;">
-                                        <!-- The select is hidden because we are manually creating the checkboxes below -->
-                                    </select>
-                                    <!-- Manually created checkboxes inside the scrollable container -->
-                                    <?php foreach ($tableView as $view): ?>
-                                        <div class="form-check user-checkbox employee-checkbox">
-
-                                            <input class="form-check-input" type="checkbox" name="checkbox"
-                                                value="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>"
-                                                id="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
-                                            <label class="form-check-label"
-                                                for="<?php echo htmlspecialchars($view->emp_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
-                                                <?php echo htmlspecialchars($view->full_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
-                                            </label>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                            <!-- Message input -->
-                            <div data-mdb-input-init class="form-outline mb-4">
-                                <select name="platform" id="platform" name="platform" class="form-control form-select">
-                                    <option disable select value="">Select Platform</option>
-                                    <?php foreach ($platforms as $platform): ?>
-                                        <option
-                                            value="<?php echo htmlspecialchars($platform->platform_id ?? "", ENT_QUOTES, 'UTF-8') ?>">
-                                            <?php echo htmlspecialchars($platform->platform_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
-                                        </option>
-                                    <?php endforeach; ?>
-                                </select>
-                                <label class="form-label" for="platform">Platform</label>
-                            </div>
-
-                            <!-- Message input -->
-                            <div data-mdb-input-init class="form-floating mb-4">
-                                <textarea class="form-control form-text" id="mess_desc" name="mess_desc"
-                                    rows="4"></textarea>
-                                <label class="form-label" for="mess_desc">Message</label>
-                            </div>
-
-                            <!-- Checkbox -->
-                            <!-- <div class="form-check d-flex justify-content-center mb-4">
-                                <input class="form-check-input me-2" type="checkbox" value="" id="send_copy"
-                                    name="send_copy" checked />
-                                <label class="form-check-label" for="send_copy">
-                                    Send me a copy of this message
-                                </label>
-                            </div> -->
-                            <!-- Submit button -->
-                            <div class="modal-footer w-auto">
-                                <button type="button" class="btn btn-secondary w-100"
-                                    data-bs-dismiss="modal">Close</button>
-                                <button data-mdb-ripple-init type="submit" class="btn btn-primary w-100">Send</button>
-                            </div>
-                        </form>
-                    </div>
-                    <style>
-
-                    </style>
-                    <div class="col-md-5" id="meeting-participants">
-                        <div>
-                            <table>
-                                <thead>
-                                    <tr class=" border-0">
-                                        <th style="background-color: transparent !important; color: black !important;">
-                                            <h3>Meeting participants</h3>
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody id="participantTableBody">
-                                    <tr class="border-0">
-                                        <td id="userTable"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
     <?php
     $page = 'dashboard';
     if (isset($_GET['page'])) {

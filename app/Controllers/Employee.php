@@ -300,11 +300,11 @@ class Employee extends Controller
     {
         $_SESSION["userId"];
         $startMeeting = new EmployeeModel();
-        $tableView = $startMeeting->getAllEmployee();
-        $platforms = $this->fetchAllPlatform();
+        // $tableView = $startMeeting->getAllEmployee();
+        // $platforms = $this->fetchAllPlatform();
         $this->view('Shared/sidenav/Employee', [
-            'tableView' => $tableView,
-            'platforms' => $platforms
+            // 'tableView' => $tableView,
+            // 'platforms' => $platforms
         ]);
     }
 

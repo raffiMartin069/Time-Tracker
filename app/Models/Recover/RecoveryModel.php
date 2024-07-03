@@ -6,15 +6,35 @@ class RecoveryModel
 {
     private $userId = '';
     private $bday = '';
+    private $email = '';
+
+    public function getEmail()
+    {
+        $email = $this->email;
+        return $email;
+    }
+
+    public function setEmail($email)
+    {
+        if(!$this->nullCheck($email)) {
+            throw new Exception("Email is required", 400);
+        }
+
+        $email_sanitized = new Sanitation();
+        $sanitized = $email_sanitized->emailSanitation($email);
+        $this->email = $sanitized;
+    }
 
     public function getId()
     {
-        return $this->userId;
+        $userId = $this->userId;
+        return $userId;
     }
 
     public function getBday()
     {
-        return $this->bday;
+        $bday = $this->bday;
+        return $bday;
     }
 
     public function setId($id)
@@ -61,7 +81,8 @@ class RecoveryModel
     public function generateRecoveryLink() {
         $expirationDuration = 300;
         $expirationTime = time() + $expirationDuration;
-        $recoveryLink = RECOVERY_REDIRECT . "&expires=" . $expirationTime;
+        $token = hash('sha256', bin2hex(random_bytes(16)));
+        $recoveryLink = RECOVERY_REDIRECT . "&token=" . $token;
         return $recoveryLink;
     }
 

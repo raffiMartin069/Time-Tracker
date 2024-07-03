@@ -29,17 +29,17 @@
           WTN Time Tracker
         </h1>
       </div>
-      <!-- ID input -->
+      <!-- Email input -->
       <div class="form-outline mb-4 position-relative form-floating">
-        <input type="text" id="idNumber" name="idNumber" class="form-control" placeholder=""/>
-        <label for="idNumber">Employee I.D.</label>
+        <input type="email" id="email" name="email" class="form-control" placeholder=""/>
+        <label for="email">Email</label>
       </div>
       <!-- Birth date input -->
-      <div class="form-outline mb-4 position-relative form-floating">
-        <input type="date" id="bday" name="bday" class="form-control" placeholder="" />
-        <label for="bday">Date of birth</label>
+      <!-- <div class="form-outline mb-4 position-relative form-floating">
+        <input type="text" id="bday" name="bday" class="form-control" placeholder="" />
+        <label for="bday">Token</label>
       </div>
-      <div>
+      <div> -->
         <!-- Submit button -->
         <button type="submit" id="sendBtn" class="btn btn-primary btn-block mt-4 mb-4 rounded-3 w-100">
           Send

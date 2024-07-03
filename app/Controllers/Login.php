@@ -87,7 +87,7 @@ class Login extends Controller
             $mess = $value->message;
             $name = $value->employee_name;
             $email = $value->email;
-            $popup_notif = $value->notification;
+            $popup_notif = $value->notification ?? "N/A";
         }
         return [
             'id' => $id,

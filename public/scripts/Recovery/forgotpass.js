@@ -1,4 +1,3 @@
-import { formCheck } from "../security.js";
 (() => {
     const warning = (title, body) => {
         Swal.fire({
@@ -20,8 +19,15 @@ import { formCheck } from "../security.js";
           });
     }
 
-    const validate = () => {
+    const formCheck = (formData) => {
+        // Check if the formData has 'email' and it's not empty
+        if (!formData.has('email') || formData.get('email').trim() === '') {
+            return [false, 'email'];
+        }
+        return [true];
+    }
 
+    const validate = () => {
         const btn = document.getElementById('sendBtn');
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -29,10 +35,8 @@ import { formCheck } from "../security.js";
             const formData = new FormData(form);
             const result = formCheck(formData);
             if(!result[0]) {
-                if(result[1] === 'idNumber') {
+                if(result[1] === 'email') {
                     warning('Forgot something?', 'Id can not be empty.');
-                } else {
-                    warning('Forgot something?', 'Date of birth can not be empty.');
                 }
                 return;
             }
@@ -74,7 +78,7 @@ import { formCheck } from "../security.js";
                 success('Email sent!', 'Please check your email for further instructions.');
                 return;
             }).catch(error => {
-                warning('Error', error.error);
+                warning('Error', error);
             });
      }
      document.addEventListener('DOMContentLoaded', () => {

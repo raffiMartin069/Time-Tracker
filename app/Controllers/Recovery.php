@@ -10,20 +10,26 @@ class Recovery extends Controller
     }
 
     public function reconfirm()
-    {
-        if (isset($_GET['expires'])) {
-            $expires = $_GET['expires'];
-            $recoveryModel = new RecoveryModel();
-        
-            if ($recoveryModel->isLinkExpired($expires)) {
-                $error = new PageNotFound();
-                $error->Index();
-            }
-        } else {
-            echo "Invalid request.";
-        }
-        $this->view('RecoveryView/Reconfirm');
-    }
+{
+    // if (isset($_GET['expires'])) {
+    //     $expires = filter_input(INPUT_GET, 'expires', FILTER_VALIDATE_INT);
+    //     if ($expires === false) {
+    //         echo "Invalid expiration time.";
+    //         return;
+    //     }
+    //     $recoveryModel = new RecoveryModel();
+    
+    //     if ($recoveryModel->isLinkExpired($expires)) {
+    //         $error = new PageNotFound();
+    //         $error->Index();
+    //         return;
+    //     }
+    // } else {
+    //     echo "Invalid request.";
+    //     return;
+    // }
+    $this->view('RecoveryView/Reconfirm');
+}
 
     public function changePassword()
     {
@@ -45,6 +51,11 @@ class Recovery extends Controller
         }
     }
 
+    /**
+     * @method initialReset
+     * This endpoint is used when user clicks the forgot password in the log in UI.
+     * The data that will be sent is the email and the birthday of the user.
+     */
     public function initialReset()
     {
         //! No Query yet, this is just a placeholder
@@ -59,14 +70,18 @@ class Recovery extends Controller
         }
 
         $json_decode = json_decode(file_get_contents('php://input'), true);
-        $id = $json_decode['idNumber'];
-        $bday = $json_decode['bday'];
+
+        // The data that was passed was initially an id number but then changed into a email.
+        // Though there is a mismatch but the HTML markup field type was changed into "email" front "text".
+        // The models are also updated, instead of the ID number it was changed into email.
+        $email = $json_decode['email'];
+        // $bday = $json_decode['bday'];
 
         $model = new RecoveryModel();
 
         try {
-            $model->setId($id);
-            $model->setBday($bday);
+            $model->setEmail($email);
+            // $model->setBday($bday);
         } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code($e->getCode());
@@ -74,14 +89,14 @@ class Recovery extends Controller
             exit();
         }
 
-        // ! Needs refactoring, instead of getting the ID and Birthday, it should be fetching the record.
+        // ! Needs refactoring, instead of getting the Email and Birthday, it should be fetching the record.
         // ! The record will be then used to send an email to the user.
-        $id_result = $model->getId();
-        $bday_result = $model->getBday();
+        $email_result = $model->getEmail();
+        // $bday_result = $model->getBday();
 
         try {
-            $this->checkResult($id_result);
-            $this->checkResult($bday_result);
+            $this->checkResult($email_result);
+            // $this->checkResult($bday_result);
         } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code($e->getCode());
@@ -96,7 +111,6 @@ class Recovery extends Controller
             echo json_encode(['result' => false]);
             exit();
         }
-
         header('Content-Type: application/json');
         echo json_encode(['result' => true]);
         exit();
@@ -116,13 +130,13 @@ class Recovery extends Controller
         }
 
         $json_decode = json_decode(file_get_contents('php://input'), true);
-        $id = $json_decode['idNumber'];
+        $email = $json_decode['idNumber'];
         $bday = $json_decode['bday'];
 
         $model = new RecoveryModel();
 
         try {
-            $model->setId($id);
+            $model->setEmail($email);
             $model->setBday($bday);
         } catch (Exception $e) {
             header('Content-Type: application/json');
