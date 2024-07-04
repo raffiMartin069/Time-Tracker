@@ -1,5 +1,7 @@
 import { formCheck } from "../security.js";
+import "../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
 (() => {
+
     const warning = (title, body) => {
         Swal.fire({
             icon: "warning",
@@ -21,7 +23,6 @@ import { formCheck } from "../security.js";
     }
 
     const validate = () => {
-
         const btn = document.getElementById('continueBtn');
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -31,8 +32,6 @@ import { formCheck } from "../security.js";
             if(!result[0]) {
                 if(result[1] === 'idNumber') {
                     warning('Forgot something?', 'Id can not be empty.');
-                } else {
-                    warning('Forgot something?', 'Date of birth can not be empty.');
                 }
                 return;
             }
@@ -47,6 +46,7 @@ import { formCheck } from "../security.js";
         return json;
      }
 
+     // Create a request going to server.
     const httpRequest = (formData) => {
         const url = "secondaryReset";
 
@@ -71,17 +71,12 @@ import { formCheck } from "../security.js";
                     warning('Error', 'Something went wrong.');
                     return;
                 }
-                // location.href = window.location.href + '/changePassword';
-                // return;
-
-
-                // TODO: Get back to this and fix this.
-                // TODO: There are no integrations to backend currently.
-                // reveal modal 
-                const modal = document.getElementById('exampleModal');
-                modal.style.display = 'block';
-
-
+                
+                // Reveal modal when request is successful.
+                // This modal is used to display the actual resetting of the password.
+                const modalElement = document.getElementById('exampleModal');
+                const modal = new bootstrap.Modal(modalElement);
+                modal.show();
 
             }).catch(error => {
                 warning('Error', error.error);

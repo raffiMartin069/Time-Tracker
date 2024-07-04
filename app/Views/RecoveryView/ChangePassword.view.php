@@ -60,6 +60,5 @@
     </div>
     <script src="<?php echo ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
-    <script defer src="<?php echo ROOT ?>scripts/Recovery/change_pass.js"></script>
 </body>
 </html>
