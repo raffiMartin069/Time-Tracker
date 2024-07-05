@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="<?php echo ROOT ?>css/default.css" />
   <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
 </head>
-
+ 
 <body>
   <div id="form-wrapper" class="d-flex align-items-center justify-content-center vh-100 text-center p-3">
     <form id="reconfirm_form" method="POST">
@@ -37,14 +37,9 @@
       <small class="mb-3"><small class="text-danger">*</small>Enter confirmation code.</small>
       <!-- ID input -->
       <div class="form-outline mb-4 position-relative form-floating">
-        <input type="email" id="idNumber" name="idNumber" class="form-control" placeholder="" />
-        <label for="idNumber">Confirmation code</label>
+        <input type="email" id="token" name="token" class="form-control" placeholder="" />
+        <label for="token">Access Token</label>
       </div>
-      <!-- Birth date input -->
-      <!-- <div class="form-outline mb-4 position-relative form-floating">
-        <input type="date" id="bday" name="bday" class="form-control" placeholder="" />
-        <label for="bday">Date of birth</label>
-      </div> -->
       <div>
         <!-- Submit button -->
         <button type="submit" id="continueBtn" class="btn btn-primary btn-block mt-4 mb-4 rounded-3 w-100">
@@ -77,13 +72,23 @@
                 </h1>
             </div>
 
+            <div class="form-outline mb-4 position-relative form-floating">
+                <input type="text" id="id" name="id" class="form-control" placeholder="" />
+                <label for="id">Employee I.D.</label>
+            </div>
+
+            <div class="form-outline mb-4 position-relative form-floating">
+                <input type="date" id="dob" name="dob" class="form-control" />
+                <label for="dob">Date of Birth</label>
+            </div>
+
             <div class="form-outline mb-4 position-relative">
-                <input type="password" id="pass" name="pass" class="form-control" placeholder="Password" />
+                <input type="password" id="new_pw" name="new_pw" class="form-control" placeholder="Password" />
             </div>
 
             <!-- Password input -->
             <div class="form-outline mb-4 position-relative">
-                <input type="password" id="confirm_pass" name="confirm_pass" class="form-control" placeholder="Confirm Password" />
+                <input type="password" id="confirm_pw" name="confirm_pw" class="form-control" placeholder="Confirm Password" />
             </div>
 
             <div>

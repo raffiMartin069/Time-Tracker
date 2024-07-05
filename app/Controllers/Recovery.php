@@ -1,6 +1,8 @@
 <?php
 require_once "../app/Core/Controller.php";
 require_once __DIR__ . "/../Models/Recover/RecoveryModel.php";
+require_once __DIR__ . "/../Models/Recover/TokenModel.php";
+require_once __DIR__ . "/../Models/Recover/ResetPasswordModel.php";
 require_once __DIR__ . "/../Controllers/_404.php";
 class Recovery extends Controller
 {
@@ -10,26 +12,26 @@ class Recovery extends Controller
     }
 
     public function reconfirm()
-{
-    // if (isset($_GET['expires'])) {
-    //     $expires = filter_input(INPUT_GET, 'expires', FILTER_VALIDATE_INT);
-    //     if ($expires === false) {
-    //         echo "Invalid expiration time.";
-    //         return;
-    //     }
-    //     $recoveryModel = new RecoveryModel();
-    
-    //     if ($recoveryModel->isLinkExpired($expires)) {
-    //         $error = new PageNotFound();
-    //         $error->Index();
-    //         return;
-    //     }
-    // } else {
-    //     echo "Invalid request.";
-    //     return;
-    // }
-    $this->view('RecoveryView/Reconfirm');
-}
+    {
+        // if (isset($_GET['expires'])) {
+        //     $expires = filter_input(INPUT_GET, 'expires', FILTER_VALIDATE_INT);
+        //     if ($expires === false) {
+        //         echo "Invalid expiration time.";
+        //         return;
+        //     }
+        //     $recoveryModel = new RecoveryModel();
+
+        //     if ($recoveryModel->isLinkExpired($expires)) {
+        //         $error = new PageNotFound();
+        //         $error->Index();
+        //         return;
+        //     }
+        // } else {
+        //     echo "Invalid request.";
+        //     return;
+        // }
+        $this->view('RecoveryView/Reconfirm');
+    }
 
     public function changePassword()
     {
@@ -68,58 +70,47 @@ class Recovery extends Controller
             echo json_encode(['error' => $e->getMessage()]);
             exit();
         }
-
         $json_decode = json_decode(file_get_contents('php://input'), true);
-
-        // The data that was passed was initially an id number but then changed into a email.
-        // Though there is a mismatch but the HTML markup field type was changed into "email" front "text".
-        // The models are also updated, instead of the ID number it was changed into email.
         $email = $json_decode['email'];
-        // $bday = $json_decode['bday'];
-
         $model = new RecoveryModel();
-
         try {
             $model->setEmail($email);
-            // $model->setBday($bday);
-        } catch (Exception $e) {
-            header('Content-Type: application/json');
-            http_response_code($e->getCode());
-            echo json_encode(['error' => $e->getMessage()]);
-            exit();
-        }
-
-        // ! Needs refactoring, instead of getting the Email and Birthday, it should be fetching the record.
-        // ! The record will be then used to send an email to the user.
-        $email_result = $model->getEmail();
-        // $bday_result = $model->getBday();
-
-        try {
+            $email_result = $model->fetchRecord();
             $this->checkResult($email_result);
-            // $this->checkResult($bday_result);
+            if (empty($email_result)) {
+                if (!$email_result) {
+                    header('Content-Type: application/json');
+                    http_response_code(200);
+                    echo json_encode(['result' => false]);
+                    exit();
+                }
+            }
+            $result = $model->sendEmail();
         } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code($e->getCode());
             echo json_encode(['error' => $e->getMessage()]);
             exit();
         }
-
-        $result = $model->sendEmail();
-
         if ($result !== true) {
             header('Content-Type: application/json');
             echo json_encode(['result' => false]);
             exit();
         }
         header('Content-Type: application/json');
+        http_response_code(200);
         echo json_encode(['result' => true]);
         exit();
     }
 
+    /**
+     * @method secondaryReset
+     * This method will verify if the access token is valid.
+     * The access token has a duration of 5 minutes only before it expires.
+     * After the expiration, the token is no longer usable.
+     */
     public function secondaryReset()
     {
-        //! No Query yet, this is just a placeholder
-        //! Waiting for the database query to be finalized.
         try {
             $this->postRequestValidation($_SERVER["REQUEST_METHOD"]);
         } catch (Exception $e) {
@@ -128,16 +119,12 @@ class Recovery extends Controller
             echo json_encode(['error' => $e->getMessage()]);
             exit();
         }
-
         $json_decode = json_decode(file_get_contents('php://input'), true);
-        $email = $json_decode['idNumber'];
-        $bday = $json_decode['bday'];
-
-        $model = new RecoveryModel();
-
+        $token = $json_decode['token'];
+        $model = new Token();
         try {
-            $model->setEmail($email);
-            $model->setBday($bday);
+            $model->setToken($token);
+            $isTokenValid = $model->confirmToken();
         } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code($e->getCode());
@@ -145,8 +132,58 @@ class Recovery extends Controller
             exit();
         }
 
+        if (!$isTokenValid) {
+            header('Content-Type: application/json');
+            echo json_encode(['result' => false]);
+            exit();
+        }
+
         header('Content-Type: application/json');
         echo json_encode(['result' => true]);
+        exit();
+    }
+
+    /**
+     * This is the actual resetting of password.
+     * If previous operations are successful then this will be the last step.
+     */
+    public function resetPassword()
+    {
+        try {
+            $this->postRequestValidation($_SERVER["REQUEST_METHOD"]);
+        } catch (Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code($e->getCode());
+            echo json_encode(['error' => $e->getMessage()]);
+            exit();
+        }
+        $json_decode = json_decode(file_get_contents('php://input'), true);
+        $new_pw = $json_decode['new_pw'];
+        $confirm_pw = $json_decode['confirm_pw'];
+        $id = $json_decode['id'];
+        $dob = $json_decode['dob'];
+        $model = new ResetPasswordModel();
+        try {
+            $model->setNewPass($new_pw);
+            $model->setConfirmPass($confirm_pw);
+            $model->setID($id);
+            $model->setDOB($dob);
+            $result = $model->fetchResetPasswordResult();
+        } catch(Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code(500);
+            echo json_encode(['error' => $e->getMessage()]);
+            exit();
+        }
+        if(!isset($result)) {
+            header('Content-Type: application/json');
+            http_response_code(200);
+            echo json_encode(['result' => false]);
+            exit();
+        }
+        header('Content-Type: application/json');
+        http_response_code(200);
+        echo json_encode(['result' => true, 'redirect' => ROOT]);
         exit();
     }
 }

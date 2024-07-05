@@ -79,7 +79,7 @@ import "../../node_modules/bootstrap/dist/js/bootstrap.bundle.min.js";
                 modal.show();
 
             }).catch(error => {
-                warning('Error', error.error);
+                warning('Error', error);
             });
      }
      document.addEventListener('DOMContentLoaded', () => {

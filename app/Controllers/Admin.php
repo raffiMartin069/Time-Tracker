@@ -1434,7 +1434,6 @@ class Admin extends Controller
         try {
             $data = $this->GetAll('get_admin_employees()');
 
-
             $admins = $this->ArrangeManageAccess($data);
 
             $adminModels = [];

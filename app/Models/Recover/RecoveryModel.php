@@ -1,12 +1,21 @@
 <?php
 require_once __DIR__."/../../Utilities/Sanitation.php";
 require_once __DIR__."/../../Utilities/Mailing.php";
-
+require_once __DIR__."/../../DAO/RecoveryDAO.php";
+require_once __DIR__."/TokenModel.php";
 class RecoveryModel
 {
     private $userId = '';
     private $bday = '';
     private $email = '';
+    private $token = '';
+
+    use RecoveryDAO;
+
+    public function __construct()
+    {
+        $this->token = new Token();
+    }
 
     public function getEmail()
     {
@@ -19,7 +28,6 @@ class RecoveryModel
         if(!$this->nullCheck($email)) {
             throw new Exception("Email is required", 400);
         }
-
         $email_sanitized = new Sanitation();
         $sanitized = $email_sanitized->emailSanitation($email);
         $this->email = $sanitized;
@@ -57,13 +65,21 @@ class RecoveryModel
         $this->bday = $bday_sanitized;
     }
 
+
     /**
-     * TODO: Be right back to the method, I need to initialize this for querying the database.
-     * @return bool
+     * @method mixed fetchRecord()
+     * This will get the record from the database
+     * Instead of returning the entire arr
      */
     public function fetchRecord()
     {
-        return true;
+        $isRecordExist = $this->validateEmail($this->email);
+        foreach($isRecordExist as $record) {
+            $hasToken = $record->token;
+            $hasEmail = $record->email_exists;
+        }
+        $this->token->setToken($hasToken);
+        return $hasEmail && isset($hasToken) ? $isRecordExist : [];
     }
 
     private function sanitizeData($raw_data)
@@ -73,14 +89,25 @@ class RecoveryModel
         return $sanitized;
     }
 
+    /**
+     * @deprecated
+     * Currently this is not in use, however this method is created for future use.
+     * The checking of token expiration is handled by the database which means it is the one who will
+     */
     public function isLinkExpired($expires) {
         $currentTime = time();
         return $currentTime > $expires;
     }
 
+    /**
+     * @deprecated
+     * Currently this is not in use, however this method is created for future use.
+     * The checking of token expiration is handled by the database which means it is the one who will
+     */
     public function generateRecoveryLink() {
-        $expirationDuration = 300;
-        $expirationTime = time() + $expirationDuration;
+        // $expirationDuration = 300;
+        // $expirationTime = time() + $expirationDuration;
+        
         $token = hash('sha256', bin2hex(random_bytes(16)));
         $recoveryLink = RECOVERY_REDIRECT . "&token=" . $token;
         return $recoveryLink;
@@ -98,9 +125,11 @@ class RecoveryModel
      */
     public function emailBody()
     {
-        $recoveryLink = $this->generateRecoveryLink();
+        // $recoveryLink = $this->generateRecoveryLink();
+        // $recoveryLink = RECOVERY_REDIRECT.'/?/\/'.hash('md5', $this->token->getToken() . bin2hex(random_bytes(16)));
+        $recoveryLink = RECOVERY_REDIRECT;
         return <<<HTML
-            <div style="padding-top: 20px;">
+            <div>
                 <p>We noticed you might have had some trouble accessing your account recently.
                      To ensure your continued security and access, 
                      we'd like to help you reset your password quickly and easily.</p>
@@ -110,11 +139,13 @@ class RecoveryModel
                     <li>Re-enter your credentials (For assurance purposes.)</li>
                     <li>Follow the instructions.</li>
                 </ol>
-                <p>Password Reset Link: <a href="{$recoveryLink}">Reset Password</a></p>
+                <h3><strong>Please copy and paste this confirmation code after clicking the link.</strong></h3>
+                <h4><strong>Access Token: {$this->token->getToken()}</strong></h4>
+                <p>Password Reset Link: <a href="{$recoveryLink}" >Reset Password</a></p>
                 <p class="mt-5"><strong>If you received this email in error:</strong>
                  We apologize for any inconvenience. Please disregard this email and delete it securely.</p>
                 <p>Cheers!,</p>
-                <p>The WhereToNext Team</p>
+                <p><strong>The WhereToNext Team</strong></p>
             </div>
             HTML;
     }
@@ -137,7 +168,7 @@ class RecoveryModel
 
     public function emailHeader()
     {
-        return '<div style="padding-top: 20px;"><b>Dear colleague, I hope this email finds you well.</b></div>';
+        return '<div style="padding-top: 20px;"><h3><b>Dear colleague, we hope this email finds you well.</b></h3></div>';
     }
 
     /**
@@ -154,7 +185,7 @@ class RecoveryModel
             $imgFormat = $this->imageFormat();
             $header = $this->emailHeader();
             
-            $mail = new Mailing('int3rnal.test@gmail.com', 'rafael.d.martinez@outlook.com', 
+            $mail = new Mailing('int3rnal.test@gmail.com', $this->email, 
             'Password Recovery', $email_body, 
             $path, $cid, 
             $header, $imgFormat);
