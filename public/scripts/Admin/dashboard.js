@@ -47,12 +47,30 @@ const meetingBtn = () => {
         let state = 2;
         let action = "";
 
-        if(meeting.innerText === "Meeting In"){
+        if(meeting.innerText === "Huddle In"){
             action = "startMeeting";
             state = 2;
         } else {
             action = "endMeeting";
             state = 3;
+        }
+        httpRequest(state, action);
+    });
+}
+
+const lunchBtn = () => {
+    const lunch = lunchToggle.querySelector("small");
+    lunchToggle.addEventListener("click", function(e){
+        e.preventDefault();
+        let state = 6;
+        let action = "";
+
+        if(lunch.innerText === "Lunch In"){
+            action = "startLunch";
+            state = 6;
+        } else {
+            action = "endLunch";
+            state = 7;
         }
         httpRequest(state, action);
     });
@@ -93,9 +111,9 @@ const mapAction = (response) => {
       } else if (response === action.timeOut) {
         message = "Time out";
       } else if (response === action.startMeeting) {
-        message = "Meeting started";
+        message = "Huddle started";
       } else if (response === action.endMeeting) {
-        message = "Meeting ended";
+        message = "Huddle ended";
       } else if (response === action.startBreak) {
         message = "Break started";
       } else if (response === action.endBreak) {
@@ -154,3 +172,4 @@ const httpRequest = async (state, action) => {
 timeInOutButton();
 meetingBtn();
 breakBtn();
+lunchBtn();

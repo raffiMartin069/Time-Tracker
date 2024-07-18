@@ -169,7 +169,7 @@
       let profilePhoto = new FormData(this);
 
       $.ajax({
-        url: "Employee/UpdateProfilePic",
+        url: "Admin/UpdateProfilePic",
         type: "POST",
         data: profilePhoto,
         processData: false,
