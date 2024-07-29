@@ -7,8 +7,8 @@ class MeetingLogModel
     private $date;
     private $meeting_title;
     private $meeting_description;
-    private $meeting_start;
-    private $meeting_end;
+    private $huddle_start;
+    private $huddle_end;
     private $platform;
     private $link;
 
@@ -32,14 +32,24 @@ class MeetingLogModel
         $this->meeting_description = $meeting_description;
     }
 
-    public function setMeetingStart($meeting_start)
+    public function setHuddleStart($huddle_start)
     {
-        $this->meeting_start = $meeting_start;
+        $this->huddle_start = $huddle_start;
     }
 
-    public function setMeetingEnd($meeting_end)
+    public function setHuddleEnd($huddle_end)
     {
-        $this->meeting_end = $meeting_end;
+        $this->huddle_end = $huddle_end;
+    }
+
+    public function getHuddleStart()
+    {
+        return $this->huddle_start;
+    }
+
+    public function getHuddleEnd()
+    {
+        return $this->huddle_end;
     }
 
     public function setPlatform($platform)
@@ -65,16 +75,6 @@ class MeetingLogModel
     public function getMeetingDescription()
     {
         return $this->meeting_description;
-    }
-
-    public function getMeetingStart()
-    {
-        return $this->meeting_start;
-    }
-
-    public function getMeetingEnd()
-    {
-        return $this->meeting_end;
     }
 
     public function getPlatform()

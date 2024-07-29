@@ -6,8 +6,7 @@ Trait EmployeeDAO
     public function employeeMeetingLog($emp_id) 
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('EmployeeMeetingLog.sql');
+            $query = "SELECT * FROM get_huddle_logs(?)";
             $params = [
                 $emp_id,
             ];

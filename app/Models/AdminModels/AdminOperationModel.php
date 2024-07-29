@@ -14,6 +14,8 @@ class DailyOperationModel implements AdminOperationInterface
     private $emp_id;
     private $break_status;
     private $operation;
+    private $lunch_in;
+    private $lunch_out;
 
     public function Action()
     {
@@ -42,10 +44,29 @@ class DailyOperationModel implements AdminOperationInterface
                 $success = $this->adminBreakOut($this->getEmp_id());
                 break;
 
+            case 6:
+                $success = $this->adminLunchIn($this->getEmp_id());
+                break;
+
+            case 7:
+                $success = $this->adminLunchOut($this->getEmp_id());
+                break;
+
             default:
                 throw new Exception("Invalid Operation");
         }
         return $success;
+    }
+
+    public function getLunch_in()
+    {
+        return $this->lunch_in;
+    }
+
+    public function setLunch_in($lunch_in)
+    {
+        $this->lunch_in = $lunch_in;
+        return $this;
     }
 
     public function getOperation()

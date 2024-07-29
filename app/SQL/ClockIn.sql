@@ -1,1 +1,0 @@
-insert into daily_report(emp_id) values (:id);

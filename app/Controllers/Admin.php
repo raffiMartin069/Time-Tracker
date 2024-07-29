@@ -452,8 +452,9 @@ class Admin extends Controller
                 'CLOCK_OUT' => property_exists($row, 'clock_out') ? $row->clock_out : null,
                 'BREAK_STATUS' => property_exists($row, 'break_status') ? $row->break_status : null,
                 'HRS_WORKED' => property_exists($row, 'hrs_worked') ? $row->hrs_worked : null,
-                'MEETING_STATUS' => property_exists($row, 'meeting_status') ? $row->meeting_status : null,
+                'HUDDLE_STATUS' => property_exists($row, 'huddle_status') ? $row->huddle_status : null,
                 'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'LUNCH_STATUS' => property_exists($row, 'lunch_status') ? $row->lunch_status : null,
             ];
         }
         return $results;
@@ -467,38 +468,21 @@ class Admin extends Controller
         return $results;
     }
 
-    private function buttonState($clock_in, $clock_out)
-    {
-        if ($clock_in && is_null($clock_out)) {
-            return $_SESSION["ClockedIn"] = true;
-        } else if ($clock_in && !is_null($clock_out)) {
-            return $_SESSION["ClockedIn"] = false;
-        }
-    }
-
-    private function breakState($breakStatus)
-    {
-        return $breakStatus ? $_SESSION["BreakIn"] = true : $_SESSION["BreakIn"] = false;
-    }
-
-    private function meetingState($meetingStatus)
-    {
-        return $meetingStatus ? $_SESSION["MeetingIn"] = true : $_SESSION["MeetingIn"] = false;
-    }
-
+    /**
+     * @param mixed $data
+     * @return void
+     * Used to assign Sessions to every state of the buttons.
+     * This dictates the buttons label or icon to change when a user changes to different status.
+     */
     private function extractStates($data)
     {
         foreach ($data as $row) {
-            $clockIn = $row->clock_in;
-            $clockOut = $row->clock_out;
-            $breakStatus = $row->break_status;
-            $meetingStatus = $row->meeting_status;
+            $_SESSION["ClockedIn"] = $row->clock_status;
+            $_SESSION["BreakIn"] = $row->break_status;
+            $_SESSION["MeetingIn"] = $row->huddle_status;
+            $_SESSION["LunchIn"] = $row->lunch_status;
         }
-        $this->buttonState($clockIn, $clockOut);
-        $this->breakState($breakStatus);
-        $this->meetingState($meetingStatus);
     }
-
 
     public function notification()
     {
@@ -534,9 +518,7 @@ class Admin extends Controller
                 $this->extractStates($state);
             }
 
-
             ob_end_flush();
-
 
             $this->view('Admin/Main', [
                 'results' => $reportModels
@@ -546,12 +528,19 @@ class Admin extends Controller
         }
     }
 
+    /**
+     * Summary of HUDDLE LOGS
+     * @method mixed meetingLogs()
+     * NOTE: Please take not that this method, instead of meeting logs, it should be named as huddle logs.
+     * This is a typo error and should be corrected.
+     * This method will be used to generate the huddle logs to the views.
+     * Typically passing read only data.
+     */
     public function meetingLog()
     {
         $logs = new MeetingLogModel();
-        $tableView = $logs->getMeetingLogs();
         $this->view('Admin/MeetingLog', [
-            'tableView' => $tableView,
+            'tableView' => $logs->getMeetingLogs(),
         ]);
     }
 
@@ -653,17 +642,17 @@ class Admin extends Controller
         ]);
     }
 
-    // public function test()
-    // {
+    public function test()
+    {
 
-    //     $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
+        $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
 
-    //     // $this->Delete(240, 'employee', 'emp_id');
+        // $this->Delete(240, 'employee', 'emp_id');
 
-    //     $this->view('Admin/Test', [
-    //         'results' => $results,
-    //     ]);
-    // }
+        $this->view('Admin/Test', [
+            'results' => $results,
+        ]);
+    }
 
     private function operations($action)
     {
@@ -778,8 +767,16 @@ class Admin extends Controller
 
     /**
      * @param $arr
-     * This method will be used to normalize the string.
-     * This will be used to normalize the string before inserting to the database.
+     * Normalizing a string includes the following:
+     * 1. Convert the string to lowercase.
+     * 2. Convert the first letter of the string to uppercase.
+     * 3. Convert the rest of the string to lowercase.
+     * 
+     * Example:
+     * "JOHN DOE" = "John Doe"
+     *
+     * Example 2:
+     * "jOhN dOe" = Output: "John Doe"
      */
     private function StrNormalize($arr)
     {
@@ -842,7 +839,6 @@ class Admin extends Controller
                 $data[] = $item; // Add the valid item to $data
             }
         }
-
         $content = $pdf->createPDF($data);
         return $content;
     }
@@ -856,7 +852,6 @@ class Admin extends Controller
      * */
     private static function ArrayNullCheck($array)
     {
-
         // perform pre checks before handling the actual looping.
         if (empty($array) || $array === null || $array === "") {
             throw new Exception('Please fill out all fields');
@@ -1583,8 +1578,6 @@ class Admin extends Controller
                 }
 
                 $destination = $folder . basename($profilePhoto['name']);
-                move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
-
                 try {
                     $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
                     $params = [
@@ -1593,6 +1586,7 @@ class Admin extends Controller
                     ];
 
                     $this->Query($query, $params);
+                    move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
                 } catch (Exception $e) {
                     echo "Error: " . $e->getMessage();
                 } catch (PDOException $e) {

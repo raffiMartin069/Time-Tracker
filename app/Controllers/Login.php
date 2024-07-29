@@ -88,6 +88,7 @@ class Login extends Controller
             $name = $value->employee_name;
             $email = $value->email;
             $popup_notif = $value->notification ?? "N/A";
+            $image = $value->image;
         }
         return [
             'id' => $id,
@@ -96,7 +97,8 @@ class Login extends Controller
             'message' => $mess,
             'employee_name' => $name,
             'email' => $email,
-            'notification' => $popup_notif
+            'notification' => $popup_notif,
+            'image' => $image
         ];
     }
 
@@ -110,7 +112,17 @@ class Login extends Controller
     }
 
     /**
-     * * This method authenticates user and sets session variables.
+     * Authenticates a user based on POST request data.
+     * 
+     * This method processes a POST request containing user credentials, performs authentication,
+     * and sets session variables based on the authenticated user's role. It redirects the user to
+     * an appropriate page (admin or employee) based on their role. If authentication fails or
+     * if the request method is not POST, it sends an appropriate HTTP response code and JSON error message.
+     * 
+     * @throws Exception If the request method is not POST, if input validation fails, or if user authentication fails.
+     * @return void This method does not return a value but redirects the user or exits with an error response.
+     * 
+     * Note: This method reads JSON-encoded POST data from php://input, expecting 'idNumber' and 'pass' fields.
      */
     public function auth()
     {
@@ -149,6 +161,7 @@ class Login extends Controller
             $_SESSION['email'] = $extract['email'];
             $_SESSION['role'] = $extract['admin'] === true ? 'admin' : 'employee';
             $_SESSION['popup_notif'] = $extract['notification'];
+            $_SESSION['image'] = $extract['image'];
 
             define('KEY_PROMPT', $keyVerify);
 

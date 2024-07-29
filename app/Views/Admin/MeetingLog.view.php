@@ -32,7 +32,7 @@
     <div id="wrapper">
         <div class="px-2 pt-5">
             <div class="container">
-                <h4>Search Meeting Logs</h4>
+                <h4>Search Huddle Logs</h4>
             </div>
         </div>
         <div class="m-2 mt-3 p-2 rounded shadow-sm">
@@ -70,8 +70,8 @@
                                         <th>Date</th>
                                         <th>Employee I.D.</th>
                                         <th>Employee</th>
-                                        <th>Meeting Start</th>
-                                        <th>Meeting End</th>
+                                        <th>Huddle Start</th>
+                                        <th>Huddle End</th>
                                         <th>Duration</th>
                                     </tr>
                                 </thead>
@@ -83,9 +83,9 @@
                                             </td>
                                             <td><?php echo htmlspecialchars($view->full_name ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($view->meeting_in ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->huddle_in ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($view->meeting_out ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->huddle_out ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($view->duration ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>

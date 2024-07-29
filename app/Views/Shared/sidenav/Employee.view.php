@@ -58,7 +58,7 @@
                             <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
                             <!-- <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
                                 style="height: 20px;"></img> -->
-                            <span class="nav-item-title ms-2 ">Meeting Logs</span>
+                            <span class="nav-item-title ms-2 ">Huddle Logs</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
@@ -306,7 +306,7 @@
             break;
 
         case 'meeting/logs':
-            $controller->meetingLog();
+            $controller->meetingLog(); // This is changed to huddle logs.
             break;
 
         default:

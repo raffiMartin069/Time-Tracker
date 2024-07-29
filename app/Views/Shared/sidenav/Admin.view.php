@@ -54,7 +54,7 @@
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
                             <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
-                            <span class="nav-item-title ms-2 ">Meeting Logs</span>
+                            <span class="nav-item-title ms-2 ">Huddle Logs</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
@@ -81,13 +81,13 @@
                     <?php
                     $pages = ['dailyReport', 'weeklyReport', 'biweeklyReport', 'editProfile', 'manageAdmin', 'recycleBin'];
                     $showStartMeeting = true;
-                    foreach($pages as $page) {
+                    foreach ($pages as $page) {
                         if (isset($_GET['page']) && $_GET['page'] === $page) {
                             $showStartMeeting = false;
                             break;
                         }
                     }
-                    
+
                     ?>
 
                     <!-- Reports list item -->
@@ -137,28 +137,15 @@
                     <hr>
 
                     <?php
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-
-                    $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
-                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
-                    $getProfilePhoto = $defaultPhoto;
-
-                    if ($empId) {
-                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
-                        $returnParams = [':emp_id' => $empId];
-                        $returnData = $this->Query($returnQuery, $returnParams);
-
-                        if (!empty($returnData) && !empty($returnData[0]->image)) {
-                            $getProfilePhoto = $returnData[0]->image;
-                        }
-                    }
+                    $img = $_SESSION['image'] ?? null;
+                    $isImgFile = file_exists(__DIR__ . "/../../../../public/" . $img);
+                    $isSessionImg = $_SESSION['image'] != null;
+                    $photo = $isImgFile && $isSessionImg ? ROOT . $_SESSION['image'] : ROOT . "assets/img/employee/default-settings-profile.png";
                     ?>
 
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img id="profile-photo" src="<?php echo $getProfilePhoto; ?>"
+                        <img id="profile-photo" src="<?php echo $photo ?>"
                             style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px"
                             alt="Profile Picture">
                         <span class="nav-item-title">
@@ -168,7 +155,8 @@
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
                         <form action="Login/logout" method="post">
-                            <button type="submit" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
+                            <button type="submit"
+                                class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
                                 Logout
                             </button>
                         </form>
@@ -201,7 +189,7 @@
             break;
 
         case 'meeting/logs':
-            $controller->meetingLog();
+            $controller->meetingLog(); // This is changed to huddle logs.
             break;
 
         case 'manage/employee':
@@ -244,7 +232,7 @@
         case 'recycleBin':
             $controller->manageRecycleBin();
             break;
-    
+
         default:
             $controller->main();
             break;
