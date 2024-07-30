@@ -487,10 +487,9 @@ class Admin extends Controller
     public function notification()
     {
         $mess = $_SESSION["notification"];
-        $popup = $_SESSION['popup_notif'];
         if (!empty($mess)) {
             header("Content-Type: application/json");
-            echo json_encode(['mess' => $mess, 'popup' => $popup]);
+            echo json_encode(['mess' => $mess]);
             exit;
         }
     }

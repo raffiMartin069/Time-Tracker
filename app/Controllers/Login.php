@@ -9,29 +9,82 @@ class Login extends Controller
 
     use AuthDAO;
 
+
+    /**
+     * Method to handle invalid requests
+     * @return void
+     * @throws Exception
+     * 
+     */
+    private static function InvalidRequest()
+    {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid request']);
+        exit();
+    }
+
+    /**
+     * Summary of validateLogoutRequest
+     * @param int $request
+     * @return bool
+     */
+    private function validateLogoutRequest($request)
+    {
+        $request_value = filter_var($request, FILTER_VALIDATE_INT);
+
+        if(!isset($request_value)) {
+            Login::InvalidRequest();
+        }
+
+        if(!is_int($request_value)) {
+            Login::InvalidRequest();
+        }
+
+        if ($request_value !== 1) {
+            Login::InvalidRequest();
+        }
+
+        return true;
+    }
+
     public function logout()
     {
         if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
             header('Content-Type: application/json');
             throw new Exception("Invalid request method", 405);
         }
-        $_SESSION = array();
-        session_unset();
-        session_destroy();
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
-            );
+
+        $request = json_decode(file_get_contents("php://input"), true);
+        $request_value = $request['logoutBtn'];
+        try {
+            $this->validateLogoutRequest($request_value);
+
+            $_SESSION = array();
+            session_unset();
+            session_destroy();
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(
+                    session_name(),
+                    '',
+                    time() - 42000,
+                    $params["path"],
+                    $params["domain"],
+                    $params["secure"],
+                    $params["httponly"]
+                );
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode(['url' => '/Time-Tracker']);
+            exit();
+        } catch(Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code($e->getCode());
+            echo json_encode(['error' => $e->getMessage()]);
+            exit();
         }
-        header('Location: /Time-Tracker/public');
-        exit();
     }
 
     public function index()
@@ -87,7 +140,6 @@ class Login extends Controller
             $mess = $value->message;
             $name = $value->employee_name;
             $email = $value->email;
-            $popup_notif = $value->notification ?? "N/A";
             $image = $value->image;
         }
         return [
@@ -97,7 +149,6 @@ class Login extends Controller
             'message' => $mess,
             'employee_name' => $name,
             'email' => $email,
-            'notification' => $popup_notif,
             'image' => $image
         ];
     }
@@ -160,7 +211,6 @@ class Login extends Controller
             $_SESSION['name'] = $extract['employee_name'];
             $_SESSION['email'] = $extract['email'];
             $_SESSION['role'] = $extract['admin'] === true ? 'admin' : 'employee';
-            $_SESSION['popup_notif'] = $extract['notification'];
             $_SESSION['image'] = $extract['image'];
 
             define('KEY_PROMPT', $keyVerify);

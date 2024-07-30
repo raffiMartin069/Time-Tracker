@@ -154,10 +154,9 @@
                         </span>
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
-                        <form action="Login/logout" method="post">
-                            <button type="submit"
-                                class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
-                                Logout
+                        <form id="log-out" action="Login/logout" method="post">
+                            <button type="submit" value="1" name="logoutBtn" id="logoutBtn" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
+                                Log Out
                             </button>
                         </form>
                     </li>
@@ -241,7 +240,7 @@
     <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.js"></script>
-    <script defer type="module" src="<?= ROOT ?>scripts/Admin/meeting.js"></script>
+    <script defer src="<?= ROOT ?>scripts/logout.js"></script>
 </body>
 
 </html>
