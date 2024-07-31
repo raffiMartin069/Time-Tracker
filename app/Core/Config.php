@@ -7,11 +7,10 @@ require_once __DIR__ . "/../../public/vendor/autoload.php";
  * This will make it easier to manage the settings.
  */
 function defineRoot() {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+    // $dotenv->safeLoad();
+    $dotenv->load();
     if($_SERVER['SERVER_NAME'] == 'localhost') {
-        // database configuration
-        // $config = simplexml_load_file('../App.config');
-        $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
-        // $dotenv->safeLoad();
         $dotenv->load();
         define('DBNAME', $_ENV['DB_NAME'] ?? null);
         define('DBHOST', $_ENV['DB_HOST'] ?? null);
@@ -23,7 +22,6 @@ function defineRoot() {
         define('RECOVERY_REDIRECT', 'http://localhost/Time-Tracker/public/recovery/reconfirm');
         define('FORGOT_PASS', 'http://localhost/Time-Tracker/public/recovery/');
     } else {
-        $config = simplexml_load_file('../App.config');
         define('DBNAME', $_ENV['DB_NAME'] ?? null);
         define('DBHOST', $_ENV['DB_HOST'] ?? null);
         define('DBUSER', $_ENV['DB_USER'] ?? null);
