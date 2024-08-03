@@ -12,335 +12,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
-    <style>
-        .header {
-            background-color: #3CA3DD;
-            color: white;
-            padding: 2rem 0;
-            border-radius: 4px;
-            text-align: center;
-        }
-
-        .header h4 {
-            margin: 0;
-            font-weight: 600;
-        }
-
-        .profile-pic-container {
-            position: relative;
-            margin-top: -3rem;
-            text-align: center;
-            z-index: 1;
-        }
-
-        .profile-pic {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-            border: 4px solid white;
-            object-fit: cover;
-            cursor: pointer;
-        }
-
-        .profile-info {
-            margin: .5rem 0;
-            text-align: center;
-        }
-
-        .profile-info h2 {
-            margin: 0;
-        }
-
-        .profile-info span {
-            margin: 0;
-            color: gray;
-            font-size: 14px;
-        }
-
-        .save-btn {
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            padding: 0.5rem 4rem;
-            right: auto;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .save-btn:hover {
-            background-color: #1976D2;
-        }
-
-        input[type="file"] {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            .profile-pic-container {
-                margin-top: -2rem;
-            }
-
-            .save-btn {
-                padding: 0.5rem 6rem;
-            }
-        }
-
-        @media (max-width: 576px) {
-
-            .header h4,
-            .profile-info h6,
-            .profile-info p {
-                font-size: 14px;
-            }
-
-            .profile-pic {
-                width: 80px;
-                height: 80px;
-            }
-
-            .save-btn {
-                padding: 0.5rem 2rem;
-                font-size: 0.9rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .profile-form {
-                padding: 1.5rem;
-                width: 90%;
-            }
-
-            .save-btn {
-                padding: 0.5rem 1rem;
-            }
-        }
-
-        .text-light {
-            color: #babbbc !important;
-        }
-
-        .card {
-            background-clip: padding-box;
-            box-shadow: 0 1px 4px rgba(24, 28, 33, 0.012);
-        }
-
-        .row-bordered {
-            overflow: hidden;
-        }
-
-        .account-settings-fileinput {
-            position: absolute;
-            visibility: hidden;
-            width: 1px;
-            height: 1px;
-            opacity: 0;
-        }
-
-        .account-settings-links .list-group-item.active {
-            font-weight: bold !important;
-        }
-
-        html:not(.dark-style) .account-settings-links .list-group-item.active {
-            background: transparent !important;
-        }
-
-        .account-settings-multiselect~.select2-container {
-            width: 100% !important;
-        }
-
-        .light-style .account-settings-links .list-group-item {
-            padding: 0.85rem 1.5rem;
-            border-color: rgba(24, 28, 33, 0.03) !important;
-        }
-
-        .light-style .account-settings-links .list-group-item.active {
-            color: #4e5155 !important;
-        }
-
-        .material-style .account-settings-links .list-group-item {
-            padding: 0.85rem 1.5rem;
-            border-color: rgba(24, 28, 33, 0.03) !important;
-        }
-
-        .material-style .account-settings-links .list-group-item.active {
-            color: #4e5155 !important;
-        }
-
-        .dark-style .account-settings-links .list-group-item {
-            padding: 0.85rem 1.5rem;
-            border-color: rgba(255, 255, 255, 0.03) !important;
-        }
-
-        .dark-style .account-settings-links .list-group-item.active {
-            color: #fff !important;
-        }
-
-        .light-style .account-settings-links .list-group-item.active {
-            color: #4E5155 !important;
-        }
-
-        .light-style .account-settings-links .list-group-item {
-            padding: 0.85rem 1.5rem;
-            border-color: rgba(24, 28, 33, 0.03) !important;
-        }
-
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 10px;
-        }
-
-        .nav-link {
-            text-decoration: none;
-            color: #4e5155;
-            padding: 10px;
-        }
-
-        .nav-link.active {
-            color: #007bff;
-        }
-
-        .badge {
-            background-color: #007bff;
-            color: #fff;
-            border-radius: 50%;
-            padding: 2px 6px;
-            font-size: 12px;
-        }
-
-        .profile-settings {
-            margin-top: 20px;
-        }
-
-        .profile-settings h2 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .profile-settings p {
-            color: #888;
-            margin-bottom: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-        }
-
-        .input-group {
-            display: flex;
-            align-items: center;
-        }
-
-        .input-group span {
-            background-color: #f1f3f5;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-right: none;
-            border-radius: 4px 0 0 4px;
-        }
-
-        .input-group input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 0 4px 4px 0;
-        }
-
-        textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            resize: none;
-        }
-
-        .char-count {
-            display: block;
-            text-align: right;
-            color: #888;
-            font-size: 12px;
-            margin-top: 5px;
-        }
-
-        .btn {
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .btn i {
-            margin-left: 5px;
-        }
-
-        .tooltip {
-            position: relative;
-            display: inline-block;
-            margin-top: 20px;
-            cursor: pointer;
-        }
-
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 220px;
-            background-color: #333;
-            color: #fff;
-            text-align: center;
-            border-radius: 4px;
-            padding: 10px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -110px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .tabs {
-            display: flex;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-            padding-left: 0;
-            list-style: none;
-        }
-
-        .tabs li {
-            margin-right: 20px;
-        }
-
-        .tabs a {
-            text-decoration: none;
-            color: #4e5155;
-            font-size: 18px;
-            padding-bottom: 10px;
-            display: inline-block;
-            transition: color 0.3s ease;
-        }
-
-        .tabs a.active {
-            color: #007bff;
-            border-bottom: 2px solid #007bff;
-        }
-    </style>
+    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/settings.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/Admin/table.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/Admin/tabs-modal.css" />
 </head>
 
 <body>
@@ -350,9 +25,13 @@
         </div>
         <div class="mx-2 my-4 rounded p-2 shadow reports-body" style="margin-top: -2rem !important;">
             <div class="container" style="text-align: center;">
-                <ul class="tabs">
-                    <li><a class="nav-link active" href="?page=editProfile">Edit Profile Information</a></li>
-                    <li><a class="nav-link" href="?page=manageAdmin">Manage Admin Access</a></li>
+            <ul class="tabs">  
+                    <li><a class="nav-link active" href="?page=editProfile">Edit Profile</a></li>
+                    <li><a class="nav-link" href="?page=manageAdmin">Manage Admin</a></li>
+                    <li><a class="nav-link" href="?page=manageShift">Manage Shift</a></li>
+                    <li><a class="nav-link" href="?page=employmentClassification">Employment Status</a></li>
+                    <li><a class="nav-link" href="?page=manageJobPosition">Job Position</a></li>  
+                    <li><a class="nav-link" href="?page=recycleBin">Recycle Bin</a></li>
                 </ul>
                  
 
@@ -392,8 +71,7 @@
                         <img id="profilePic" class="profile-pic" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
                         <input type="file" id="profilePhoto" class="getmyimg" name="profilePhoto">
                     </form>
-                </div>
-
+                </div> 
 
                 <?php foreach ($results as $report) : ?>
                     <div class="profile-info">
@@ -602,8 +280,7 @@
                         $('#closeError').click(function() {
                             $('#errorModal').modal('hide');
                         })
-                        // console.error('AJAX error:', status, error, xhr.responseText);
-                    }
+                     }
                 });
             });
 
@@ -653,8 +330,7 @@
                     reader.onload = function(e) {
                         $('#profilePic').attr('src', e.target.result);
                     }
-                    reader.readAsDataURL(file);
-                    // Automatically submit the form
+                    reader.readAsDataURL(file); 
                     $('#profilePicForm').submit();
                 }
             });
@@ -671,6 +347,7 @@
                     contentType: false,
                     success: function(data) {
                         $('#profilePic').attr('src', data.profilePhoto);
+                        location.reload();
                         $('#changeModal').modal('show');
                         $('#closeChangeModal').click(function() {
                             $('#changeModal').modal('hide');
@@ -684,10 +361,9 @@
             });
         });
     </script>
-
-    <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
-    <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+ 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
 </body>
 
 </html>

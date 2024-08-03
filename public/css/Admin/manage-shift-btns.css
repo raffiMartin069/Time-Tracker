@@ -1,0 +1,38 @@
+#addShiftBtn:hover,
+#addShiftBtn:focus,
+#addShiftBtn:active {
+  background-color: #fff !important;
+  border: 1px solid #e0e0e0 !important;
+}
+
+#UpdateShiftBtn:hover,
+#UpdateShiftBtn:focus,
+#UpdateShiftBtn:active {
+  background-color: #0d6efd !important;
+}
+
+#deleteShiftBtn:hover,
+#deleteShiftBtn:focus,
+#deleteShiftBtn:active {
+  background-color: #dc3545 !important;
+}
+
+#cancelShiftBtn,
+#saveShiftBtn {
+  width: 90px;
+  height: 40px;
+}
+
+#cancelShiftBtn:hover,
+#cancelShiftBtn:focus,
+#cancelShiftBtn:active {
+  background-color: #6c757d !important;
+  border: none;
+}
+
+#saveShiftBtn:hover,
+#saveShiftBtn:focus,
+#saveShiftBtn:active {
+  background-color: #0d6efd !important;
+  border: none;
+}

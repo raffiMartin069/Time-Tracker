@@ -1,0 +1,21 @@
+.modal-body {
+  text-align: left;
+}
+
+.modal-body label,
+.modal-body input,
+.modal-body .checkbox-group {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal-body .checkbox-group {
+  display: flex;
+  flex-direction: column;
+  margin-top: 10px;
+}
+
+#shiftName:focus {
+  box-shadow: none;
+  border: 1px solid #0095ff;
+}

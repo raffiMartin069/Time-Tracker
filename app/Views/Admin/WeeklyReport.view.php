@@ -1,18 +1,22 @@
-<!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhereToNext | Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsModals.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/search.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/tables.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsDateHeader.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/reportsDateFilter.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/reportsBtns.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/reportsBreaks.css">
 </head>
 
 <body>
@@ -23,51 +27,112 @@
         <div class="mx-2 my-4 rounded p-2 shadow reports-body" style="margin-top: -2rem !important;">
             <div class="container">
                 <br>
+
                 <div class="reports-header d-flex flex-wrap align-items-center" style="font-weight: 600;">
                     <h4 style="margin: 0;">Weekly Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Biweekly</button>
                         </a>
                     </div>
 
-                    <div class="search">
-                        <input type="number" id="searchInput" class="searchWeeklyId" placeholder="Search Weekly ID">
+                    <div class="date-filter">
+                        <div class="input-group">
+                            <input type="text" placeholder="Choose date range" id="dateRangePicker" class="form-control">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="filterDateRange" title="Filter Reports"><i class="fas fa-filter"></i></span>
+                                <span class="input-group-text" id="resetDate" title="Undo Filter"><i class="fas fa-redo"></i></span>
+                            </div>
+                        </div>
                     </div>
 
                 </div>
                 <div>
+                    <style>
+                        #reportsTable th {
+                            width: 15% !important;
+                        }
+                    </style>
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
-                    <thead style="position: sticky; top: 0;">
+                        <thead style="position: sticky; top: 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                             <tr>
-                                <th>Weekly ID</th>
-                                <th>Date</th>
-                                <th>Weekly Total</th>
-                                <th>Daily Stamps</th>
-                                <th>Tracker ID</th>
+                                <th hidden>Weekly ID</th>
+                                <th>Employee ID</th>
                                 <th>Employee Name</th>
-                                <th>Status</th>
-                                <th>Acknowledged By</th>
+                                <th>Total Weekly Hours</th> 
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="reportTableBody">
                             <?php if (!empty($results) && is_array($results)) : ?>
-                                <?php foreach ($results as $report) : ?>
-                                    <tr class="table-row">
-                                        <td class="getmywklyid"><?php echo $report->getWKLYID(); ?></td>
-                                        <td class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
-                                        <td><?php echo $report->getTOTALHRS(); ?></td>
-                                        <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
+                                <?php
+                                $currentDate = "";
+                                foreach ($results as $report) :
+                                    $reportDate = $report->getREPORTDATE();
+                                    $dateTime = new DateTime($reportDate);
+                                    $formattedDate = $dateTime->format('j M Y');
+                                    $dayOfWeek = $dateTime->format('D');
+
+                                    if ($currentDate != $reportDate) {
+                                        if ($currentDate != "") {
+                                            echo '</tr>';
+                                        }
+                                        $currentDate = $reportDate;
+                                        echo '<tbody>';
+                                        echo '<tr class="date-header">';
+                                        echo '<td colspan="9" style="background-color: #F6F6F7;">';
+                                        echo '<span>';
+                                        echo '<img src="' . ROOT . 'assets/img/calendar.png" class="img-fluid" style="max-width:20px;" /> <p>' . $dayOfWeek . ', ' . $formattedDate . '</p>';
+                                        echo '</span>';
+                                        echo '</td>';
+                                        echo '</tr>';
+                                    }
+
+                                    $empId = $report->getEMPID();
+                                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                                    $getProfilePhoto = $defaultPhoto;
+
+                                    if ($empId) {
+                                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                                        $returnParams = [
+                                            ':emp_id' => $empId
+                                        ];
+                                        $returnData = $this->Query($returnQuery, $returnParams);
+
+                                        if (!empty($returnData) && !empty($returnData[0]->image)) {
+                                            $getProfilePhoto = $returnData[0]->image;
+                                        }
+                                    }
+                                ?>
+                                    <tr class="employee-record" data-date="<?php echo $reportDate; ?>">
+                                        <td class="getmywklyid" hidden><?php echo $report->getWKLYID(); ?></td>
                                         <td class="getmyempid"><?php echo $report->getEMPID(); ?></td>
-                                        <td><?php echo $report->getEMPNAME(); ?></td>
-                                        <td class="getmyapprstat"><?php echo $report->getAPPRSTAT(); ?></td>
-                                        <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px;"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
+                                        <td class="employee-name">
+                                             <img src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                             <?php echo $report->getEMPNAME(); ?>
+                                         </td> 
+                                        <td hidden class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
+                                        <td><?php echo $report->getTOTALHRS(); ?></td>
+                                        <td>
+                                            <button type="submit" class="btn clickMyDots" id="previewBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius: 0; border-right: none !important; margin-right: 2.3rem !important; margin-top: 1rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                                <img src="<?php ROOT ?>assets/img/view30.png" class="img-fluid ms-2" title="View Daily Reports" style="max-width:87%;  margin-left: .1rem !important;" />
+                                            </button>
+
+                                            <form action="vendor/WeeklyReport.php" method="post" target="_blank" class="weeklyDownload">
+                                                <input type="hidden" name="name" value="<?php echo $report->getEMPNAME(); ?>"> 
+                                                <input type="hidden" name="totalweeklyhrs" value="<?php echo $report->getTOTALHRS(); ?>">
+
+                                                <button type="submit" class="btn downloadBtn" id="downloadBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius:0; margin-right: -2.5rem !important; margin-top: -2.05rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                                                    <img src="<?php ROOT ?>assets/img/download-pdf5.png" class="img-fluid" title="Download Report" style="max-width: 110%; margin-left: -.1rem;" />
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -75,6 +140,9 @@
                                     <td colspan="8">No data found.</td>
                                 </tr>
                             <?php endif; ?>
+                            <tr id="displayNoReportsFound" style="display: none;">
+                                 <td colspan="9">No reports found.</td>
+                             </tr>
                         </tbody>
                     </table>
                 </div>
@@ -85,221 +153,34 @@
     <!-- Modal for daily reports -->
     <div id="myModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
             <table class="summary-table table align-middle mb-0 bg-white text-center">
                 <thead>
-                    <tr> 
+                    <tr>
                         <th>Date</th>
                         <th>Clock In</th>
-                        <th>Break In</th>
-                        <th>Break Out</th>
-                        <th>Break Duration</th>
+                        <th>Lunch In</th>
+                        <th>Lunch Out</th>
+                        <th>Break Taken</th>
                         <th>Clock Out</th>
-                        <th>Daily Total</th>
+                        <th>Total Weekly Hours</th>
                     </tr>
                 </thead>
                 <tbody id="dailyReportsBody">
+
                 </tbody>
             </table>
         </div>
     </div>
 
-    <!-- Password Confirmation Modal -->
-    <div id="passwordModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h5>Enter Password to Confirm</h5>
-            <form id="passwordForm" method="post">
-                <div class="form-group">
-                    <label for="adminPassword">Password:</label>
-                    <input type="password" id="adminPassword" name="adminPassword" required>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Error Modal -->
-    <!-- <div id="errorModal" class="modal modal-message modal-warning fade" style="display: none;" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <i class="fa fa-warning"></i>
-                </div>
-                <div class="modal-title">Error</div>
-
-                <div class="modal-body">Your password is incorrect. Please try again.</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-warning" id="closeError" data-dismiss="modal">OK</button>
-                </div>
-            </div>  
-        </div>  
-    </div> -->
-
-
-    <!-- Acknowledgement Modal -->
-    <!-- <div class="modal fade" id="acknowledgementModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <span class="close">&times;</span>
-                <div class="modal-body">
-                    Employee report has been successfully acknowledged!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="closeAcknowledgementModal" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
     <!-- jQuery and Bootstrap Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script>
-        $(document).ready(function() {
-            var dailyReportsModal = $("#myModal");
-            var passwordModal = $("#passwordModal");
-            // var errorModal = $("#errorModal");
-            // var acknowledgementModal = $("#acknowledgementModal");
-            var closeModal = $(".close");
-
-            $(".clickMyDots").click(function() {
-                var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
-                var empId = $(this).closest('tr').find('.getmyempid').text(); 
- 
-                $.ajax({
-                    url: "Admin/fetchWeeklyDailyReports",
-                    method: 'GET',
-                    data: {
-                        report_date: reportDate,
-                        emp_id: empId
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        var dailyReportsBody = $("#dailyReportsBody");
-                        dailyReportsBody.empty();
-
-                        if (data.length > 0) {
-                            data.forEach(function(report) {
-                                var row = `
-                                    <tr>   
-                                        <td>${report.DATE}</td>
-                                        <td>${report.CLOCK_IN}</td>
-                                        <td>${report.BREAK_IN}</td>
-                                        <td>${report.BREAK_OUT}</td>
-                                        <td>${report.BREAK_DURATION}</td> 
-                                        <td>${report.CLOCK_OUT}</td>
-                                        <td>${report.HRS_WORKED}</td>
-                                    </tr>
-                                `;
-                                dailyReportsBody.append(row);
-                            });
-                        } else {
-                            dailyReportsBody.html('<tr><td colspan="9">No daily reports found for this week.</td></tr>');
-                        }
-                        dailyReportsModal.show();
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX error:', status, error);
-                        var errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred while fetching data.';
-                        var dailyReportsBody = $("#dailyReportsBody");
-                        dailyReportsBody.html('<tr><td colspan="9">' + errorMessage + '</td></tr>');
-                        dailyReportsModal.show();
-                    }
-                });
-            });
-
-            $(".approve-btn").click(function() {
-                var wklyId = $(this).closest('tr').find('.getmywklyid').text();
-                var apprStat = $(this).closest('tr').find('.getmyapprstat').text();
-
-                if (apprStat === 'Awaiting approval') {
-                    passwordModal.data('wkly-id', wklyId).data('button', $(this)).show();
-                } else {
-                    alert("This report has already been approved and cannot be changed.");
-                    // $('.modal-body').replaceWith("This report has already been approved and cannot be changed.");
-                    // $('#errorModal').modal('show');
-                    // $('#closeError').click(function() {
-                    //     $('#errorModal').modal('hide');
-                    // })
-                }
-            });
-
-            $("#passwordForm").submit(function(event) {
-                event.preventDefault();
-                var wklyId = passwordModal.data('wkly-id');
-                var password = $("#adminPassword").val();
-
-                $.ajax({
-                    url: "Admin/fetchAcknowledgementData",
-                    method: 'GET',
-                    data: {
-                        wkly_id: wklyId,
-                        password: password
-                    },
-                    success: function(data) {
-                        var button = passwordModal.data('button');
-                        button.closest('tr').find('.getmyapprstat').text("Approved");
-                        button.text(data.acknowledgedBy);
-                        alert("You have successfully acknowledged this report!");
-                        // $('#acknowledgementModal').modal('show');
-                        // $('#closeAcknowledgementModal').click(function() {
-                        //     $('#acknowledgementModal').modal('hide');
-                        // })
-                        passwordModal.hide();
-                    },
-                    error: function(xhr, status, error) {
-                        // $('#modal-warning').modal('show');
-                        // $('#closeError').click(function() {
-                        //     $('#modal-warning').modal('hide');
-                        // })
-                        alert("Failed to acknowledge this report. Please try again.");
-                    }
-                });
-            });
-
-            // Search function 
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('keyup', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-                const filter = searchInput.value.trim();
-                const tableRows = document.querySelectorAll('.table tbody tr');
-
-                tableRows.forEach(row => {
-                    const weeklyIdCell = row.querySelector('td:first-child');
-                    if (weeklyIdCell) {
-                        const txtValue = weeklyIdCell.textContent || weeklyIdCell.innerText;
-                        const rowDisplay = txtValue.indexOf(filter) > -1 ? '' : 'none';
-                        row.style.display = rowDisplay;
-                    }
-                });
-            });
-
-            closeModal.click(function() {
-                dailyReportsModal.hide();
-                passwordModal.hide();
-                // errorModal.hide();
-                // acknowledgementModal.hide();
-            });
-
-            $(window).click(function(event) {
-                if (event.target === dailyReportsModal[0]) {
-                    dailyReportsModal.hide();
-                }
-                if (event.target === passwordModal[0]) {
-                    passwordModal.hide();
-                }
-                // if (event.target === errorModal[0]) {
-                //     errorModal.hide();
-                // }
-                // if (event.target === acknowledgementModal[0]) {
-                //     acknowledgementModal.hide();
-                // }
-            });
-        });
-    </script>
-    <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+         var ROOT = '<?= ROOT ?>';
+     </script>
+    <script defer src="<?= ROOT ?>scripts/Admin/adminWeeklyReport.js"></script>   
 </body>
 
 </html>

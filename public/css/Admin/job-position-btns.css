@@ -1,0 +1,60 @@
+#addJobPositionBtn:hover,
+#addJobPositionBtn:focus,
+#addJobPositionBtn:active {
+    background-color: #fff !important;
+    border: 1px solid #e0e0e0; 
+}
+
+#UpdateJobPositionBtn:hover,
+#UpdateJobPositionBtn:focus,
+#UpdateJobPositionBtn:active {
+  background-color: #0d6efd !important;
+}
+
+#deleteJobPositionBtn:hover,
+#deleteJobPositionBtn:focus,
+#deleteJobPositionBtn:active {
+  background-color: #dc3545 !important;
+}
+
+#update-job-position-btn:hover,
+#update-job-position-btn:focus,
+#update-job-position-btn:active {
+  background-color: #0d6efd !important;
+  border: none;
+}
+
+.deleteJobPositionBtn:hover,
+.deleteJobPositionBtn:focus,
+.deleteJobPositionBtn:active {
+  background-color: #dc3545 !important;
+  border: none;
+}
+
+#cancelAddJobPositionBtn,
+#saveAddJobPositionBtn,
+#cancelUpdatedJobPositionBtn,
+#saveUpdatedJobPositionBtn {
+  width: 90px;
+  height: 40px;
+}
+
+#cancelAddJobPositionBtn:hover,
+#cancelAddJobPositionBtn:focus,
+#cancelAddJobPositionBtn:active,
+#cancelUpdatedJobPositionBtn:hover,
+#cancelUpdatedJobPositionBtn:focus,
+#cancelUpdatedJobPositionBtn:active {
+  background-color: #6c757d !important;
+  border: none;
+}
+
+#saveAddJobPositionBtn:hover,
+#saveAddJobPositionBtn:focus,
+#saveAddJobPositionBtn:active,
+#saveUpdatedJobPositionBtn:hover,
+#saveUpdatedJobPositionBtn:focus,
+#saveUpdatedJobPositionBtn:active {
+  background-color: #0d6efd !important;
+  border: none;
+}

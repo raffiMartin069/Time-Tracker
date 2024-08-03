@@ -6,7 +6,7 @@ hr {
     width: 264px;
     margin-top: -15px;
     margin-left: 17px;
-}
+} 
 
 .sidebar {
     background: linear-gradient(180deg, #FBF9F3 0%, #C3F7EB 100%);
@@ -14,20 +14,10 @@ hr {
     position: fixed;
     height: 100vh;
     width: 300px;
-    overflow: hidden;
+    overflow: hidden;  
 }
 
-@media (min-width:992px) {
-/*     .sidebar.active {
-        left: -300px;
-        height: 100%;
-        position: absolute;
-        overflow: visible;
-        top: 0;
-        z-index: 666;
-        float: left;
-    } */
-
+@media (min-width:992px) {  
     #content-area.active {
         width: 100%;
     }
@@ -44,16 +34,11 @@ hr {
 }
 
 /* Adds background when hovered */
-.sidebar ul li a:hover {
-    color: #FFF !important;
-    background: #3B9FD8;
-}
-
-/* Adds background when clicked */
+.sidebar ul li a:hover,
 .sidebar li a.active {
     color: #FFF !important;
     background: #3B9FD8;
-}
+} 
 
 .menu-navbar {
     width: 100%;

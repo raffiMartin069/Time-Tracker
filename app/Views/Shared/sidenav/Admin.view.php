@@ -19,12 +19,85 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/bell.css" />
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
+    <style>
+        * {
+            font-family: "Poppins", sans-serif;
+        }
+
+        hr {
+            width: 264px;
+            margin-top: -15px;
+            margin-left: 17px;
+        }
+
+        .sidebar {
+            background: linear-gradient(180deg, #FBF9F3 0%, #C3F7EB 100%);
+            box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.25);
+            position: fixed;
+            height: 100vh;
+            width: 300px;
+            overflow: hidden;
+        }
+
+        @media (min-width:992px) {
+            #content-area.active {
+                width: 100%;
+            }
+        }
+
+        .logo h3 img {
+            width: 45px;
+        }
+
+        .sidebar ul li a {
+            align-items: center;
+            text-decoration: none;
+            padding: 5px 10px 5px 20px;
+        }
+
+        /* Adds background when hovered */
+        .sidebar ul li a:hover,
+        .sidebar li a.active {
+            color: #FFF !important;
+            background: #3B9FD8;
+        }
+
+        .menu-navbar {
+            width: 100%;
+            padding: 15px 30px;
+        }
+
+        .sidebar.show-nav,
+        .body-overlay.show-nav {
+            transform: translatex(0%);
+            display: block;
+        }
+
+        @media (max-width:992px) {
+            .sidebar {
+                transform: translatex(-100%);
+                transition: all 150ms linear;
+            }
+
+            .body-overlay {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+                display: none;
+            }
+        }
+
+        .bottom-items {
+            position: absolute;
+            bottom: 15px;
+        }
+    </style>
 </head>
 
 <body>
     <div>
         <div class="body-overlay"></div>
-        <div class="sidebar">
+        <div class="sidebar" style="z-index: 1000;">
             <div class="logo">
                 <h3 class="ms-3 mt-4 mb-4">
                     <img src="<?php ROOT ?>assets/img/Sidebar/logo.png" class="img-fluid ms-2" />
@@ -103,10 +176,6 @@
                     <hr>
 
                     <?php
-                    if (session_status() == PHP_SESSION_NONE) {
-                        session_start();
-                    }
-
                     $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
                     $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
                     $getProfilePhoto = $defaultPhoto;
@@ -302,29 +371,41 @@
             $controller->notificationView();
             break;
 
-            case 'dailyReport':
-                $controller->dailyreport();
-                break;
-    
-            case 'weeklyReport':
-                $controller->weeklyreport();
-                break;
-    
-            case 'biweeklyReport':
-                $controller->biweeklyreport();
-                break;
-    
-            case 'editProfile':
-                $controller->editProfileInformation();
-                break;
-    
-            case 'manageAdmin':
-                $controller->manageAdminAccess();
-                break;
+        case 'dailyReport':
+            $controller->dailyreport();
+            break;
 
-            // case 'manage/reports/view':
-            //     $controller->reports();
-            //     break;
+        case 'weeklyReport':
+            $controller->weeklyreport();
+            break;
+
+        case 'biweeklyReport':
+            $controller->biweeklyreport();
+            break;
+
+        case 'editProfile':
+            $controller->editProfileInformation();
+            break;
+
+        case 'manageAdmin':
+            $controller->manageAdminAccess();
+            break;
+
+        case 'manageShift':
+            $controller->manageShifts();
+            break;
+
+        case 'employmentClassification':
+            $controller->employmentClassification();
+            break;
+
+        case 'manageJobPosition':
+            $controller->manageJobPosition();
+            break;
+
+        case 'recycleBin':
+            $controller->manageRecycleBin();
+            break;
 
         default:
             $controller->main();

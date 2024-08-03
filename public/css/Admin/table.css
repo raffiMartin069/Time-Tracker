@@ -1,0 +1,45 @@
+.table-responsive {
+  overflow-x: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  margin: 0 !important;
+}
+
+table th,
+table td {
+  padding-right: 12px !important;
+  white-space: nowrap;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+table th {
+  color: #189174 !important;
+  background-color: #fdfdfd !important;
+}
+
+table td .button-group {
+  display: inline-flex;
+  gap: 4px;
+}
+
+thead th:first-child,
+tbody td:first-child {
+  border-left: none;
+}
+
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}

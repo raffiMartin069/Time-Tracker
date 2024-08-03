@@ -1,0 +1,47 @@
+#addEmploymentBtn:hover,
+#addEmploymentBtn:focus,
+#addEmploymentBtn:active {
+  background-color: #fff !important;
+  border: 1px solid #e0e0e0; 
+}
+
+#UpdateBtn:hover,
+#UpdateBtn:focus,
+#UpdateBtn:active {
+  background-color: #0d6efd !important;
+}
+
+.deleteEmploymentBtn:hover,
+.deleteEmploymentBtn:focus,
+.deleteEmploymentBtn:active {
+  background-color: #dc3545 !important;
+  border: none;
+}
+
+#cancelAddEmploymentBtn,
+#saveAddEmploymentBtn,
+#cancelUpdatedEmploymentBtn,
+#saveUpdatedEmploymentBtn {
+  width: 90px;
+  height: 40px;
+}
+
+#cancelAddEmploymentBtn:hover,
+#cancelAddEmploymentBtn:focus,
+#cancelAddEmploymentBtn:active,
+#cancelUpdatedEmploymentBtn:hover,
+#cancelUpdatedEmploymentBtn:focus,
+#cancelUpdatedEmploymentBtn:active {
+  background-color: #6c757d !important;
+  border: none;
+}
+
+#saveAddEmploymentBtn:hover,
+#saveAddEmploymentBtn:focus,
+#saveAddEmploymentBtn:active,
+#saveUpdatedEmploymentBtn:hover,
+#saveUpdatedEmploymentBtn:focus,
+#saveUpdatedEmploymentBtn:active {
+  background-color: #0d6efd !important;
+  border: none;
+}

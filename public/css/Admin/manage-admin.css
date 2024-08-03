@@ -1,0 +1,22 @@
+.checkbox-group {
+  display: block;
+  gap: 10px;
+}
+
+.checkbox-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 5px;
+}
+
+.select-members {
+  height: 200px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  padding: 5px;
+}
+
+ 

@@ -1,18 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="en"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhereToNext | Admin</title>
+    <title>WhereToNext | Employee</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" /> 
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/tables.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
-</head>
+    <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reportsDateHeader.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/reportsDateFilter.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/reportsBtns.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/reportsBreaks.css">
+ </head>
 
 <body>
     <div id="wrapper">
@@ -26,18 +31,20 @@
                     <h4 style="margin: 0;">Daily Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center">Bi-weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                         </a>
                     </div>
+
+                    
                 </div>
                 <div>
-                    <table class="table align-middle mb-0 bg-white text-center">
+                    <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                         <thead style="position: sticky; top: 0;">
                             <tr>
                                 <th>Date</th>
@@ -61,9 +68,7 @@
                                         <td><?php echo $report->getBREAKOUT(); ?></td>
                                         <td><?php echo $report->getDURATION(); ?></td>
                                         <td><?php echo $report->getCLOCKOUT(); ?></td>
-                                        <td><?php echo $report->getHRSWORKED(); ?></td>
-                                        <!-- <td><?php echo $report->getAPPRSTAT(); ?></td>
-                                        <td><?php echo $report->getACKNOWLEDGEDBY(); ?></td> -->
+                                        <td><?php echo $report->getHRSWORKED(); ?></td> 
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -78,9 +83,8 @@
         </div>
     </div>
 
-    <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
+    <script src="<?= ROOT ?>scripts/Admin/sidebar.js" async></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.lordicon.com/lordicon.js"></script>
-</body>
-
+</body> 
 </html>

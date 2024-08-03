@@ -1,0 +1,43 @@
+#addAdminBtn:hover,
+#addAdminBtn:focus,
+#addAdminBtn:active {
+  background-color: #fff !important;
+  border: 1px solid #e0e0e0;
+}
+
+#deleteBtn:hover,
+#deleteBtn:focus,
+#deleteBtn:active {
+  background-color: #fff !important;
+  border: 1px solid #e0e0e0;
+}
+
+#cancelAddAdminBtn,
+#saveAdminBtn,
+#cancelDeleteAdminBtn,
+#confirmDeleteBtn {
+  width: 90px;
+  height: 40px;
+}
+
+#cancelAddAdminBtn:hover,
+#cancelAddAdminBtn:focus,
+#cancelAddAdminBtn:active,
+#cancelDeleteAdminBtn:hover,
+#cancelDeleteAdminBtn:focus,
+#cancelDeleteAdminBtn:active {
+  background-color: #6c757d !important;
+}
+
+#saveAdminBtn:hover,
+#saveAdminBtn:focus,
+#saveAdminBtn:active {
+  background-color: #0d6efd !important;
+}
+
+#confirmDeleteBtn:hover,
+#confirmDeleteBtn:focus,
+#confirmDeleteBtn:active {
+  background-color: #dc3545 !important;
+  border: none;
+}

@@ -1,0 +1,11 @@
+.modal-body {
+  text-align: left;
+}
+
+#addEmploymentType:focus,
+#addRequiredHours:focus,
+#modal-update-employment-type:focus,
+#modal-update-employment-hrs:focus {
+  box-shadow: none;
+  border: 1px solid #0095ff;
+}

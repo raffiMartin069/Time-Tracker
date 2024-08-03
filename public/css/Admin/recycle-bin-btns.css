@@ -1,0 +1,13 @@
+#recover-account-btn:hover,
+#recover-account-btn:focus,
+#recover-account-btn:active {
+  background-color: #0d6efd !important;
+  border: none !important;
+}
+
+#delete-account-btn:hover,
+#delete-account-btn:focus,
+#delete-account-btn:active {
+  background-color: #dc3545 !important;
+  border: none !important;
+}

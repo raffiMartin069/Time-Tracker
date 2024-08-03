@@ -1,0 +1,44 @@
+.table th,
+.table td {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.accordion .table {
+    margin: 0;
+    border: none;
+    width: 100%;
+}
+
+ 
+
+.accordion .table th,
+.accordion .table td {  
+    height: 20px !important; 
+    padding: 3px !important; 
+    line-height: 20px !important; 
+    border-bottom: none !important;
+}  
+
+.accordion .accordion-body {
+    padding: 0;
+    border-top: 1px solid #ddd;
+    border-bottom: none !important;
+} 
+
+.accordion .accordion-header {
+    background-color: #e9f2ff !important;
+}
+
+.accordion-item {
+    border: none; 
+}
+
+.break-details-row td {
+    padding: 0 !important;
+    border: none;
+}
+
+.view-breaks-btn { 
+    cursor: pointer; 
+}
