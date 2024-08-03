@@ -1025,14 +1025,7 @@ class Admin extends Controller
 
         echo json_encode($serverResponse);
     }
-
-    // airielle
-    // public function index()
-    // {
-    //     $_SESSION["UID"] = 12;
-    //     $this->view('Shared/sidenav/Admin');
-    // }
-
+    
     protected function ArrangeReportsResults($data)
     {
         $results = [];
@@ -1301,35 +1294,6 @@ class Admin extends Controller
         }
     }
 
-    // Daily Stamps of each employee for the week
-    // public function fetchWeeklyDailyReports()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //         $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
-    //         $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
-
-    //         try {
-    //             $query = "select * from weekly_stamp(:report_date, :emp_id)";
-
-    //             $params = [
-    //                 'report_date' => $reportDate,
-    //                 'emp_id' => $empId
-    //             ];
-
-    //             $data = $this->Query($query, $params);
-    //             $results = $this->ArrangeReportsResults($data);
-    //             header("Content-Type: application/json");
-    //             echo json_encode($results);
-    //         } catch (Exception $e) {
-    //             echo "Error: " . $e->getMessage();
-    //         } catch (PDOException $e) {
-    //             echo "PDO Error: " . $e->getMessage();
-    //         }
-    //     } else {
-    //         die();
-    //     }
-    // }
-
     public function fetchWeeklyDailyReports()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -1376,104 +1340,7 @@ class Admin extends Controller
             echo json_encode(['error' => 'Invalid request method']);
         }
     }
-
-
-    public function fetchAcknowledgementData()
-    {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $wklyId = isset($_GET['wkly_id']) ? $_GET['wkly_id'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
-            $password = isset($_GET['password']) ? $_GET['password'] : null;
-
-            try {
-                // Call the stored procedure to approve the weekly report
-                $query = "call approve_weekly_report(:emp_id, :wkly_id, :password)";
-                $params = [
-                    'emp_id' => $empId,
-                    'wkly_id' => $wklyId,
-                    'password' => $password
-                ];
-
-                $this->Query($query, $params);
-
-                $returnQuery = "SELECT acknowledged_by FROM get_weekly_report_table_admin() WHERE wkly_id = :wkly_id";
-
-                $returnParams = [
-                    'wkly_id' => $wklyId
-                ];
-
-                $returnData = $this->Query($returnQuery, $returnParams);
-
-                if (!empty($returnData) && isset($returnData[0])) {
-
-                    $returnUpdatedData = $returnData[0];
-
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'acknowledgedBy' => $returnUpdatedData->acknowledged_by ?? null
-                    ]);
-                }
-            } catch (PDOException $e) {
-                echo "PDO Error: " . $e->getMessage();
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            }
-        } else {
-            die();
-        }
-    }
-
-    // public function fetchBiweeklyAcknowledgementData()
-    // {
-    //     if (session_status() == PHP_SESSION_NONE) {
-    //         session_start();
-    //     }
-
-    //     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //         $biWklyId = isset($_GET['bi_wkly_id']) ? $_GET['bi_wkly_id'] : null;
-    //         $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
-    //         $password = isset($_GET['password']) ? $_GET['password'] : null;
-
-    //         try {
-    //             // Call the stored procedure to approve the weekly report
-    //             $query = "call approve_bi_weekly_report(:emp_id, :bi_wkly_id, :password)";
-    //             $params = [
-    //                 'emp_id' => $empId,
-    //                 'bi_wkly_id' => $biWklyId,
-    //                 'password' => $password
-    //             ];
-
-    //             $this->Query($query, $params);
-
-    //             $returnQuery = "SELECT acknowledged_by FROM get_bi_weekly_report_table_admin() WHERE bi_wkly_id = :bi_wkly_id";
-    //             $returnParams = [
-    //                 'bi_wkly_id' => $biWklyId
-    //             ];
-
-    //             $returnData = $this->Query($returnQuery, $returnParams);
-
-    //             if (!empty($returnData) && isset($returnData[0])) {
-    //                 $returnUpdatedData = $returnData[0];
-
-    //                 header("Content-Type: application/json");
-    //                 echo json_encode([
-    //                     'acknowledgedBy' => $returnUpdatedData->acknowledged_by ?? null
-    //                 ]);
-    //             }
-    //         } catch (PDOException $e) {
-    //             echo "PDO Error: " . $e->getMessage();
-    //         } catch (Exception $e) {
-    //             echo "Error: " . $e->getMessage();
-    //         }
-    //     } else {
-    //         die();
-    //     }
-    // }
-
+    
     protected function ArrangeBiweeklyResults($data)
     {
         $results = [];
@@ -1560,7 +1427,7 @@ class Admin extends Controller
     public function editProfileInformation()
     {
         try {
-            $data = $this->GetInfo($_SESSION["UID"], 'employee');
+            $data = $this->GetInfo($_SESSION["userId"]);
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
