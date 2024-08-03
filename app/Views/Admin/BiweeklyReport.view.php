@@ -60,30 +60,78 @@
                         }
                     </style>
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
-                    <thead style="position: sticky; top: 0;">
-                            <tr>
-                                <th>Biweekly ID</th>
-                                <th>Date</th>
-                                <th>Biweekly Total</th>
-                                <th>Daily Stamps</th>
-                                <th>Tracker ID</th>
-                                <th>Employee Name</th> 
-                                <th>Status</th>
-                                <th>Acknowledged By</th>
+                        <thead style="position: sticky; top: 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                                <th hidden>Weekly ID</th>
+                                <th>Employee ID</th>
+                                <th>Employee Name</th>
+                                <th>Total Biweekly Hours</th>
+                                <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody id="reportTableBody">
                             <?php if (!empty($results) && is_array($results)) : ?>
-                                <?php foreach ($results as $report) : ?>
-                                    <tr class="table-row">
-                                        <td class="getmybiwklyid"><?php echo $report->getBIWKLYID(); ?></td>
-                                        <td class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
-                                        <td><?php echo $report->getTOTALHRS(); ?></td>
-                                         <td><img class="clickMyDots" src="<?= ROOT ?>assets/img/employee/dots.svg"></td>
+                                <?php
+                                $currentDate = "";
+                                foreach ($results as $report) :
+                                    $reportDate = $report->getREPORTDATE();
+                                    $dateTime = new DateTime($reportDate);
+                                    $formattedDate = $dateTime->format('j M Y');
+                                    $dayOfWeek = $dateTime->format('D');
+
+                                    if ($currentDate != $reportDate) {
+                                        if ($currentDate != "") {
+                                            echo '</tr>';
+                                        }
+                                        $currentDate = $reportDate;
+                                        echo '<tbody>';
+                                        echo '<tr class="date-header">';
+                                        echo '<td colspan="9" style="background-color: #F6F6F7;">';
+                                        echo '<span>';
+                                        echo '<img src="' . ROOT . 'assets/img/calendar.png" class="img-fluid" style="max-width:20px;" /> <p>' . $dayOfWeek . ', ' . $formattedDate . '</p>';
+                                        echo '</span>';
+                                        echo '</td>';
+                                        echo '</tr>';
+                                    }
+
+                                    $empId = $report->getEMPID();
+                                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                                    $getProfilePhoto = $defaultPhoto;
+
+                                    if ($empId) {
+                                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                                        $returnParams = [
+                                            ':emp_id' => $empId
+                                        ];
+                                        $returnData = $this->Query($returnQuery, $returnParams);
+
+                                        if (!empty($returnData) && !empty($returnData[0]->image)) {
+                                            $getProfilePhoto = $returnData[0]->image;
+                                        }
+                                    }
+                                ?>
+                                    <tr class="employee-record" data-date="<?php echo $reportDate; ?>">
+                                        <td class="getmybiwklyid" hidden><?php echo $report->getBIWKLYID(); ?></td>
                                         <td class="getmyempid"><?php echo $report->getEMPID(); ?></td>
-                                        <td><?php echo $report->getEMPNAME(); ?></td> 
-                                        <td class="getmyapprstat"><?php echo $report->getAPPRSTAT(); ?></td>
-                                        <td><button class="text-white approve-btn" id="getmyadminname" style="font-size: 12px; background-color: #009DFE; border: none; border-radius: 10px;"><?php echo $report->getACKNOWLEDGEDBY(); ?></button></td>
+                                        <td class="employee-name">
+                                             <img src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                             <?php echo $report->getEMPNAME(); ?>
+                                         </td> 
+                                        <td hidden class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
+                                        <td><?php echo $report->getTOTALHRS(); ?></td>
+                                        <td>
+                                            <button type="submit" class="btn clickMyDots" id="previewBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius: 0; border-right: none !important; margin-right: 2.3rem !important; margin-top: 1rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                                <img src="<?php ROOT ?>assets/img/view30.png" class="img-fluid ms-2" title="View Daily Reports" style="max-width:87%;  margin-left: .1rem !important;" />
+                                            </button>
+
+                                            <form action="vendor/BiweeklyReport.php" method="post" target="_blank" class="biweeklyDownload">
+                                                <input type="hidden" name="name" value="<?php echo $report->getEMPNAME(); ?>">
+                                                <input type="hidden" name="totalbiweeklyhrs" value="<?php echo $report->getTOTALHRS(); ?>">
+
+                                                <button type="submit" class="btn downloadBtn" id="downloadBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius:0; margin-right: -2.5rem !important; margin-top: -2.05rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                                                    <img src="<?php ROOT ?>assets/img/download-pdf5.png" class="img-fluid" title="Download Report" style="max-width: 110%; margin-left: -.1rem;" />
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else : ?>
@@ -128,127 +176,8 @@
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script> 
     <script>
-        $(document).ready(function() {
-            var dailyReportsModal = $("#myModal");
-            var passwordModal = $("#passwordModal");
-            var closeModal = $(".close");
-
-            $(".clickMyDots").click(function() {
-                var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
-                var empId = $(this).closest('tr').find('.getmyempid').text();
-
-                $.ajax({
-                    url: "Admin/fetchBiweeklyDailyReports",
-                    method: 'GET',
-                    data: {
-                        report_date: reportDate,
-                        emp_id: empId
-                    },
-                    dataType: 'json',
-                    success: function(data) {
-                        var dailyReportsBody = $("#dailyReportsBody");
-                        dailyReportsBody.empty();
-
-                        if (data.length > 0) {
-                            data.forEach(function(report) {
-                                var row = `
-                            <tr>   
-                                <td>${report.DATE}</td>
-                                <td>${report.CLOCK_IN}</td>
-                                <td>${report.BREAK_IN}</td>
-                                <td>${report.BREAK_OUT}</td>
-                                <td>${report.BREAK_DURATION}</td> 
-                                <td>${report.CLOCK_OUT}</td>
-                                <td>${report.HRS_WORKED}</td>
-                            </tr>
-                        `;
-                                dailyReportsBody.append(row);
-                            });
-                        } else {
-                            dailyReportsBody.html('<tr><td colspan="9">No daily reports found for this week.</td></tr>');
-                        }
-
-                        dailyReportsModal.show();
-                    },
-                    error: function(xhr, status, error) {
-                        var errorMessage = xhr.responseJSON ? xhr.responseJSON.error : 'An error occurred while fetching data.';
-                        var dailyReportsBody = $("#dailyReportsBody");
-                        dailyReportsBody.html('<tr><td colspan="9">' + errorMessage + '</td></tr>');
-                        dailyReportsModal.show();
-                    }
-                });
-            });
-
-            $(".approve-btn").click(function() {
-                var biWklyId = $(this).closest('tr').find('.getmybiwklyid').text();
-                var apprStat = $(this).closest('tr').find('.getmyapprstat').text();
-
-                if (apprStat === 'Awaiting approval') {
-                    passwordModal.data('bi-wkly-id', biWklyId).data('button', $(this)).show();
-                } else {
-                    alert("This report has already been approved and cannot be changed.");
-                }
-            });
-
-            $("#passwordForm").submit(function(event) {
-                event.preventDefault();
-                var biWklyId = passwordModal.data('bi-wkly-id');
-                var password = $("#adminPassword").val();
-
-                $.ajax({
-                    url: "Admin/fetchBiweeklyAcknowledgementData",
-                    method: 'GET',
-                    data: {
-                        bi_wkly_id: biWklyId,
-                        password: password
-                    },
-                    success: function(data) {
-                        var button = passwordModal.data('button');
-                        button.closest('tr').find('.getmyapprstat').text("Approved");
-                        button.text(data.acknowledgedBy);
-                        alert("You have successfully acknowledged this report!");
-                        passwordModal.hide();
-                    },
-                    error: function(xhr, status, error) {
-                        alert("Failed to acknowledge this report. Please try again.");
-                    }
-                });
-            });
-
-            // Search function 
-            const searchInput = document.getElementById('searchInput');
-            searchInput.addEventListener('keyup', function() {
-                this.value = this.value.replace(/[^0-9]/g, '');
-                const filter = searchInput.value.trim();
-                const tableRows = document.querySelectorAll('.table tbody tr');
-
-                tableRows.forEach(row => {
-                    const weeklyIdCell = row.querySelector('td:first-child');
-                    if (weeklyIdCell) {
-                        const txtValue = weeklyIdCell.textContent || weeklyIdCell.innerText;
-                        const rowDisplay = txtValue.indexOf(filter) > -1 ? '' : 'none';
-                        row.style.display = rowDisplay;
-                    }
-                });
-            });
-
-            closeModal.click(function() {
-                dailyReportsModal.hide();
-                passwordModal.hide();
-            });
-
-            $(window).click(function(event) {
-                if (event.target === dailyReportsModal[0]) {
-                    dailyReportsModal.hide();
-                }
-                if (event.target === passwordModal[0]) {
-                    passwordModal.hide();
-                }
-            });
-        });
-    </script>
-    <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
-    <script src="https://cdn.lordicon.com/lordicon.js"></script>
-</body>
-
+         var ROOT = '<?= ROOT ?>';
+     </script>
+    <script defer src="<?= ROOT ?>scripts/Admin/adminBiweeklyReport.js"></script> 
+</body> 
 </html>
