@@ -1,5 +1,5 @@
 <?php
-class Sanitations
+class Sanitize
 { 
     public static function intSanitation($value)
     {

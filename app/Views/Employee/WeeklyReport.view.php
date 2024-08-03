@@ -105,7 +105,7 @@
 
             $(".clickMyDots").click(function() {
                 var reportDate = $(this).closest('tr').find('.getmyreportdate').text();
-                var empId = <?php echo $_SESSION["UID"]; ?>
+                var empId = <?php echo $_SESSION["userId"]; ?>
 
                 $.ajax({
                     url: "Employee/fetchWeeklyDailyReports",

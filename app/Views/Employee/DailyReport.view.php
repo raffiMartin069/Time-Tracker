@@ -32,11 +32,14 @@
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Bi-weekly</button>
                         </a>
                     </div>
@@ -44,6 +47,7 @@
                     
                 </div>
                 <div>
+                    <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                         <thead style="position: sticky; top: 0;">
                             <tr>

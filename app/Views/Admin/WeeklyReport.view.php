@@ -33,8 +33,10 @@
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
+                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
@@ -155,6 +157,7 @@
         <div class="modal-content">
             <table class="summary-table table align-middle mb-0 bg-white text-center">
                 <thead>
+                    <tr>
                     <tr>
                         <th>Date</th>
                         <th>Clock In</th>

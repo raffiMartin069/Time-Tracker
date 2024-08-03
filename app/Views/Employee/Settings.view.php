@@ -33,7 +33,7 @@
                         session_start();
                     }
  
-                    $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
+                    $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
 
                     // This is the path for the default profile photo
                     $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
