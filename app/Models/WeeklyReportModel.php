@@ -5,18 +5,14 @@ final class WeeklyReportModel
     private $REPORT_DATE;
     private $TOTAL_HOURS;
     private $EMP_ID;
-    private $EMPLOYEE_NAME; 
-    private $APPR_STATUS;
-    private $ACKNOWLEDGED_BY;
+    private $EMPLOYEE_NAME;  
 
     public function __construct($data) {
         $this->WKLY_ID = $data['WKLY_ID'];
         $this->REPORT_DATE = $data['REPORT_DATE'];
         $this->TOTAL_HOURS = $data['TOTAL_HOURS'];
         $this->EMP_ID = $data['EMP_ID'];   
-        $this->EMPLOYEE_NAME = $data['EMPLOYEE_NAME']; 
-        $this->APPR_STATUS = $data['APPR_STATUS'];
-        $this->ACKNOWLEDGED_BY = $data['ACKNOWLEDGED_BY'];
+        $this->EMPLOYEE_NAME = $data['EMPLOYEE_NAME'];  
     }  
 
     /**
@@ -97,37 +93,5 @@ final class WeeklyReportModel
     public function setEMPNAME($EMPLOYEE_NAME)
     {
         $this->EMPLOYEE_NAME = $EMPLOYEE_NAME;
-    } 
-
-     /**
-     * @return mixed
-     */
-    public function getAPPRSTAT()
-    {
-        return $this->APPR_STATUS;
-    }
- 
-    /**
-     * @param mixed $APPR_STATUS
-     */
-    public function setAPPRSTAT($APPR_STATUS)
-    {
-        $this->APPR_STATUS = $APPR_STATUS;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getACKNOWLEDGED_BY()
-    {
-        return $this->ACKNOWLEDGED_BY;
-    }
- 
-    /**
-     * @param mixed $ACKNOWLEDGED_BY
-     */
-    public function setACKNOWLEDGED_BY($ACKNOWLEDGED_BY)
-    {
-        $this->ACKNOWLEDGED_BY = $ACKNOWLEDGED_BY;
-    }
+    }  
 }
