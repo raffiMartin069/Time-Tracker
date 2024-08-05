@@ -62,16 +62,19 @@
 #closeReport:focus {
   background-color: #6c757d !important;
   border-color: transparent;
+  border: none !important;
 }
 
 #updateReport:hover,
 #updateReport:focus {
   background-color: #0d6efd !important;
   border-color: transparent;
+  border: none !important;
 }
 
 /* Weekly Report Buttons */
 #previewDownloadBtns:hover,
 #previewDownloadBtns:focus {
   background-color: #f9f9f9 !important;
+  border: none !important;
 }
