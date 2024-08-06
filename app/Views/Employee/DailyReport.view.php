@@ -130,8 +130,8 @@
                                         </td>
                                         <td><?php echo $report->getHRSWORKED(); ?></td>
                                         <td>
-                                            <form action="Admin/employeeDailyReport" method="post" target="_blank"> 
-                                                <input type="hidden" name="name" value="<?php echo $_SESSION['name'] ?>">
+                                            <form action="Admin/employeeDailyReport" method="post" target="_blank">
+                                                <input type="hidden" name="name" value="<?php echo isset($_SESSION['name']) ? htmlspecialchars($_SESSION['name']) : 'N/A'; ?>">
                                                 <input type="hidden" name="date" value="<?php echo $report->getDATE(); ?>">
                                                 <input type="hidden" name="clockin" value="<?php echo $report->getCLOCKIN(); ?>">
                                                 <input type="hidden" name="lunchduration" value="<?php echo $report->getLUNCHDURATION(); ?>">
