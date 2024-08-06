@@ -521,10 +521,8 @@ class Employee extends Controller
     public function UpdateProfilePic()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize and validate the uploaded file
+            // Sanitize and validates the uploaded file and employee session id
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
-
-            // Validate and sanitize the session data
             $empId = isset($_SESSION["userId"]) ? Sanitize::intSanitation($_SESSION["userId"]) : null;
 
             // Define allowed file types for file upload
@@ -534,11 +532,13 @@ class Employee extends Controller
             if ($profilePhoto && $profilePhoto['error'] == 0 && in_array($profilePhoto['type'], $allowed)) {
                 $folder = 'uploads/';
 
+                // Checks if the 'uploads' directory already exist
+                // If it is not, it will create a new directory
                 if (!file_exists($folder)) {
                     mkdir($folder, 0777, true);
                 }
 
-                // Sanitize the file name to avoid security issues
+                // Sanitized the file name to avoid security issues
                 $sanitizedFileName = Sanitize::strSanitation(basename($profilePhoto['name']));
                 $destination = $folder . $sanitizedFileName;
 
