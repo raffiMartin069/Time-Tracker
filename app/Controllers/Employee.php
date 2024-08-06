@@ -327,7 +327,6 @@ class Employee extends Controller
         return $results;
     }
 
-
     public function dailyreport()
     {
         try {
@@ -346,7 +345,7 @@ class Employee extends Controller
             echo $e->getMessage();
         }
     }
-    
+
     protected function ArrangeWeeklyResults($data)
     {
         $results = [];
@@ -384,8 +383,8 @@ class Employee extends Controller
     public function fetchWeeklyDailyReports()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
-            $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
+            $reportDate = isset($_GET['report_date']) ? Sanitize::strSanitation($_GET['report_date']) : null;
+            $empId = isset($_GET['emp_id']) ? Sanitize::intSanitation($_GET['emp_id']) : null;
 
             try {
                 $query = "select * from weekly_stamp(:report_date, :emp_id)";
@@ -447,8 +446,8 @@ class Employee extends Controller
     public function fetchBiweeklyDailyReports()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
-            $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
+            $reportDate = isset($_GET['report_date']) ? Sanitize::strSanitation($_GET['report_date']) : null;
+            $empId = isset($_GET['emp_id']) ? Sanitize::intSanitation($_GET['emp_id']) : null;
 
             try {
                 $query = "select * from bi_weekly_stamp(:report_date, :emp_id)";
@@ -503,7 +502,7 @@ class Employee extends Controller
     public function settings()
     {
         try {
-            $data = $this->GetInfo($_SESSION["userId"]);
+            $data = $this->GetInfo($_SESSION["userId"], 'employee');
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
@@ -522,38 +521,48 @@ class Employee extends Controller
     public function UpdateProfilePic()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            // Sanitize and validate the uploaded file
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
-            $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
 
+            // Validate and sanitize the session data
+            $empId = isset($_SESSION["userId"]) ? Sanitize::intSanitation($_SESSION["userId"]) : null;
+
+            // Define allowed file types for file upload
             $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg+xml'];
 
+            // Checks the file type of the uploaded image and verify if it is in the list of allowed file types
             if ($profilePhoto && $profilePhoto['error'] == 0 && in_array($profilePhoto['type'], $allowed)) {
                 $folder = 'uploads/';
 
                 if (!file_exists($folder)) {
                     mkdir($folder, 0777, true);
                 }
-                $destination = $folder . basename($profilePhoto['name']);
-                try {
-                    $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
-                    $params = [
-                        'emp_id' => $empId,
-                        'profile_photo' => $destination
-                    ];
-                    $this->Query($query, $params);
-                    move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
-                } catch (Exception $e) {
-                    echo "Error: " . $e->getMessage();
-                } catch (PDOException $e) {
-                    echo "PDO Error: " . $e->getMessage();
+
+                // Sanitize the file name to avoid security issues
+                $sanitizedFileName = Sanitize::strSanitation(basename($profilePhoto['name']));
+                $destination = $folder . $sanitizedFileName;
+
+                // Uploads the file to its destination in the uploads folder
+                if (move_uploaded_file($profilePhoto['tmp_name'], $destination)) {
+                    try {
+                        $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
+                        $params = [
+                            'emp_id' => $empId,
+                            'profile_photo' => $destination
+                        ];
+
+                        $this->Query($query, $params);
+                    } catch (Exception $e) {
+                        echo "Error: " . $e->getMessage();
+                    } catch (PDOException $e) {
+                        echo "PDO Error: " . $e->getMessage();
+                    }
                 }
-            } else {
-                echo "Uploaded image is not valid!";
-            }
+            }  
         } else {
             die();
         }
-    }
+    } 
 
     public function UpdateSettingsGeneralInfo()
     {
@@ -571,14 +580,8 @@ class Employee extends Controller
                 'm_name' => Sanitize::strSanitation($data['m_name']),
                 'l_name' => Sanitize::strSanitation($data['l_name']),
                 'birth_date' => Sanitize::strSanitation($data['birth_date']),
-                'emp_id' => Sanitation::intSanitation($data['emp_id'])
+                'emp_id' => Sanitize::intSanitation($data['emp_id'])
             ];
-
-            if ($sanitized_data['emp_id'] === null) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid Tracker ID.']);
-                exit;
-            }
 
             try {
                 $query = "CALL change_info(:emp_id, :l_name, :m_name, :f_name, :birth_date)";
@@ -592,11 +595,13 @@ class Employee extends Controller
 
                 $this->Query($query, $params);
 
+                // Get the values of the updated entries 
                 $returnQuery = "SELECT lname, mname, fname, birth_date FROM employee WHERE emp_id = :emp_id";
                 $returnParams = [':emp_id' => $sanitized_data['emp_id']];
 
                 $returnData = $this->Query($returnQuery, $returnParams);
 
+                // Sends the updated values to display changes without reload and remain on the same tab
                 if (!empty($returnData) && isset($returnData[0])) {
                     $returnUpdatedData = $returnData[0];
 
@@ -609,15 +614,12 @@ class Employee extends Controller
                     ]);
                 }
             } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
+                echo "Error: " . $e->getMessage();
             } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
             }
         } else {
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed.']);
+            die();
         }
     }
 
@@ -636,12 +638,6 @@ class Employee extends Controller
                 'emp_id' => Sanitize::intSanitation($data['emp_id'])
             ];
 
-            if ($sanitized_data['emp_id'] === null) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid employee ID.']);
-                exit;
-            }
-
             try {
                 $query = "CALL change_password(:emp_id, :curr_password, :new_password)";
                 $params = [
@@ -652,6 +648,7 @@ class Employee extends Controller
 
                 $data = $this->Query($query, $params);
 
+                // Sends the updated values to display changes without reload and remain on the same tab
                 if (!empty($data) && isset($data[0])) {
                     $updatedInfo = $data[0];
                     header("Content-Type: application/json");
@@ -660,16 +657,13 @@ class Employee extends Controller
                         'new_password' => $updatedInfo['new_password'] ?? null,
                     ]);
                 }
-            } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
             } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
         } else {
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed.']);
+            die();
         }
     }
 
@@ -685,14 +679,8 @@ class Employee extends Controller
             $sanitized_data = [
                 'email' => Sanitize::emailSanitation($data['email']),
                 'ecn' => Sanitize::strSanitation($data['ecn']),
-                'emp_id' => Sanitation::intSanitation($data['emp_id'])
+                'emp_id' => Sanitize::intSanitation($data['emp_id'])
             ];
-
-            if ($sanitized_data['emp_id'] === null || !filter_var($sanitized_data['email'], FILTER_VALIDATE_EMAIL)) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid input data.']);
-                exit;
-            }
 
             try {
                 $query = "CALL change_email_contact(:emp_id, :email, :ecn)";
@@ -704,11 +692,13 @@ class Employee extends Controller
 
                 $this->Query($query, $params);
 
+                // Get the values of the updated entries
                 $returnQuery = "SELECT email, ecn FROM employee_credential WHERE emp_id = :emp_id";
                 $returnParams = [':emp_id' => $sanitized_data['emp_id']];
 
                 $returnData = $this->Query($returnQuery, $returnParams);
 
+                // Sends the updated values to display changes without reload and remain on the same tab
                 if (!empty($returnData) && isset($returnData[0])) {
                     $returnUpdatedData = $returnData[0];
 
@@ -718,16 +708,13 @@ class Employee extends Controller
                         'ecn' => $returnUpdatedData->ecn ?? null,
                     ]);
                 }
-            } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'Error: ' . $e->getMessage()]);
             } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => 'PDO Error: ' . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
         } else {
-            http_response_code(405);
-            echo json_encode(['error' => 'Method not allowed.']);
+            die();
         }
     }
 
