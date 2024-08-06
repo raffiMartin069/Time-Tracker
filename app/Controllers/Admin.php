@@ -1518,6 +1518,11 @@ class Admin extends Controller
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             try {
                 $data = $this->GetAll('get_admin_employees()');
+                if ($_SERVER['REQUEST_METHOD'] == 'GET' && isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
+                    header("Content-Type: application/json");
+                    echo json_encode($data);
+                    exit;
+                }
 
                 $admins = $this->ArrangeManageAccess($data);
 
