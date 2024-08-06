@@ -542,7 +542,8 @@ class Employee extends Controller
                 $sanitizedFileName = Sanitize::strSanitation(basename($profilePhoto['name']));
                 $destination = $folder . $sanitizedFileName;
 
-                // Uploads the file to its destination in the uploads folder
+                // Uploads the file to its destination in the uploads folder and
+                // only executes the query after a successful upload to avoid inconsistency
                 if (move_uploaded_file($profilePhoto['tmp_name'], $destination)) {
                     try {
                         $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
