@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/reportsDateFilter.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/reportsBtns.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/reportsBreaks.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/Admin/employee-photo.css">
 </head>
 
 <body>
@@ -54,18 +55,12 @@
 
                 </div>
                 <div>
-                    <style>
-                        #reportsTable th,
-                        #reportsTable td {
-                            width: 15% !important;
-                            white-space: nowrap;
-                        }
-
+                    <style>  
                         #reportsTableIdTh,
                         #reportsTableIdTd {
                             padding-left: 3rem !important;
                         } 
-                    </style>
+                    </style> 
 
                     <div class="table-responsive">
                         <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
@@ -78,6 +73,7 @@
                                 </tr>
                             </thead>
                             <tbody id="reportTableBody">
+
                                 <?php if (!empty($results) && is_array($results)) : ?>
                                     <?php
                                     $currentDate = "";
@@ -122,7 +118,10 @@
                                             <td class="getmybiwklyid" hidden><?php echo $report->getBIWKLYID(); ?></td>
                                             <td class="getmyempid" id="reportsTableIdTd"><?php echo $report->getEMPID(); ?></td>
                                             <td class="employee-name">
-                                                <img src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                                <div class="photo-container">
+                                                    <img class="photo" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                                </div>
+
                                                 <?php echo $report->getEMPNAME(); ?>
                                             </td>
                                             <td hidden class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
