@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="<?= ROOT ?>css/reportsDateFilter.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/reportsBtns.css">
     <link rel="stylesheet" href="<?= ROOT ?>css/reportsBreaks.css">
+    <link rel="stylesheet" href="<?= ROOT ?>css/Admin/employee-photo.css">
 </head>
 
 <body>
@@ -57,13 +58,7 @@
                 </div>
                 <div>
 
-                    <style>
-                        #reportsTable th,
-                        #reportsTable td {
-                            width: 15% !important;
-                            white-space: nowrap;
-                        }
-
+                    <style> 
                         #reportsTableNameTh,
                         #reportsTableNameTd {
                             padding-right: 12px !important;
@@ -131,7 +126,10 @@
                                         <tr class="employee-record" data-date="<?php echo $reportDate; ?>">
                                             <td hidden class="daily-id"><?php echo $report->getDAILYID(); ?></td>
                                             <td class="employee-name" id="reportsTableNameTd">
-                                                <img src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                                <div class="photo-container">
+                                                    <img class="photo" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                                </div>
+
                                                 <?php echo $report->getEMPNAME(); ?>
                                             </td>
                                             <td><?php echo $report->getCLOCKIN(); ?></td>
