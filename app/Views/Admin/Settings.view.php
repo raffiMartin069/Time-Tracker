@@ -12,8 +12,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
-    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" /> 
-    <link rel="stylesheet" href="<?= ROOT ?>css/settings.css" /> 
+    <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
+    <link rel="stylesheet" href="<?= ROOT ?>css/settings.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/table.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/Admin/tabs-modal.css" />
 </head>
@@ -25,15 +25,16 @@
         </div>
         <div class="mx-2 my-4 rounded p-2 shadow reports-body" style="margin-top: -2rem !important;">
             <div class="container" style="text-align: center;">
-            <ul class="tabs">  
-                    <li><a class="nav-link active" href="?page=editProfile">Edit Profile</a></li>
-                    <li><a class="nav-link" href="?page=manageAdmin">Manage Admin</a></li>
-                    <li><a class="nav-link" href="?page=manageShift">Manage Shift</a></li>
-                    <li><a class="nav-link" href="?page=employmentClassification">Employment Status</a></li>
-                    <li><a class="nav-link" href="?page=manageJobPosition">Job Position</a></li>  
-                    <li><a class="nav-link" href="?page=recycleBin">Recycle Bin</a></li>
-                </ul>
-                 
+                <div class="tabs-container">
+                    <ul class="tabs">
+                        <li><a class="nav-link active" href="?page=editProfile">Edit Profile</a></li>
+                        <li><a class="nav-link" href="?page=manageAdmin">Manage Admin</a></li>
+                        <li><a class="nav-link" href="?page=manageShift">Manage Shift</a></li>
+                        <li><a class="nav-link" href="?page=employmentClassification">Employment Status</a></li>
+                        <li><a class="nav-link" href="?page=manageJobPosition">Job Position</a></li>
+                        <li><a class="nav-link" href="?page=recycleBin">Recycle Bin</a></li>
+                    </ul>
+                </div>
 
                 <div class="header">
                     <h6>Profile Settings</h6>
@@ -41,10 +42,6 @@
                 </div>
 
                 <?php
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
-                }
-
                 $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
 
                 // This is the path for the default profile photo
@@ -71,7 +68,7 @@
                         <img id="profilePic" class="profile-pic" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
                         <input type="file" id="profilePhoto" class="getmyimg" name="profilePhoto">
                     </form>
-                </div> 
+                </div>
 
                 <?php foreach ($results as $report) : ?>
                     <div class="profile-info">
@@ -111,8 +108,8 @@
                                                         <input placeholder="Birth Date" class="form-control mt-3" id="getmybirthday" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" value="<?php echo $report->getBIRTHDATE(); ?>" id="date" disabled>
                                                     </div>
                                                 <?php endforeach; ?>
-                                                <button type="button" class="save-btn mt-3" id="editGeneralBtn">Update</button>
-                                                <button type="submit" class="save-btn mt-3" id="saveGeneralBtn" disabled>Save</button>
+                                                <button type="button" class="save-btn mt-1" id="editGeneralBtn">Update</button>
+                                                <button type="submit" class="save-btn mt-1" id="saveGeneralBtn" disabled>Save</button>
                                             </form>
                                         </div>
                                     </div>
@@ -127,8 +124,8 @@
                                                         <input type="password" class="form-control mt-3" id="getmynewpassword" placeholder="New password" disabled required>
                                                     </div>
                                                 <?php endforeach; ?>
-                                                <button type="button" class="save-btn mt-3" id="editPasswordBtn">Update</button>
-                                                <button type="submit" class="save-btn mt-3" id="savePasswordBtn" disabled>Save</button>
+                                                <button type="button" class="save-btn mt-1" id="editPasswordBtn">Update</button>
+                                                <button type="submit" class="save-btn mt-1" id="savePasswordBtn" disabled>Save</button>
                                             </form>
                                         </div>
                                     </div>
@@ -144,8 +141,8 @@
                                                         <input type="text" class="form-control mt-3" id="getmyecn" value="<?php echo $report->getECN(); ?>" placeholder="Contact Number" disabled>
                                                     </div>
                                                 <?php endforeach; ?>
-                                                <button type="button" class="save-btn mt-3" id="editContactBtn">Update</button>
-                                                <button type="submit" class="save-btn mt-3" id="saveContactBtn" disabled>Save</button>
+                                                <button type="button" class="save-btn mt-1" id="editContactBtn">Update</button>
+                                                <button type="submit" class="save-btn mt-1" id="saveContactBtn" disabled>Save</button>
                                             </form>
                                         </div>
                                     </div>
@@ -156,217 +153,15 @@
                 </div>
             </div>
         </div>
-
-    </div>
     </div>
 
-    <!-- Error Modal -->
-    <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    Sorry, you've already used your attempt to change your personal information. Please contact support if you need further assistance.
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="closeError" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Changes Modal -->
-    <div class="modal fade" id="changeModal" tabindex="-1" role="dialog" aria-labelledby="changePasswordModalLabel" aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">
-                    Your changes has been successfully saved!
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" id="closeChangeModal" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-
-        </div>
     </div>
     </div>
     </div>
 
-    <script>
-        $(document).ready(function() { 
-
-            let isEditAllowed = true;
-
-            $('#editGeneralBtn').click(function() {
-                if (isEditAllowed) {
-                    $('#generalInfoForm input').prop('disabled', false);
-                    $('#saveGeneralBtn').prop('disabled', false);
-                } else {
-                    $('#errorModal').modal('show');
-                    $('#closeError').click(function() {
-                        $('#errorModal').modal('hide');
-                    })
-                }
-            });
-
-            $("#generalInfoForm").submit(function(event) {
-                event.preventDefault();
-                $('#generalInfoForm input').prop('disabled', true);
-                isEditAllowed = false;
-                var fName = $("#getmyfname").val();
-                var mName = $("#getmymname").val();
-                var lName = $("#getmylname").val();
-                var birthDate = $("#getmybirthday").val();
-
-                $.ajax({
-                    url: "Employee/UpdateSettingsGeneralInfo",
-                    method: 'POST',
-                    data: {
-                        f_name: fName,
-                        m_name: mName,
-                        l_name: lName,
-                        birth_date: birthDate
-                    },
-                    success: function(data) {
-                        $(".empFname").text(data.f_name);
-                        $(".empMname").text(data.m_name);
-                        $(".empLname").text(data.l_name);
-                        $('#changeModal').modal('show');
-                        $('#closeChangeModal').click(function() {
-                            $('#changeModal').modal('hide');
-                        })
-                    },
-                    error: function(xhr, status, error) {
-                        $('#errorModal').modal('show');
-                        $('#closeError').click(function() {
-                            $('#errorModal').modal('hide');
-                        })
-                    }
-                });
-            });
-
-
-            $('#editPasswordBtn').click(function() {
-                $('#passwordInfoForm input').prop('disabled', false);
-                $('#savePasswordBtn').prop('disabled', false);
-            });
-
-            // Password Form 
-            $("#passwordInfoForm").submit(function(event) {
-                event.preventDefault();
-                $('#passwordInfoForm input').prop('disabled', true);
-                var currPassword = $("#getmycurrpassword").val();
-                var newPassword = $("#getmynewpassword").val();
-
-                console.log("Fetching passwords, currpass: " + currPassword + ", newpass: " + newPassword);
-
-                $.ajax({
-                    url: "Employee/UpdateSettingsPasswordInfo",
-                    method: 'POST',
-                    data: {
-                        curr_password: currPassword,
-                        new_password: newPassword
-                    },
-                    success: function(data) {
-                        $('#changeModal').modal('show');
-                        $('#closeChangeModal').click(function() {
-                            $('#changeModal').modal('hide');
-                            $('#getmycurrpassword').val('');
-                            $('#getmynewpassword').val('');
-                        })
-                    },
-                    error: function(xhr, status, error) {
-                        $('.modal-body').replaceWith("Password is too common and easily guessable. Please try again.");
-                        $('#errorModal').modal('show');
-                        $('#closeError').click(function() {
-                            $('#errorModal').modal('hide');
-                        })
-                     }
-                     }
-                });
-            });
-
-            // Contact Form 
-            $('#editContactBtn').click(function() {
-                $('#contactInfoForm input').prop('disabled', false);
-                $('#saveContactBtn').prop('disabled', false);
-            });
-
-            $("#contactInfoForm").submit(function(event) {
-                event.preventDefault();
-                $('#contactInfoForm input').prop('disabled', true);
-                var email = $("#getmyemail").val();
-                var ecn = $("#getmyecn").val();
-
-                console.log("Fetching contacts, email: " + email + ", ecn: " + ecn);
-
-                $.ajax({
-                    url: "Employee/UpdateSettingsContactInfo",
-                    method: 'POST',
-                    data: {
-                        email: email,
-                        ecn: ecn
-                    },
-                    success: function(data) {
-                        $(".empEmail").text(data.email);
-                        $(".empContact").text(data.ecn);
-                        $('#changeModal').modal('show');
-                        $('#closeChangeModal').click(function() {
-                            $('#changeModal').modal('hide');
-                        })
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('AJAX error:', status, error, xhr.responseText);
-                    }
-                });
-            });
-
-            $('#profilePic').on('click', function() {
-                $('#profilePhoto').click();
-            });
-
-            $('#profilePhoto').on('change', function() {
-                let file = this.files[0];
-                if (file) {
-                    let reader = new FileReader();
-                    reader.onload = function(e) {
-                        $('#profilePic').attr('src', e.target.result);
-                    }
-                    reader.readAsDataURL(file); 
-                    reader.readAsDataURL(file); 
-                    $('#profilePicForm').submit();
-                }
-            });
-
-            $('.profilePicChange').on('submit', function(e) {
-                e.preventDefault();
-                let profilePhoto = new FormData(this);
-
-                $.ajax({
-                    url: 'Employee/UpdateProfilePic',
-                    type: 'POST',
-                    data: profilePhoto,
-                    processData: false,
-                    contentType: false,
-                    success: function(data) {
-                        $('#profilePic').attr('src', data.profilePhoto);
-                        location.reload();
-                        location.reload();
-                        $('#changeModal').modal('show');
-                        $('#closeChangeModal').click(function() {
-                            $('#changeModal').modal('hide');
-                        });
-
-                    },
-                    error: function() {
-                        alert('Error uploading profile picture');
-                    }
-                });
-            });
-        });
-    </script>
- 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script> 
+    <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="<?= ROOT ?>scripts/Admin/settings.js"></script>
 </body>
 
 </html>
