@@ -3,20 +3,15 @@ $('#addShiftBtn').click(function() {
     $('#addShiftModal').modal('show');
 });
 
-// This will create a new shift after a successful process
 $('#saveShiftBtn').click(function() { 
-    // Checks and get every selected input from the checkbox and puts them in an array
     var daysSelected = [];
     $('.form-check-input:checked').each(function() {
         daysSelected.push($(this).val());
     });
 
-    // Checks if all input fields are not empty, 
-    // if it is empty, a distinguished prompt will show
     if (daysSelected.length === 0) { 
         var showShiftErrorMsg = 'Please do not leave the input field empty!';
-         
-
+          
         Swal.fire({
             title: "Oops",
             text: showShiftErrorMsg,
@@ -26,8 +21,6 @@ $('#saveShiftBtn').click(function() {
         return;
     }
 
-    // If all input fields are not empty,
-    // a request will be sent to the server to access various data
     $.ajax({
         url: "Admin/addShift",
         method: 'POST',
@@ -36,27 +29,38 @@ $('#saveShiftBtn').click(function() {
         },
         dataType: 'json',
         success: function(response) {
-            Swal.fire({
-                title: "Success",
-                text: "Shift has been added successfully!",
-                icon: "success"
-            });
-            $('.swal2-confirm').click(function() {
-                location.reload();
-            });
+            if (response.success) {
+                Swal.fire({
+                    title: "Success",
+                    text: "Shift has been added successfully!",
+                    icon: "success"
+                });
+                $('.swal2-confirm').click(function() {
+                    location.reload();
+                });
+            } else {
+                Swal.fire({
+                    title: "Error",
+                    text: response.message,
+                    icon: "error"
+                });
+            }
         },
-        error: function(error) {
+        error: function(xhr) {
+            // Use the response JSON from the server-side error
+            var errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                ? xhr.responseJSON.message
+                : "Unable to save changes. Please try again later.";
+
             Swal.fire({
                 title: "Error",
-                text: "Unable to save changes. Please try again later.",
+                text: errorMessage,
                 icon: "error"
-            });
-            $('.swal2-confirm').click(function() {
-                location.reload();
             });
         }
     }); 
-}); 
+});
+
 
 // This will perform a deletion of a shift
 const deleteBtns = document.querySelectorAll(".deleteShiftBtn");
