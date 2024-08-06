@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhereToNext | Employee</title>
+    <title>WhereToNext | Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -51,26 +51,10 @@
                                 <span class="input-group-text" id="resetDate" title="Undo Filter"><i class="fas fa-redo"></i></span>
                             </div>
                         </div>
-                    </div>
-
+                    </div> 
                 </div>
-                <div>
-
-                    <style>
-                        #reportsTable th,
-                        #reportsTable td {
-                            width: 15% !important;
-                        }
-
-                        .fixed-height {
-                            height: 3.4rem !important;
-                        }
-
-                        .fixed-height button {
-                            margin: 0 !important;
-                        }
-                    </style>
-
+                
+                <div>  
                     <table class="table align-middle mb-0 bg-white text-center" id="reportsTable">
                         <thead style="position: sticky; top: 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                             <tr>
