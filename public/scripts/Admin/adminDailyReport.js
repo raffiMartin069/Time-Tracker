@@ -83,7 +83,7 @@ editButtons.forEach((button) => {
     document.getElementById("modal-clock-out").value = empClockout;
 
     let originalBreakData = [];
-    // Flag to track success messages of each updated inputs and only display one message all at once
+    // Flag to track success messages of each updated inputs and only display one successful message
     let successMsg = false;  
 
     $.ajax({
