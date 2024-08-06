@@ -54,12 +54,7 @@
 
                 </div>
                 <div>
-                    <style>
-                        #reportsTable th,
-                        #reportsTable td {
-                            width: 15% !important;
-                        }
-
+                    <style>  
                         #reportsTableClockinTh,
                         #reportsTableClockinTd {
                             padding-left: 52px !important;
