@@ -56,10 +56,6 @@
       notificationQueue.push(responseData.mess);
     }
 
-    if (responseData.popup) {
-      notificationQueue.push(responseData.popup);
-    }
-
     processQueue();
   };
   
@@ -68,7 +64,7 @@
       httpRequest();
       localStorage.setItem('hasSeenNotification', true);
     } else {
-      console.log('Notification already seen');
+      localStorage.setItem('hasSeenNotification', false);
     }
   }
 })();

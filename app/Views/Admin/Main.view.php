@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>WhereToNext | Admin</title>
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="<?php echo ROOT ?>node_modules/sweetalert2/dist/sweetalert2.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/tables.css" />
 </head>
+
 <body>
     <div id="wrapper">
         <div class="px-2 pt-5">
@@ -57,11 +58,19 @@
                                 src="<?= ROOT ?>assets/img/admin/break.png" class="img-fluid" /> <small
                                 class="fs-3 fw-medium"><?php echo $_SESSION['BreakIn'] ?? false ? 'Break Out' : 'Break In'; ?></small></a>
                     </div>
+
+                    <!-- TODO: Add state for this button. -->
+                    <div class=" col p-1 rounded-5 d-flex align-items-center justify-content-center">
+                        <a id="lunchToggle" href="" class="text-decoration-none text-dark" onclick="return false;"><img
+                                src="<?= ROOT ?>assets/img/admin/break.png" class="img-fluid" /> <small
+                                class="fs-3 fw-medium"><?php echo $_SESSION["LunchIn"] ?? false ? 'Lunch Out' : 'Lunch In' ?></small></a>
+                    </div>
+                    
                     <div class=" col   p-1 rounded-5 d-flex align-items-center justify-content-center">
                         <a id="meetingToggle" href="" class="text-decoration-none text-dark"
                             onclick="return false;"><img src="<?= ROOT ?>assets/img/admin/meeting.png"
                                 class="img-fluid" /> <small
-                                class="fs-3 fw-medium"><?php echo $_SESSION['MeetingIn'] ?? false ? 'Meeting Out' : 'Meeting In' ?></small></a>
+                                class="fs-3 fw-medium"><?php echo $_SESSION['MeetingIn'] ?? false ? 'Huddle Out' : 'Huddle In' ?></small></a>
                     </div>
                 </div>
             </div>
@@ -94,12 +103,13 @@
                     </p>
                 </div>
                 <div class="w-100 overflow-x-auto" style="height:43rem!important;">
-                    <table class="table table-stripped align-middle mb-0 bg-white text-center" >
-                        <thead class="bg-light" >
-                            <tr class="table-row" >
+                    <table class="table table-stripped align-middle mb-0 bg-white text-center">
+                        <thead class="bg-light">
+                            <tr class="table-row">
                                 <th>Date</th>
                                 <th>Time In</th>
                                 <th>Break Status</th>
+                                <th>Lunch Status</th>
                                 <th>Meeting</th>
                                 <th>Time Out</th>
                                 <th>Total Hours</th>
@@ -115,15 +125,30 @@
                                     </td>
                                     <td>
                                         <div class="d-flex justify-content-center">
-                                            <?php if (htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8') == 'In session'): ?>
+                                            <?php if (htmlspecialchars($report->getLunchStatus() ?? '', ENT_QUOTES, 'UTF-8') == 'In session'): ?>
                                                 <p class="border px-2 my-1 rounded-3"
                                                     style="background-color: hsl(0, 100%, 89%); color: hsl(0, 96%, 45%); border: 1.5px solid hsl(0, 96%, 45%) !important;">
-                                                    <?php echo htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                                    <?php echo htmlspecialchars($report->getLunchStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                                 </p>
                                             <?php else: ?>
                                                 <p class="border px-2 my-1 rounded-3"
                                                     style="background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%); border: 1.5px solid hsl(166, 100%, 26%) !important;">
-                                                    <?php echo htmlspecialchars($report->getMeetingStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                                    <?php echo htmlspecialchars($report->getLunchStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                                </p>
+                                            <?php endif; ?>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="d-flex justify-content-center">
+                                            <?php if (htmlspecialchars($report->getHuddleStatus() ?? '', ENT_QUOTES, 'UTF-8') == 'In session'): ?>
+                                                <p class="border px-2 my-1 rounded-3"
+                                                    style="background-color: hsl(0, 100%, 89%); color: hsl(0, 96%, 45%); border: 1.5px solid hsl(0, 96%, 45%) !important;">
+                                                    <?php echo htmlspecialchars($report->getHuddleStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
+                                                </p>
+                                            <?php else: ?>
+                                                <p class="border px-2 my-1 rounded-3"
+                                                    style="background-color:hsl(166, 58%, 78%); color:hsl(166, 100%, 26%); border: 1.5px solid hsl(166, 100%, 26%) !important;">
+                                                    <?php echo htmlspecialchars($report->getHuddleStatus() ?? '', ENT_QUOTES, 'UTF-8'); ?>
                                                 </p>
                                             <?php endif; ?>
                                         </div>
@@ -151,4 +176,5 @@
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/events.js"></script>
 <script defer type="module" src="<?= ROOT ?>scripts/Admin/notification.js"></script>
 </body>
+
 </html>

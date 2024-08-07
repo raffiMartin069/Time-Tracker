@@ -68,8 +68,8 @@
                                 <thead class="bg-light">
                                     <tr>
                                         <th>Date</th>
-                                        <th>Meeting Start</th>
-                                        <th>Meeting End</th>
+                                        <th>Huddle Start</th>
+                                        <th>Huddle End</th>
                                         <th>Duration</th>
                                     </tr>
                                 </thead>
@@ -77,9 +77,9 @@
                                     <?php foreach ($tableView as $view): ?>
                                         <tr class="table-row">
                                             <td><?php echo htmlspecialchars($view->date ?? "", ENT_QUOTES, 'UTF-8'); ?></td>
-                                            <td><?php echo htmlspecialchars($view->meeting_in ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->huddle_in ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
-                                            <td><?php echo htmlspecialchars($view->meeting_out ?? "", ENT_QUOTES, 'UTF-8'); ?>
+                                            <td><?php echo htmlspecialchars($view->huddle_out ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>
                                             <td><?php echo htmlspecialchars($view->duration ?? "", ENT_QUOTES, 'UTF-8'); ?>
                                             </td>

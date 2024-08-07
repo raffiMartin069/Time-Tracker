@@ -56,18 +56,9 @@
 
       <!-- 2 column grid layout for inline styling -->
       <div class="row mb-4">
-        <div class="col d-flex justify-content-end">
-          <!-- Checkbox -->
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="rememberMe" checked />
-            <label class="form-check-label" for="rememberMe">
-              Remember me
-            </label>
-          </div>
-        </div>
         <div class="text-end">
           <!-- Simple link -->
-          <a href="#!">Forgot password?</a>
+          <a href="<?php echo FORGOT_PASS ?>">Forgot password?</a>
         </div>
       </div>
       <div>

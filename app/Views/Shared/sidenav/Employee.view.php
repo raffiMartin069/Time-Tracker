@@ -58,7 +58,7 @@
                             <i class="bi bi-person-video3 fw-bold" style="margin-left: 4px;"></i>
                             <!-- <img src="<?= ROOT ?>node_modules/bootstrap-icons/icons/person-video3.svg"
                                 style="height: 20px;"></img> -->
-                            <span class="nav-item-title ms-2 ">Meeting Logs</span>
+                            <span class="nav-item-title ms-2 ">Huddle Logs</span>
                         </a>
                     </li>
                     <li class="nav-item mb-2 " style="width: 270px; margin-left: 14px;">
@@ -125,11 +125,9 @@
                         </span>
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
-                        <form action="Login/logout" method="post">
-                            <button type="submit"
-                                class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
-                                <!-- <i class="lni lni-exit fs-4"></i> -->
-                                Logout
+                    <form id="log-out" action="Login/logout" method="post">
+                            <button type="submit" value="1" name="logoutBtn" id="logoutBtn" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
+                                Log Out
                             </button>
                         </form>
                     </li>
@@ -306,7 +304,7 @@
             break;
 
         case 'meeting/logs':
-            $controller->meetingLog();
+            $controller->meetingLog(); // This is changed to huddle logs.
             break;
 
         default:
@@ -319,7 +317,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <script src="<?= ROOT ?>scripts/Admin/sidebar.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script defer type="module" src="<?= ROOT ?>scripts/Employee/employee_meeting.js"></script>
+    <script defer src="<?= ROOT ?>scripts/logout.js"></script>
 </body>
 
 </html>

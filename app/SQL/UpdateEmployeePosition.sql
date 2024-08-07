@@ -1,0 +1,1 @@
+UPDATE employee_credential SET position_id = ? WHERE emp_id = ?;  

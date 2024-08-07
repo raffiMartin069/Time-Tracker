@@ -300,11 +300,11 @@ class Employee extends Controller
     {
         $_SESSION["userId"];
         $startMeeting = new EmployeeModel();
-        $tableView = $startMeeting->getAllEmployee();
-        $platforms = $this->fetchAllPlatform();
+        // $tableView = $startMeeting->getAllEmployee();
+        // $platforms = $this->fetchAllPlatform();
         $this->view('Shared/sidenav/Employee', [
-            'tableView' => $tableView,
-            'platforms' => $platforms
+            // 'tableView' => $tableView,
+            // 'platforms' => $platforms
         ]);
     }
 
@@ -548,13 +548,6 @@ class Employee extends Controller
 
     public function UpdateProfilePic()
     {
-
-        // if(!$result = $user->check_is_logged_in())
-        // {
-        //     header("Location:" . ROOT . "Login");
-        //     die();
-        // }
-
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
             $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
@@ -567,18 +560,15 @@ class Employee extends Controller
                 if (!file_exists($folder)) {
                     mkdir($folder, 0777, true);
                 }
-
                 $destination = $folder . basename($profilePhoto['name']);
-                move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
-
                 try {
                     $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
                     $params = [
                         'emp_id' => $empId,
                         'profile_photo' => $destination
                     ];
-
                     $this->Query($query, $params);
+                    move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
                 } catch (Exception $e) {
                     echo "Error: " . $e->getMessage();
                 } catch (PDOException $e) {

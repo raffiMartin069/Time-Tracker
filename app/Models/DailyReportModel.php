@@ -8,8 +8,9 @@ final class DailyReportModel
     private $BREAK_IN;
     private $BREAK_OUT;
     private $HRS_WORKED;
-    private $MEETING_STATUS;
+    private $HUDDLE_STATUS;
     private $BREAK_STATUS;
+    private $LUNCH_STATUS;
 
     public function __construct($data) {
         $this->ID = $data['ID'];
@@ -20,7 +21,19 @@ final class DailyReportModel
         // $this->BREAK_OUT = $data['BREAK_OUT'];
         $this->BREAK_STATUS = $data['BREAK_STATUS'];
         $this->HRS_WORKED = $data['HRS_WORKED'];
-        $this->MEETING_STATUS = $data['MEETING_STATUS'];
+        $this->HUDDLE_STATUS = $data['HUDDLE_STATUS'];
+        $this->LUNCH_STATUS = $data['LUNCH_STATUS'];
+    }
+
+
+    public function getLUNCHSTATUS()
+    {
+        return $this->LUNCH_STATUS;
+    }
+
+    public function setLUNCHSTATUS($LUNCH_STATUS)
+    {
+        $this->LUNCH_STATUS = $LUNCH_STATUS;
     }
 
     /**
@@ -138,18 +151,19 @@ final class DailyReportModel
     /**
      * @return mixed
      */
-    public function getMEETINGSTATUS()
+    public function getHUDDLESTATUS()
     {
-        return $this->MEETING_STATUS;
+        return $this->HUDDLE_STATUS;
     }
 
     /**
-     * @param mixed $MEETING_STATUS
+     * @param mixed $HUDDLESTATUS
      */
-    public function setMEETINGSTATUS($MEETING_STATUS)
+    public function setHUDDLESTATUS($HUDDLE_STATUS)
     {
-        $this->MEETING_STATUS = $MEETING_STATUS;
+        $this->HUDDLE_STATUS = $HUDDLE_STATUS;
     }
+
 
     /**
      * @return mixed

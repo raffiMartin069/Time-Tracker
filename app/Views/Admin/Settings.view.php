@@ -31,42 +31,20 @@
                     <li><a class="nav-link" href="?page=recycleBin">Recycle Bin</a></li>
                 </ul>
 
+                <?php
+                $img = $_SESSION['image'] ?? null;
+                $isImgFile = file_exists(__DIR__ . "/../../../../public/" . $img);
+                $isSessionImg = $_SESSION['image'] != null;
+                $photo = $isImgFile && $isSessionImg ? ROOT . $_SESSION['image'] : ROOT . "assets/img/employee/default-settings-profile.png";
+                ?>
 
                 <div class="header">
                     <h6>Profile Settings</h6>
                     <br>
                 </div>
-
-                <?php
-                if (session_status() == PHP_SESSION_NONE) {
-                    session_start();
-                }
-
-                $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
-
-                // This is the path for the default profile photo
-                $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
-
-                // Sets the default image as the profile photo if the user have not yet uploaded any
-                // Otherwise, this will fetch their uploaded profile photo from the database
-                $getProfilePhoto = $defaultPhoto;
-
-                if ($empId) {
-                    $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
-                    $returnParams = [':emp_id' => $empId];
-
-                    $returnData = $this->Query($returnQuery, $returnParams);
-
-                    if (!empty($returnData) && !empty($returnData[0]->image)) {
-                        $getProfilePhoto = $returnData[0]->image;
-                    }
-                }
-                ?>
-
                 <div class="profile-pic-container">
                     <form id="profilePicForm" class="profilePicChange" method="post" enctype="multipart/form-data">
-                        <img id="profilePic" class="profile-pic" src="<?php echo $getProfilePhoto; ?>"
-                            alt="Profile Picture">
+                        <img id="profilePic" class="profile-pic" src="<?php echo $photo ?>" alt="Profile Picture">
                         <input type="file" id="profilePhoto" class="getmyimg" name="profilePhoto">
                     </form>
                 </div>

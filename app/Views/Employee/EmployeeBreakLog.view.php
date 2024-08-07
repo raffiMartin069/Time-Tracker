@@ -89,36 +89,7 @@
 </body>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
 <script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const sortSelect = document.getElementById('sort-select');
-    const tableBody = document.getElementById('table-body');
-
-    sortSelect.addEventListener('change', () => {
-        const option = sortSelect.value;
-        const rows = Array.from(tableBody.querySelectorAll('tr'));
-
-        rows.sort((a, b) => {
-            const dateA = new Date(a.cells[2].innerText);
-            const dateB = new Date(b.cells[2].innerText);
-
-            if (option === '1') {
-                // Sort by Oldest
-                return dateA - dateB;
-            } else if (option === '2') {
-                // Sort by Newest
-                return dateB - dateA;
-            }
-        });
-
-        // Clear the table body
-        tableBody.innerHTML = '';
-
-        // Append sorted rows
-        rows.forEach(row => tableBody.appendChild(row));
-    });
-});
-</script>
+<script defer src="<?= ROOT ?>scripts/Employee/employee_break_log_sorting.js"></script>
 </body>
 
 </html>
