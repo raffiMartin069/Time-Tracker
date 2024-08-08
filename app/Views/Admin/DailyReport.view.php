@@ -31,7 +31,7 @@
                 <br>
                 <div class="reports-header d-flex flex-wrap align-items-center" style="font-weight: 600;">
                     <h4 style="margin: 0;">Daily Report</h4>
-                    
+
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
                             <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
@@ -58,7 +58,7 @@
                 </div>
                 <div>
 
-                    <style> 
+                    <style>
                         #reportsTableNameTh,
                         #reportsTableNameTd {
                             padding-right: 12px !important;
@@ -169,7 +169,11 @@
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <form>
+                                                                <!-- Loading message -->
+                                                                <div id="loadingMessage" style=" text-align: center; margin-bottom: 10px;">
+                                                                    Please wait while we are loading the data...
+                                                                </div>
+                                                                <form id="editReportForm" style="display: none;">
                                                                     <div class="mb-2" style="text-align: left;">
                                                                         Employee Name:
                                                                         <input disabled type="text" class="mt-1 form-control" id="modal-employee-name">
