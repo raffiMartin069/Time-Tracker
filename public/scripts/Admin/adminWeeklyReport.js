@@ -194,8 +194,12 @@ $(document).on("click", ".view-breaks-btn", function () {
         $accordionBody.html(content);
       },
       error: function (xhr, status, error) {
-        console.error("AJAX error:", status, error);
-        $accordionBody.html("Error fetching break data");
+        var errorMessage = "An error has occured while fetching break data. Please try again later.";
+        if (xhr.responseJSON && xhr.responseJSON.error) {
+          errorMessage = xhr.responseJSON.error;
+        }
+  
+        $accordionBody.html(errorMessage);
       },
     });
   }
@@ -258,11 +262,32 @@ $(".downloadBtn").click(function (event) {
 
           form.submit();
         } else {
-          alert("No daily reports found for this report.");
+          Swal.fire({
+            title: "Error",
+            text: "No daily reports found for this report.",
+            icon: "error",
+          });
+
+          $(".swal2-confirm").click(function () {
+            location.reload();
+          });
         }
       },
       error: function (xhr, status, error) {
-        console.error(error);
+        var errorMessage = "Something went wrong. Please try again later.";
+        if (xhr.responseJSON && xhr.responseJSON.error) {
+          errorMessage = xhr.responseJSON.error;
+        }
+  
+        Swal.fire({
+          title: "Error",
+          text: errorMessage,
+          icon: "error",
+        });
+
+        $(".swal2-confirm").click(function () {
+          location.reload();
+        });
       },
     });
   } else {
