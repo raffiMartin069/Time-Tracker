@@ -49,8 +49,8 @@
                     <table class="table align-middle mb-0 bg-white text-center">
                         <thead style="position: sticky; top: 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                             <tr>
-                                <th>Shift ID</th>
-                                <th>Schedule</th>
+                                <th hidden>Shift ID</th>
+                                <th>Shift Schedule</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -58,7 +58,7 @@
                             <?php if (!empty($shifts) && is_array($shifts)) : ?>
                                 <?php foreach ($shifts as $shift) : ?>
                                     <tr>
-                                        <td><?php echo $shift->getSHIFTID(); ?></td>
+                                        <td hidden><?php echo $shift->getSHIFTID(); ?></td>
                                         <td><?php echo $shift->getSHIFTNAME(); ?></td>
                                         <td>
                                             <button class="btn btn-danger deleteShiftBtn" title="Delete Shift" style="width: 2.5rem; height: 1.7rem; border: none; background-color: #dc3545 !important;" data-shift-id="<?php echo $shift->getSHIFTID(); ?>">

@@ -48,7 +48,7 @@
                     <table class="table align-middle mb-0 bg-white text-center">
                         <thead style="position: sticky; top: 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                             <tr>
-                                <th>Position ID</th>
+                                <th hidden>Position ID</th>
                                 <th>Job Title</th>
                                 <th>Actions</th>
                             </tr>
@@ -57,7 +57,7 @@
                             <?php if (!empty($positions) && is_array($positions)) : ?>
                                 <?php foreach ($positions as $position) : ?>
                                     <tr>
-                                        <td><?php echo $position->getTITLEID(); ?></td>
+                                        <td hidden><?php echo $position->getTITLEID(); ?></td>
                                         <td><?php echo $position->getTITLENAME(); ?></td>
                                         <td>
                                             <button type="button" class="btn btn-primary text-white" id="update-job-position-btn" data-bs-toggle="modal" data-bs-target="#updateJobPositionModal" title="Update Job Position" style="width: 2.5rem; height: 1.7rem; border: none;">

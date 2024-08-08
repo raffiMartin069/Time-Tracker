@@ -9,22 +9,55 @@ require_once __DIR__ . "/../Models/ShiftModel.php";
 require_once __DIR__ . "/../DAO/AdminDAO.php";
 require_once __DIR__ . '/../Utilities/PDFUtility.php';
 require_once __DIR__ . '/../Utilities/ExceptionHandler.php';
+require_once __DIR__ . "/../Models/DailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllDailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllWeeklyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllBiweeklyReportModel.php";
-require_once __DIR__ . "/../Models/AdminModels/AllSettingsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageAdminModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageShiftsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllEmploymentClassificationModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageJobPositionModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllRecycleBinModel.php";
 require_once __DIR__ . '/../Helpers/Sanitation.php';
+require_once __DIR__ . '/../Models/SettingsModel.php';
+require_once __DIR__ . '/../Helpers/DailyReportPDF.php';
+require_once __DIR__ . '/../Helpers/WeeklyReportPDF.php';
+require_once __DIR__ . '/../Helpers/BiweeklyReportPDF.php';
+
 
 class Admin extends Controller
 {
 
     use Model;
     use AdminDAO;
+
+    /**
+     * @var ExceptionHandler
+     * This is a global scope variable that will be used to handle exceptions.
+     * This is a utility class that will be used clean handled exceptions before sending to the client side.
+     */
+    private $sweep;
+
+    /**
+     * @method void routeValidation()
+     * This method will be used to validate the route.
+     * This will be used to validate the route before executing the program.
+     */
+    private function routeValidation()
+    {
+        $key = '/admin';
+        if (strpos($_SERVER['REQUEST_URI'], $key) !== false) {
+            // If it does, call the checkAdmin method to validate the user
+            $this->checkAdmin();
+        }
+    }
+
+    public function __construct()
+    {
+        $this->routeValidation();
+        $this->sweep = new ExceptionHandler();
+    }
+
 
     private function sanitizeUpdateEmployeePosition($data)
     {
@@ -305,18 +338,6 @@ class Admin extends Controller
         ]);
     }
 
-    /**
-     * @var ExceptionHandler
-     * This is a global scope variable that will be used to handle exceptions.
-     * This is a utility class that will be used clean handled exceptions before sending to the client side.
-     */
-    private $sweep;
-
-    public function __construct()
-    {
-        $this->sweep = new ExceptionHandler();
-    }
-
     private function validHttpMethod($method)
     {
         if ($_SERVER["REQUEST_METHOD"] !== $method) {
@@ -399,10 +420,13 @@ class Admin extends Controller
     {
         $startMeeting = new EmployeeModel();
         $tableView = $startMeeting->getAllEmployee();
-        $platforms = $this->fetchAllPlatform();
+        // $platforms = $this->fetchAllPlatform();
+        // $this->view('Shared/sidenav/Admin', [
+        //     'tableView' => $tableView,
+        //     'platforms' => $platforms
+        // ]);
         $this->view('Shared/sidenav/Admin', [
             'tableView' => $tableView,
-            'platforms' => $platforms
         ]);
     }
 
@@ -435,8 +459,9 @@ class Admin extends Controller
                 'CLOCK_OUT' => property_exists($row, 'clock_out') ? $row->clock_out : null,
                 'BREAK_STATUS' => property_exists($row, 'break_status') ? $row->break_status : null,
                 'HRS_WORKED' => property_exists($row, 'hrs_worked') ? $row->hrs_worked : null,
-                'MEETING_STATUS' => property_exists($row, 'meeting_status') ? $row->meeting_status : null,
+                'HUDDLE_STATUS' => property_exists($row, 'huddle_status') ? $row->huddle_status : null,
                 'EMP_ID' => property_exists($row, 'emp_id') ? $row->emp_id : null,
+                'LUNCH_STATUS' => property_exists($row, 'lunch_status') ? $row->lunch_status : null,
             ];
         }
         return $results;
@@ -450,46 +475,28 @@ class Admin extends Controller
         return $results;
     }
 
-    private function buttonState($clock_in, $clock_out)
-    {
-        if ($clock_in && is_null($clock_out)) {
-            return $_SESSION["ClockedIn"] = true;
-        } else if ($clock_in && !is_null($clock_out)) {
-            return $_SESSION["ClockedIn"] = false;
-        }
-    }
-
-    private function breakState($breakStatus)
-    {
-        return $breakStatus ? $_SESSION["BreakIn"] = true : $_SESSION["BreakIn"] = false;
-    }
-
-    private function meetingState($meetingStatus)
-    {
-        return $meetingStatus ? $_SESSION["MeetingIn"] = true : $_SESSION["MeetingIn"] = false;
-    }
-
+    /**
+     * @param mixed $data
+     * @return void
+     * Used to assign Sessions to every state of the buttons.
+     * This dictates the buttons label or icon to change when a user changes to different status.
+     */
     private function extractStates($data)
     {
         foreach ($data as $row) {
-            $clockIn = $row->clock_in;
-            $clockOut = $row->clock_out;
-            $breakStatus = $row->break_status;
-            $meetingStatus = $row->meeting_status;
+            $_SESSION["ClockedIn"] = $row->clock_status;
+            $_SESSION["BreakIn"] = $row->break_status;
+            $_SESSION["MeetingIn"] = $row->huddle_status;
+            $_SESSION["LunchIn"] = $row->lunch_status;
         }
-        $this->buttonState($clockIn, $clockOut);
-        $this->breakState($breakStatus);
-        $this->meetingState($meetingStatus);
     }
-
 
     public function notification()
     {
         $mess = $_SESSION["notification"];
-        $popup = $_SESSION['popup_notif'];
         if (!empty($mess)) {
             header("Content-Type: application/json");
-            echo json_encode(['mess' => $mess, 'popup' => $popup]);
+            echo json_encode(['mess' => $mess]);
             exit;
         }
     }
@@ -517,7 +524,6 @@ class Admin extends Controller
                 $this->extractStates($state);
             }
 
-
             ob_end_flush();
 
             $this->view('Admin/Main', [
@@ -528,12 +534,19 @@ class Admin extends Controller
         }
     }
 
+    /**
+     * Summary of HUDDLE LOGS
+     * @method mixed meetingLogs()
+     * NOTE: Please take not that this method, instead of meeting logs, it should be named as huddle logs.
+     * This is a typo error and should be corrected.
+     * This method will be used to generate the huddle logs to the views.
+     * Typically passing read only data.
+     */
     public function meetingLog()
     {
         $logs = new MeetingLogModel();
-        $tableView = $logs->getMeetingLogs();
         $this->view('Admin/MeetingLog', [
-            'tableView' => $tableView,
+            'tableView' => $logs->getMeetingLogs(),
         ]);
     }
 
@@ -637,11 +650,12 @@ class Admin extends Controller
 
     public function test()
     {
-        $results = $this->GetAll('employee');
+
+        $results = $this->Get($_SESSION["userId"], 'get_bi_weekly_report_table');
 
         // $this->Delete(240, 'employee', 'emp_id');
 
-        $this->view('Test', [
+        $this->view('Admin/Test', [
             'results' => $results,
         ]);
     }
@@ -759,8 +773,16 @@ class Admin extends Controller
 
     /**
      * @param $arr
-     * This method will be used to normalize the string.
-     * This will be used to normalize the string before inserting to the database.
+     * Normalizing a string includes the following:
+     * 1. Convert the string to lowercase.
+     * 2. Convert the first letter of the string to uppercase.
+     * 3. Convert the rest of the string to lowercase.
+     * 
+     * Example:
+     * "JOHN DOE" = "John Doe"
+     *
+     * Example 2:
+     * "jOhN dOe" = Output: "John Doe"
      */
     private function StrNormalize($arr)
     {
@@ -823,7 +845,6 @@ class Admin extends Controller
                 $data[] = $item; // Add the valid item to $data
             }
         }
-
         $content = $pdf->createPDF($data);
         return $content;
     }
@@ -837,7 +858,6 @@ class Admin extends Controller
      * */
     private static function ArrayNullCheck($array)
     {
-
         // perform pre checks before handling the actual looping.
         if (empty($array) || $array === null || $array === "") {
             throw new Exception('Please fill out all fields');
@@ -1026,12 +1046,50 @@ class Admin extends Controller
         echo json_encode($serverResponse);
     }
 
-    // airielle
-    // public function index()
-    // {
-    //     $_SESSION["UID"] = 12;
-    //     $this->view('Shared/sidenav/Admin');
-    // }
+    public function employeeDailyReport()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST;
+
+            $pdf = new DailyReportPDF();
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="daily-report.pdf"');
+
+            $pdf->createPDFReport($data);
+            exit;
+        }
+    }
+
+    public function employeeWeeklyReport()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST;
+
+            $pdf = new WeeklyReportPDF();
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="weekly-report.pdf"');
+
+            $pdf->createPDFReport($data);
+            exit;
+        }
+    }
+
+    public function employeeBiweeklyReport()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $data = $_POST;
+
+            $pdf = new BiweeklyReportPDF();
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: inline; filename="biweekly-report.pdf"');
+
+            $pdf->createPDFReport($data);
+            exit;
+        }
+    }
 
     protected function ArrangeReportsResults($data)
     {
@@ -1057,6 +1115,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Daily report table view
     public function dailyreport()
     {
         try {
@@ -1075,13 +1134,14 @@ class Admin extends Controller
             echo $e->getMessage();
         }
     }
-
+    
+    // Query to update clockin stamp of an employee
     public function UpdateClockInReport()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $dailyId = isset($_POST['daily_id']) ? $_POST['daily_id'] : null;
-            $reportDate = isset($_POST['report_date']) ? $_POST['report_date'] : null;
-            $clockIn = isset($_POST['clock_in']) ? $_POST['clock_in'] : null;
+            $dailyId = isset($_POST['daily_id']) ? Sanitize::intSanitation($_POST['daily_id']) : null;
+            $reportDate = isset($_POST['report_date']) ? Sanitize::strSanitation($_POST['report_date']) : null;
+            $clockIn = isset($_POST['clock_in']) ? Sanitize::strSanitation($_POST['clock_in']) : null;
 
             try {
                 $dateTime = DateTime::createFromFormat('Y-m-d h:i:s A', $reportDate . ' ' . $clockIn);
@@ -1109,12 +1169,13 @@ class Admin extends Controller
         }
     }
 
+    // Query to update clockout stamp of an employee
     public function UpdateClockOutReport()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $dailyId = isset($_POST['daily_id']) ? $_POST['daily_id'] : null;
-            $reportDate = isset($_POST['report_date']) ? $_POST['report_date'] : null;
-            $clockOut = isset($_POST['clock_out']) ? $_POST['clock_out'] : null;
+            $dailyId = isset($_POST['daily_id']) ? Sanitize::intSanitation($_POST['daily_id']) : null;
+            $reportDate = isset($_POST['report_date']) ? Sanitize::strSanitation($_POST['report_date']) : null;
+            $clockOut = isset($_POST['clock_out']) ? Sanitize::strSanitation($_POST['clock_out']) : null;
 
             try {
                 $dateTime = DateTime::createFromFormat('Y-m-d h:i:s A', $reportDate . ' ' . $clockOut);
@@ -1157,10 +1218,11 @@ class Admin extends Controller
         return $results;
     }
 
+    // Query to fetch break logs of each employee
     public function BreakStamps()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $dailyId = isset($_GET['daily_id']) ? $_GET['daily_id'] : null;
+            $dailyId = isset($_GET['daily_id']) ? Sanitize::intSanitation($_GET['daily_id']) : null;
 
             try {
                 $query = "select * from get_break_logs_stamp(:daily_id)";
@@ -1183,14 +1245,15 @@ class Admin extends Controller
         }
     }
 
+    // Query for updating employee lunch periods
     public function UpdateLunchReport()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $dailyId = isset($_POST['daily_id']) ? $_POST['daily_id'] : null;
-            $empId = isset($_POST['emp_id']) ? $_POST['emp_id'] : null;
-            $reportDate = isset($_POST['report_date']) ? $_POST['report_date'] : null;
-            $lunchIn = isset($_POST['lunch_in']) ? $_POST['lunch_in'] : null;
-            $lunchOut = isset($_POST['lunch_out']) ? $_POST['lunch_out'] : null;
+            $dailyId = isset($_POST['daily_id']) ? Sanitize::intSanitation($_POST['daily_id']) : null;
+            $empId = isset($_POST['emp_id']) ? Sanitize::intSanitation($_POST['emp_id']) : null;
+            $reportDate = isset($_POST['report_date']) ? Sanitize::strSanitation($_POST['report_date']) : null;
+            $lunchIn = isset($_POST['lunch_in']) ? Sanitize::strSanitation($_POST['lunch_in']) : null;
+            $lunchOut = isset($_POST['lunch_out']) ? Sanitize::strSanitation($_POST['lunch_out']) : null;
 
             try {
                 $LunchIndateTime = DateTime::createFromFormat('Y-m-d h:i:s A', $reportDate . ' ' . $lunchIn);
@@ -1224,15 +1287,16 @@ class Admin extends Controller
         }
     }
 
+    // Query for updating employee break periods
     public function UpdateBreakReport()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $dailyId = isset($_POST['daily_id']) ? $_POST['daily_id'] : null;
-            $recordId = isset($_POST['record_id']) ? $_POST['record_id'] : null;
-            $empId = isset($_POST['emp_id']) ? $_POST['emp_id'] : null;
-            $reportDate = isset($_POST['report_date']) ? $_POST['report_date'] : null;
-            $breakIn = isset($_POST['break_in']) ? $_POST['break_in'] : null;
-            $breakOut = isset($_POST['break_out']) ? $_POST['break_out'] : null;
+            $dailyId = isset($_POST['daily_id']) ? Sanitize::intSanitation($_POST['daily_id']) : null;
+            $recordId = isset($_POST['record_id']) ? Sanitize::intSanitation($_POST['record_id']) : null;
+            $empId = isset($_POST['emp_id']) ? Sanitize::intSanitation($_POST['emp_id']) : null;
+            $reportDate = isset($_POST['report_date']) ? Sanitize::strSanitation($_POST['report_date']) : null;
+            $breakIn = isset($_POST['break_in']) ? Sanitize::strSanitation($_POST['break_in']) : null;
+            $breakOut = isset($_POST['break_out']) ? Sanitize::strSanitation($_POST['break_out']) : null;
 
             try {
                 $BreakIndateTime = DateTime::createFromFormat('Y-m-d h:i:s A', $reportDate . ' ' . $breakIn);
@@ -1282,6 +1346,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Weekly report table view
     public function weeklyreport()
     {
         try {
@@ -1301,47 +1366,12 @@ class Admin extends Controller
         }
     }
 
-    // Daily Stamps of each employee for the week
-    // public function fetchWeeklyDailyReports()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //         $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
-    //         $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
-
-    //         try {
-    //             $query = "select * from weekly_stamp(:report_date, :emp_id)";
-
-    //             $params = [
-    //                 'report_date' => $reportDate,
-    //                 'emp_id' => $empId
-    //             ];
-
-    //             $data = $this->Query($query, $params);
-    //             $results = $this->ArrangeReportsResults($data);
-    //             header("Content-Type: application/json");
-    //             echo json_encode($results);
-    //         } catch (Exception $e) {
-    //             echo "Error: " . $e->getMessage();
-    //         } catch (PDOException $e) {
-    //             echo "PDO Error: " . $e->getMessage();
-    //         }
-    //     } else {
-    //         die();
-    //     }
-    // }
-
+    // Daily Stamps of each employee for each week for downloading report
     public function fetchWeeklyDailyReports()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
-            $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
-
-            // Validate parameters
-            if (empty($reportDate) || empty($empId)) {
-                header("HTTP/1.1 400 Bad Request");
-                echo json_encode(['error' => 'Invalid parameters']);
-                exit();
-            }
+            $reportDate = isset($_GET['report_date']) ? Sanitize::strSanitation($_GET['report_date']) : null;
+            $empId = isset($_GET['emp_id']) ? Sanitize::intSanitation($_GET['emp_id']) : null;
 
             try {
                 $query = "select * from weekly_stamp(:report_date, :emp_id)";
@@ -1353,127 +1383,19 @@ class Admin extends Controller
 
                 $data = $this->Query($query, $params);
 
-                if (!$data) {
-                    header("HTTP/1.1 404 Not Found");
-                    echo json_encode(['error' => 'No data found']);
-                    exit();
-                }
-
                 $results = $this->ArrangeReportsResults($data);
                 header("Content-Type: application/json");
                 echo json_encode($results);
-            } catch (PDOException $e) {
-                header("HTTP/1.1 500 Internal Server Error");
-                error_log("PDO Error: " . $e->getMessage());
-                echo json_encode(['error' => 'Database error']);
-            } catch (Exception $e) {
-                header("HTTP/1.1 500 Internal Server Error");
-                error_log("Error: " . $e->getMessage());
-                echo json_encode(['error' => 'An error occurred']);
-            }
-        } else {
-            header("HTTP/1.1 405 Method Not Allowed");
-            echo json_encode(['error' => 'Invalid request method']);
-        }
-    }
-
-
-    public function fetchAcknowledgementData()
-    {
-        if (session_status() == PHP_SESSION_NONE) {
-            session_start();
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $wklyId = isset($_GET['wkly_id']) ? $_GET['wkly_id'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
-            $password = isset($_GET['password']) ? $_GET['password'] : null;
-
-            try {
-                // Call the stored procedure to approve the weekly report
-                $query = "call approve_weekly_report(:emp_id, :wkly_id, :password)";
-                $params = [
-                    'emp_id' => $empId,
-                    'wkly_id' => $wklyId,
-                    'password' => $password
-                ];
-
-                $this->Query($query, $params);
-
-                $returnQuery = "SELECT acknowledged_by FROM get_weekly_report_table_admin() WHERE wkly_id = :wkly_id";
-
-                $returnParams = [
-                    'wkly_id' => $wklyId
-                ];
-
-                $returnData = $this->Query($returnQuery, $returnParams);
-
-                if (!empty($returnData) && isset($returnData[0])) {
-
-                    $returnUpdatedData = $returnData[0];
-
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'acknowledgedBy' => $returnUpdatedData->acknowledged_by ?? null
-                    ]);
-                }
-            } catch (PDOException $e) {
-                echo "PDO Error: " . $e->getMessage();
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
             }
         } else {
             die();
         }
     }
-
-    // public function fetchBiweeklyAcknowledgementData()
-    // {
-    //     if (session_status() == PHP_SESSION_NONE) {
-    //         session_start();
-    //     }
-
-    //     if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    //         $biWklyId = isset($_GET['bi_wkly_id']) ? $_GET['bi_wkly_id'] : null;
-    //         $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
-    //         $password = isset($_GET['password']) ? $_GET['password'] : null;
-
-    //         try {
-    //             // Call the stored procedure to approve the weekly report
-    //             $query = "call approve_bi_weekly_report(:emp_id, :bi_wkly_id, :password)";
-    //             $params = [
-    //                 'emp_id' => $empId,
-    //                 'bi_wkly_id' => $biWklyId,
-    //                 'password' => $password
-    //             ];
-
-    //             $this->Query($query, $params);
-
-    //             $returnQuery = "SELECT acknowledged_by FROM get_bi_weekly_report_table_admin() WHERE bi_wkly_id = :bi_wkly_id";
-    //             $returnParams = [
-    //                 'bi_wkly_id' => $biWklyId
-    //             ];
-
-    //             $returnData = $this->Query($returnQuery, $returnParams);
-
-    //             if (!empty($returnData) && isset($returnData[0])) {
-    //                 $returnUpdatedData = $returnData[0];
-
-    //                 header("Content-Type: application/json");
-    //                 echo json_encode([
-    //                     'acknowledgedBy' => $returnUpdatedData->acknowledged_by ?? null
-    //                 ]);
-    //             }
-    //         } catch (PDOException $e) {
-    //             echo "PDO Error: " . $e->getMessage();
-    //         } catch (Exception $e) {
-    //             echo "Error: " . $e->getMessage();
-    //         }
-    //     } else {
-    //         die();
-    //     }
-    // }
-
+    
     protected function ArrangeBiweeklyResults($data)
     {
         $results = [];
@@ -1490,6 +1412,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Biweekly report table view
     public function biweeklyreport()
     {
         try {
@@ -1509,12 +1432,12 @@ class Admin extends Controller
         }
     }
 
-    // Daily Stamps of each employee for the week
+    // Daily Stamps of each employee for each 2 weeks for downloading report
     public function fetchBiweeklyDailyReports()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-            $reportDate = isset($_GET['report_date']) ? $_GET['report_date'] : null;
-            $empId = isset($_GET['emp_id']) ? $_GET['emp_id'] : null;
+            $reportDate = isset($_GET['report_date']) ? Sanitize::strSanitation($_GET['report_date']) : null;
+            $empId = isset($_GET['emp_id']) ? Sanitize::intSanitation($_GET['emp_id']) : null;
 
             try {
                 $query = "select * from bi_weekly_stamp(:report_date, :emp_id)";
@@ -1557,15 +1480,16 @@ class Admin extends Controller
         return $results;
     }
 
+   // Admin settings table view 
     public function editProfileInformation()
     {
         try {
-            $data = $this->GetInfo($_SESSION["UID"], 'employee');
+            $data = $this->GetInfo($_SESSION["userId"]);
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
             foreach ($results as $result) {
-                $reportModels[] = new AllSettingsModel($result);
+                $reportModels[] = new SettingsModel($result);
             }
 
             $this->view('Admin/Settings', [
@@ -1588,6 +1512,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Gets admin employees and put list in the remove admins modal with a query to remove selected admin/s
     public function manageAdminAccess()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -1609,14 +1534,10 @@ class Admin extends Controller
                 $this->view('Admin/ManageAdmin', [
                     'admins' => $adminModels
                 ]);
-            } catch (Exception $e) {
-                http_response_code(500);
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             } catch (PDOException $e) {
-                http_response_code(500);
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
         } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
@@ -1625,22 +1546,20 @@ class Admin extends Controller
                     $empId = [$empId];
                 }
                 $empId = array_map('intval', $empId);
+                $sanitizedEmpId = array_map('Sanitize::intSanitation', $empId);
 
-                $idsArray = implode(',', $empId);
+                // Converts the array to a comma separated string for the query
+                $idsArray = implode(',', $sanitizedEmpId);
                 $query = "CALL remove_admins(ARRAY[" . $idsArray . "])";
 
                 $this->Query($query);
 
                 header("Content-Type: application/json");
                 echo json_encode(['success' => true]);
-            } catch (Exception $e) {
-                http_response_code(500);
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
             } catch (PDOException $e) {
-                http_response_code(500);
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
+            } catch (Exception $e) {
+                echo "Error: " . $e->getMessage();
             }
         } else {
             die();
@@ -1659,6 +1578,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Shift table view
     public function manageShifts()
     {
         try {
@@ -1678,6 +1598,7 @@ class Admin extends Controller
         }
     }
 
+    // A query for adding a shift
     public function addShift()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1688,10 +1609,12 @@ class Admin extends Controller
                     $days = [$days];
                 }
 
+                // Apply sanitation to each days value
                 $sanitized_data = [
-                    'days' => array_map('Sanitations::intSanitation', $days)
+                    'days' => array_map('Sanitize::intSanitation', $days)
                 ];
 
+                // Converts to a comma separated string for the query
                 $sanitizedDaysArray = implode(',', $sanitized_data['days']);
                 $query = "CALL add_shift(ARRAY[" . $sanitizedDaysArray . "])";
 
@@ -1707,6 +1630,7 @@ class Admin extends Controller
         }
     }
 
+    // A query for deleting shift
     public function deleteShift()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1714,14 +1638,16 @@ class Admin extends Controller
                 $shiftId = isset($_POST['shift_id']) ? $_POST['shift_id'] : null;
 
                 $sanitized_data = [
-                    'shift_id' => Sanitations::intSanitation($shiftId)
+                    'shift_id' => Sanitize::intSanitation($shiftId)
                 ];
 
+                // Removes the sanitized shift id
                 $sanitizedShiftId = $sanitized_data['shift_id'];
                 $query = "CALL delete_shift('$sanitizedShiftId')";
 
                 $this->Query($query);
 
+                // Returns the success response
                 header("Content-Type: application/json");
                 echo json_encode(['success' => true]);
             } catch (PDOException $e) {
@@ -1745,6 +1671,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Employment type table view
     public function employmentClassification()
     {
         try {
@@ -1764,6 +1691,7 @@ class Admin extends Controller
         }
     }
 
+    // A query to add new employment type
     public function addEmploymentType()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1771,13 +1699,15 @@ class Admin extends Controller
                 $employmentType = isset($_POST['employment_type']) ? $_POST['employment_type'] : null;
                 $requiredHours = isset($_POST['required_hours']) ? $_POST['required_hours'] : [];
 
+                // Apply sanitation to input values to prevent sql injection
                 $sanitized_data = [
-                    'employment_type' => Sanitations::strSanitation($employmentType),
-                    'required_hours' => Sanitations::intSanitation($requiredHours)
+                    'employment_type' => Sanitize::strSanitation($employmentType),
+                    'required_hours' => Sanitize::intSanitation($requiredHours)
                 ];
 
                 $sanitizedEmploymentType = $sanitized_data['employment_type'];
                 $sanitizedRequiredHours = $sanitized_data['required_hours'];
+                
                 $query = "CALL add_update_employment_status('$sanitizedEmploymentType', '$sanitizedRequiredHours')";
 
                 $this->Query($query);
@@ -1792,6 +1722,7 @@ class Admin extends Controller
         }
     }
 
+    // A query to update an employment type
     public function updateEmploymentType()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1801,15 +1732,16 @@ class Admin extends Controller
                 $employmentHrs = isset($_POST['employment_hrs']) ? $_POST['employment_hrs'] : null;
 
                 $sanitized_data = [
-                    'employment_id' => Sanitations::intSanitation($employmentId),
-                    'employment_type' => Sanitations::strSanitation($employmentType),
-                    'employment_hrs' => Sanitations::intSanitation($employmentHrs)
+                    'employment_id' => Sanitize::intSanitation($employmentId),
+                    'employment_type' => Sanitize::strSanitation($employmentType),
+                    'employment_hrs' => Sanitize::intSanitation($employmentHrs)
                 ];
 
                 $sanitizedEmploymentId = $sanitized_data['employment_id'];
                 $sanitizedEmploymentType = $sanitized_data['employment_type'];
                 $sanitizedEmploymentHours = $sanitized_data['employment_hrs'];
 
+                // Replace parameters of query with the sanitized input values
                 $query = "CALL add_update_employment_status('$sanitizedEmploymentType', '$sanitizedEmploymentHours', '$sanitizedEmploymentId')";
 
                 $this->Query($query);
@@ -1826,6 +1758,7 @@ class Admin extends Controller
         }
     }
 
+    // Deletes an employment type
     public function deleteEmploymentType()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1833,7 +1766,7 @@ class Admin extends Controller
                 $employmentId = isset($_POST['employment_id']) ? $_POST['employment_id'] : null;
 
                 $sanitized_data = [
-                    'employment_id' => Sanitations::intSanitation($employmentId)
+                    'employment_id' => Sanitize::intSanitation($employmentId)
                 ];
 
                 $sanitizedEmploymentId = $sanitized_data['employment_id'];
@@ -1863,6 +1796,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Job position table view
     public function manageJobPosition()
     {
         try {
@@ -1882,6 +1816,7 @@ class Admin extends Controller
         }
     }
 
+    // Query to add another job position
     public function addJobPosition()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1889,7 +1824,7 @@ class Admin extends Controller
                 $titleName = isset($_POST['title_name']) ? $_POST['title_name'] : null;
 
                 $sanitized_data = [
-                    'title_name' => Sanitations::strSanitation($titleName)
+                    'title_name' => Sanitize::strSanitation($titleName)
                 ];
 
                 $sanitizedTitleName = $sanitized_data['title_name'];
@@ -1907,6 +1842,7 @@ class Admin extends Controller
         }
     }
 
+    // Query to update a job position
     public function updateJobPosition()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1915,8 +1851,8 @@ class Admin extends Controller
                 $titleName = isset($_POST['title_name']) ? $_POST['title_name'] : null;
 
                 $sanitized_data = [
-                    'title_id' => Sanitations::intSanitation($titleId),
-                    'title_name' => Sanitations::strSanitation($titleName)
+                    'title_id' => Sanitize::intSanitation($titleId),
+                    'title_name' => Sanitize::strSanitation($titleName)
                 ];
 
                 $sanitizedTitleId = $sanitized_data['title_id'];
@@ -1938,6 +1874,7 @@ class Admin extends Controller
         }
     }
 
+    // Query to delete a job position
     public function deleteJobPosition()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1945,7 +1882,7 @@ class Admin extends Controller
                 $titleId = isset($_POST['title_id']) ? $_POST['title_id'] : null;
 
                 $sanitized_data = [
-                    'title_id' => Sanitations::intSanitation($titleId)
+                    'title_id' => Sanitize::intSanitation($titleId)
                 ];
 
                 $sanitizedTitleId = $sanitized_data['title_id'];
@@ -1960,6 +1897,8 @@ class Admin extends Controller
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
             }
+        } else {
+            die();
         }
     }
 
@@ -1985,6 +1924,7 @@ class Admin extends Controller
         return $results;
     }
 
+    // Recycle bin table view
     public function manageRecycleBin()
     {
         try {
@@ -2006,6 +1946,7 @@ class Admin extends Controller
         }
     }
 
+    // Query to recover an employee account
     public function recoverAccount()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -2013,7 +1954,7 @@ class Admin extends Controller
                 $recycleId = isset($_POST['recycle_id']) ? $_POST['recycle_id'] : null;
 
                 $sanitized_data = [
-                    'recycle_id' => Sanitations::intSanitation($recycleId)
+                    'recycle_id' => Sanitize::intSanitation($recycleId)
                 ];
 
                 $sanitizedRecycleId = $sanitized_data['recycle_id'];
@@ -2031,6 +1972,7 @@ class Admin extends Controller
         }
     }
 
+    // Query to permanently delete an employee account
     public function permanentDeleteAccount()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -2038,7 +1980,7 @@ class Admin extends Controller
                 $deleteRecycleId = isset($_POST['delete_recycle_id']) ? $_POST['delete_recycle_id'] : null;
 
                 $sanitized_data = [
-                    'delete_recycle_id' => Sanitations::intSanitation($deleteRecycleId)
+                    'delete_recycle_id' => Sanitize::intSanitation($deleteRecycleId)
                 ];
 
                 $sanitizedDeleteEmpId = $sanitized_data['delete_recycle_id'];
@@ -2049,16 +1991,14 @@ class Admin extends Controller
                 header("Content-Type: application/json");
                 echo json_encode(['success' => true]);
             } catch (PDOException $e) {
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => "PDO Error: " . $e->getMessage()]);
+                echo "PDO Error: " . $e->getMessage();
             } catch (Exception $e) {
-                header('Content-Type: application/json');
-                echo json_encode(['success' => false, 'message' => "Error: " . $e->getMessage()]);
+                echo "Error: " . $e->getMessage();
             }
         }
     }
 
-
+    // Puts non-admin employees in a modal to add admins with a query to add new admins
     public function manageNoneAdminAccess()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
@@ -2076,235 +2016,25 @@ class Admin extends Controller
         } elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
             try {
                 $empId = isset($_POST['empId']) ? $_POST['empId'] : [];
-                if (empty($empId)) {
-                    http_response_code(400);
-                    echo json_encode(['error' => 'No employee IDs provided.']);
-                    exit;
-                }
                 if (!is_array($empId)) {
                     $empId = [$empId];
-                }
-                $empId = array_map('intval', $empId);
+                } 
 
-                $idsArray = implode(',', $empId);
-                $query = "CALL add_admins(ARRAY[" . $idsArray . "])";
+                // Apply sanitation to each employee id 
+                $sanitizedEmpId = array_map('Sanitize::intSanitation', $empId);
+
+                // Converts array of ids to a comma separated string for the query
+                $idsArray = implode(',', $sanitizedEmpId);
+                $query = "CALL add_admins(ARRAY[" . $idsArray . "])"; 
 
                 $this->Query($query);
 
                 header("Content-Type: application/json");
                 echo json_encode(['success' => true]);
-            } catch (Exception $e) {
-                http_response_code(500);
-                echo json_encode(['error' => "Error: " . $e->getMessage()]);
-            } catch (PDOException $e) {
-                http_response_code(500);
-                echo json_encode(['error' => "PDO Error: " . $e->getMessage()]);
-            }
-        } else {
-            die();
-        }
-    }
-
-    public function UpdateProfilePic()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
-            $empId = isset($_SESSION["UID"]) ? $_SESSION["UID"] : null;
-
-            $allowed = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/svg'];
-
-            if ($profilePhoto && $profilePhoto['error'] == 0 && in_array($profilePhoto['type'], $allowed)) {
-                $folder = 'uploads/';
-
-                if (!file_exists($folder)) {
-                    mkdir($folder, 0777, true);
-                }
-
-                $destination = $folder . basename($profilePhoto['name']);
-                move_uploaded_file($_FILES['profilePhoto']['tmp_name'], $destination);
-
-                try {
-                    $query = "CALL change_profile_photo(:emp_id, :profile_photo)";
-                    $params = [
-                        'emp_id' => $empId,
-                        'profile_photo' => $destination
-                    ];
-
-                    $this->Query($query, $params);
-                } catch (Exception $e) {
-                    echo "Error: " . $e->getMessage();
-                } catch (PDOException $e) {
-                    echo "PDO Error: " . $e->getMessage();
-                }
-            } else {
-                echo "Uploaded image is not valid!";
-            }
-        } else {
-            die();
-        }
-    }
-
-    public function UpdateSettingsGeneralInfo()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = [
-                'f_name' => $_POST['f_name'] ?? null,
-                'm_name' => $_POST['m_name'] ?? null,
-                'l_name' => $_POST['l_name'] ?? null,
-                'birth_date' => $_POST['birth_date'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
-            ];
-
-            $sanitized_data = [
-                'f_name' => Sanitation::strSanitation($data['f_name']),
-                'm_name' => Sanitation::strSanitation($data['m_name']),
-                'l_name' => Sanitation::strSanitation($data['l_name']),
-                'birth_date' => Sanitation::strSanitation($data['birth_date']),
-                'emp_id' => Sanitation::intSanitation($data['emp_id'])
-            ];
-
-            if ($sanitized_data['emp_id'] === null) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid Tracker ID.']);
-                exit;
-            }
-
-            try {
-                $query = "CALL change_info(:emp_id, :l_name, :m_name, :f_name, :birth_date)";
-                $params = [
-                    ':emp_id' => $sanitized_data['emp_id'],
-                    ':l_name' => $sanitized_data['l_name'],
-                    ':m_name' => $sanitized_data['m_name'],
-                    ':f_name' => $sanitized_data['f_name'],
-                    ':birth_date' => $sanitized_data['birth_date']
-                ];
-
-                $this->Query($query, $params);
-
-                $returnQuery = "SELECT lname, mname, fname, birth_date FROM employee WHERE emp_id = :emp_id";
-                $returnParams = [':emp_id' => $sanitized_data['emp_id']];
-
-                $returnData = $this->Query($returnQuery, $returnParams);
-
-                if (!empty($returnData) && isset($returnData[0])) {
-                    $returnUpdatedData = $returnData[0];
-
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'f_name' => $returnUpdatedData->fname ?? null,
-                        'm_name' => $returnUpdatedData->mname ?? null,
-                        'l_name' => $returnUpdatedData->lname ?? null,
-                        'birth_date' => $returnUpdatedData->birth_date ?? null,
-                    ]);
-                }
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
             } catch (PDOException $e) {
                 echo "PDO Error: " . $e->getMessage();
-            }
-        } else {
-            die();
-        }
-    }
-
-    public function UpdateSettingsPasswordInfo()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = [
-                'curr_password' => $_POST['curr_password'] ?? null,
-                'new_password' => $_POST['new_password'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
-            ];
-
-            $sanitized_data = [
-                'curr_password' => Sanitation::strSanitation($data['curr_password']),
-                'new_password' => Sanitation::strSanitation($data['new_password']),
-                'emp_id' => Sanitation::intSanitation($data['emp_id'])
-            ];
-
-            if ($sanitized_data['emp_id'] === null) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid employee ID.']);
-                exit;
-            }
-
-            try {
-                $query = "CALL change_password(:emp_id, :curr_password, :new_password)";
-                $params = [
-                    ':emp_id' => $sanitized_data['emp_id'],
-                    ':curr_password' => $sanitized_data['curr_password'],
-                    ':new_password' => $sanitized_data['new_password']
-                ];
-
-                $data = $this->Query($query, $params);
-
-                if (!empty($data) && isset($data[0])) {
-                    $updatedInfo = $data[0];
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'curr_password' => $updatedInfo['curr_password'] ?? null,
-                        'new_password' => $updatedInfo['new_password'] ?? null,
-                    ]);
-                }
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
-            } catch (PDOException $e) {
-                echo "PDO Error: " . $e->getMessage();
-            }
-        } else {
-            die();
-        }
-    }
-
-    public function UpdateSettingsContactInfo()
-    {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            $data = [
-                'email' => $_POST['email'] ?? null,
-                'ecn' => $_POST['ecn'] ?? null,
-                'emp_id' => $_SESSION["UID"] ?? null
-            ];
-
-            $sanitized_data = [
-                'email' => Sanitation::emailSanitation($data['email']),
-                'ecn' => Sanitation::strSanitation($data['ecn']),
-                'emp_id' => Sanitation::intSanitation($data['emp_id'])
-            ];
-
-            if ($sanitized_data['emp_id'] === null || !filter_var($sanitized_data['email'], FILTER_VALIDATE_EMAIL)) {
-                http_response_code(400);
-                echo json_encode(['error' => 'Invalid input data.']);
-                exit;
-            }
-
-            try {
-                $query = "CALL change_email_contact(:emp_id, :email, :ecn)";
-                $params = [
-                    ':emp_id' => $sanitized_data['emp_id'],
-                    ':email' => $sanitized_data['email'],
-                    ':ecn' => $sanitized_data['ecn']
-                ];
-
-                $this->Query($query, $params);
-
-                $returnQuery = "SELECT email, ecn FROM employee_credential WHERE emp_id = :emp_id";
-                $returnParams = [':emp_id' => $sanitized_data['emp_id']];
-
-                $returnData = $this->Query($returnQuery, $returnParams);
-
-                if (!empty($returnData) && isset($returnData[0])) {
-                    $returnUpdatedData = $returnData[0];
-
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'email' => $returnUpdatedData->email ?? null,
-                        'ecn' => $returnUpdatedData->ecn ?? null,
-                    ]);
-                }
-            } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
-            } catch (PDOException $e) {
-                echo "PDO Error: " . $e->getMessage();
             }
         } else {
             die();

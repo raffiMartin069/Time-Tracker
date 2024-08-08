@@ -9,37 +9,24 @@ final class AllManageJobPositionModel
         $this->TITLE_ID = $data['TITLE_ID']; 
         $this->TITLE_NAME = $data['TITLE_NAME'];  
       }
-  
-    /**
-     * @return mixed
-     */
+   
     public function getTITLEID()
     {
         return $this->TITLE_ID;
     }
 
-    /**
-     * @param mixed $TITLE_ID
-     */
     public function setTITLEID($TITLE_ID)
     {
         $this->TITLE_ID = $TITLE_ID;
     } 
-
-    /**
-     * @return mixed
-     */
+ 
     public function getTITLENAME()
     {
         return $this->TITLE_NAME;
     }
-
-    /**
-     * @param mixed $TITLE_NAME
-     */
+ 
     public function setTITLENAME($TITLE_NAME)
     {
         $this->TITLE_NAME = $TITLE_NAME;
     }  
-
  }

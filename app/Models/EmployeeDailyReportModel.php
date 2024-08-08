@@ -2,205 +2,115 @@
 final class EmployeeDailyReportModel
 
 {
-    private $DAILY_ID;
-    private $EMP_ID;
+    private $DAILY_ID; 
     private $DATE;
     private $CLOCK_IN; 
-    private $BREAK_IN;
-    private $BREAK_OUT;
-    private $CLOCK_OUT;
-    private $DURATION;
-    private $HRS_WORKED;  
-    // private $APPR_STATUS;
-    // private $ACKNOWLEDGED_BY;
+    private $LUNCH_IN;
+    private $LUNCH_OUT;
+    private $LUNCH_DURATION;
+    private $TOTAL_BREAK;
+    private $CLOCK_OUT; 
+    private $HRS_WORKED;   
 
     public function __construct($data) {
-        $this->DAILY_ID = $data['DAILY_ID'];
-        $this->EMP_ID = $data['EMP_ID'];
+        $this->DAILY_ID = $data['DAILY_ID']; 
         $this->DATE = $data['DATE'];
         $this->CLOCK_IN = $data['CLOCK_IN'];
-        $this->BREAK_IN = $data['BREAK_IN'];
-        $this->BREAK_OUT = $data['BREAK_OUT'];
-        $this->DURATION = $data['DURATION'];
+        $this->LUNCH_IN = $data['LUNCH_IN'];
+        $this->LUNCH_OUT = $data['LUNCH_OUT'];
+        $this->LUNCH_DURATION = $data['LUNCH_DURATION'];
+        $this->TOTAL_BREAK = $data['TOTAL_BREAK'];
         $this->CLOCK_OUT = $data['CLOCK_OUT'];    
-        $this->HRS_WORKED = $data['HRS_WORKED'];
-        // $this->APPR_STATUS = $data['APPR_STATUS'];
-        // $this->ACKNOWLEDGED_BY = $data['ACKNOWLEDGED_BY'];
+        $this->HRS_WORKED = $data['HRS_WORKED']; 
      }
-
-     /**
-     * @return mixed
-     */
+ 
     public function getDAILYID()
     {
         return $this->DAILY_ID;
-    }
-
-    /**
-     * @param mixed $DAILY_ID
-     */
+    } 
+    
     public function setDAILYID($DAILY_ID)
     {
         $this->DAILY_ID = $DAILY_ID;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getEMPID()
-    {
-        return $this->EMP_ID;
-    }
-
-    /**
-     * @param mixed $EMP_ID
-     */
-    public function setEMPID($EMP_ID)
-    {
-        $this->EMP_ID = $EMP_ID;
-    }
-
-    /**
-     * @return mixed
-     */
+    } 
+ 
     public function getDATE()
     {
         return $this->DATE;
     }
-
-    /**
-     * @param mixed $DATE
-     */
+ 
     public function setDATE($DATE)
     {
         $this->DATE = $DATE;
     }
-
-    /**
-     * @return mixed
-     */
+ 
     public function getCLOCKIN()
     {
         return $this->CLOCK_IN;
     }
-
-    /**
-     * @param mixed $CLOCK_IN
-     */
+ 
     public function setCLOCKIN($CLOCK_IN)
     {
         $this->CLOCK_IN = $CLOCK_IN;
     }
-
-    /**
-     * @return mixed
-     */
+ 
     public function getCLOCKOUT()
     {
         return $this->CLOCK_OUT;
     }
-
-    /**
-     * @param mixed $CLOCK_OUT
-     */
+ 
     public function setCLOCKOUT($CLOCK_OUT)
     {
         $this->CLOCK_OUT = $CLOCK_OUT;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getBREAKIN()
+ 
+    public function getLUNCHIN()
     {
-        return $this->BREAK_IN;
+        return $this->LUNCH_IN;
+    }
+ 
+    public function setLUNCHIN($LUNCH_IN)
+    {
+        $this->LUNCH_IN = $LUNCH_IN;
+    }
+ 
+    public function getLUNCHOUT()
+    {
+        return $this->LUNCH_OUT;
+    }
+ 
+    public function setLUNCHOUT($LUNCH_OUT)
+    {
+        $this->LUNCH_OUT = $LUNCH_OUT;
+    }
+ 
+    public function getLUNCHDURATION()
+    {
+        return $this->LUNCH_DURATION;
+    }
+ 
+    public function setDURATION($LUNCH_DURATION)
+    {
+        $this->LUNCH_DURATION = $LUNCH_DURATION;
     }
 
-    /**
-     * @param mixed $BREAK_IN
-     */
-    public function setBREAKIN($BREAK_IN)
+    public function getTOTALBREAK()
     {
-        $this->BREAK_IN = $BREAK_IN;
+        return $this->TOTAL_BREAK;
     }
-
-    /**
-     * @return mixed
-     */
-    public function getBREAKOUT()
+ 
+    public function setTOTALBREAK($TOTAL_BREAK)
     {
-        return $this->BREAK_OUT;
+        $this->TOTAL_BREAK = $TOTAL_BREAK;
     }
-
-    /**
-     * @param mixed $BREAK_OUT
-     */
-    public function setBREAKOUT($BREAK_OUT)
-    {
-        $this->BREAK_OUT = $BREAK_OUT;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDURATION()
-    {
-        return $this->DURATION;
-    }
-
-    /**
-     * @param mixed $DURATION
-     */
-    public function setDURATION($DURATION)
-    {
-        $this->DURATION = $DURATION;
-    }
-
-    /**
-     * @return mixed
-     */
+ 
     public function getHRSWORKED()
     {
         return $this->HRS_WORKED;
     }
-
-    /**
-     * @param mixed $HRS_WORKED
-     */
+ 
     public function setHRSWORKED($HRS_WORKED)
     {
         $this->HRS_WORKED = $HRS_WORKED;
-    }
-
-      /**
-     * @return mixed
-     */
-    // public function getAPPRSTAT()
-    // {
-    //     return $this->APPR_STATUS;
-    // }
- 
-    /**
-     * @param mixed $APPR_STATUS
-     */
-    // public function setAPPRSTAT($APPR_STATUS)
-    // {
-    //     $this->APPR_STATUS = $APPR_STATUS;
-    // }
-
-    /**
-     * @return mixed
-     */
-    // public function getACKNOWLEDGEDBY()
-    // {
-    //     return $this->ACKNOWLEDGED_BY;
-    // }
- 
-    /**
-     * @param mixed $ACKNOWLEDGED_BY
-     */
-    // public function setACKNOWLEDGEDBY($ACKNOWLEDGED_BY)
-    // {
-    //     $this->ACKNOWLEDGED_BY = $ACKNOWLEDGED_BY;
-    // }
+    } 
 }

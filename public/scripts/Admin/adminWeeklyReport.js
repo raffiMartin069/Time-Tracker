@@ -1,75 +1,3 @@
-$("#dateRangePicker").daterangepicker({
-  autoUpdateInput: false,
-  locale: {
-    cancelLabel: "Clear",
-  },
-});
-
-$("#dateRangePicker").on("apply.daterangepicker", function (ev, picker) {
-  $(this).val(
-    picker.startDate.format("MM/DD/YYYY") +
-      " - " +
-      picker.endDate.format("MM/DD/YYYY")
-  );
-});
-
-$("#dateRangePicker").on("cancel.daterangepicker", function (ev, picker) {
-  $(this).val("");
-});
-
-$("#filterDateRange").click(function () {
-  var dateRange = $("#dateRangePicker").val();
-  if (!dateRange) {
-    $("tr.date-header").show();
-    $("tr.employee-record").show();
-    $("#displayNoReportsFound").hide();
-    return;
-  }
-
-  var startDate = moment(dateRange.split(" - ")[0], "MM/DD/YYYY")
-    .startOf("day")
-    .toDate();
-  var endDate = moment(dateRange.split(" - ")[1], "MM/DD/YYYY")
-    .endOf("day")
-    .toDate();
-  var reportsFound = false;
-
-  $("tr.date-header").each(function () {
-    var reportDate = new Date(
-      $(this).next("tr.employee-record").attr("data-date")
-    );
-    if (reportDate >= startDate && reportDate <= endDate) {
-      $(this).show();
-      reportsFound = true;
-    } else {
-      $(this).hide();
-    }
-  });
-
-  $("tr.employee-record").each(function () {
-    var reportDate = new Date($(this).attr("data-date"));
-    if (reportDate >= startDate && reportDate <= endDate) {
-      $(this).show();
-      reportsFound = true;
-    } else {
-      $(this).hide();
-    }
-  });
-
-  if (!reportsFound) {
-    $("#displayNoReportsFound").show();
-  } else {
-    $("#displayNoReportsFound").hide();
-  }
-});
-
-$("#resetDate").click(function () {
-  $("tr.date-header").show();
-  $("tr.employee-record").show();
-  $("#displayNoReportsFound").hide();
-  $("#dateRangePicker").val("");
-});
-
 var dailyReportsModal = $("#myModal");
 
 $(".clickMyDots").click(function () {
@@ -141,14 +69,18 @@ $(".clickMyDots").click(function () {
             }
 
             var checkTotalDailyHrs;
-            if (
-              report.HRS_WORKED !== null &&
-              report.HRS_WORKED !== undefined &&
-              report.HRS_WORKED !== ""
-            ) {
-              checkTotalDailyHrs = report.HRS_WORKED;
+            if (checkClockIn !== "N/A") {
+              if (
+                report.HRS_WORKED !== null &&
+                report.HRS_WORKED !== undefined &&
+                report.HRS_WORKED !== ""
+              ) {
+                checkTotalDailyHrs = report.HRS_WORKED;
+              } else {
+                checkTotalDailyHrs = "";
+              }
             } else {
-              checkTotalDailyHrs = "";
+              checkTotalDailyHrs = "N/A";
             }
 
             var row = `
@@ -239,10 +171,11 @@ $(document).on("click", ".view-breaks-btn", function () {
             (i + 1) +
             " End</th>";
         }
+
         content += "</tr></thead><tbody>";
         if (data.length > 0) {
           content += "<tr>";
-          data.forEach(function (report) {
+          data.reverse().forEach(function (report) {
             content +=
               "<td>" +
               report.BREAK_IN +
@@ -261,8 +194,12 @@ $(document).on("click", ".view-breaks-btn", function () {
         $accordionBody.html(content);
       },
       error: function (xhr, status, error) {
-        console.error("AJAX error:", status, error);
-        $accordionBody.html("Error fetching break data");
+        var errorMessage = "An error has occured while fetching break data. Please try again later.";
+        if (xhr.responseJSON && xhr.responseJSON.error) {
+          errorMessage = xhr.responseJSON.error;
+        }
+  
+        $accordionBody.html(errorMessage);
       },
     });
   }
@@ -325,11 +262,32 @@ $(".downloadBtn").click(function (event) {
 
           form.submit();
         } else {
-          alert("No daily reports found for this report.");
+          Swal.fire({
+            title: "Error",
+            text: "No daily reports found for this report.",
+            icon: "error",
+          });
+
+          $(".swal2-confirm").click(function () {
+            location.reload();
+          });
         }
       },
       error: function (xhr, status, error) {
-        console.error(error);
+        var errorMessage = "Something went wrong. Please try again later.";
+        if (xhr.responseJSON && xhr.responseJSON.error) {
+          errorMessage = xhr.responseJSON.error;
+        }
+  
+        Swal.fire({
+          title: "Error",
+          text: errorMessage,
+          icon: "error",
+        });
+
+        $(".swal2-confirm").click(function () {
+          location.reload();
+        });
       },
     });
   } else {
