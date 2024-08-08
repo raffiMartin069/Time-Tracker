@@ -47,8 +47,8 @@
                     <table class="table align-middle mb-0 bg-white text-center">
                         <thead style="position: sticky; top: 0; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                             <tr>
-                                <th>Status ID</th>
-                                <th>Status</th>
+                                <th hidden>Status ID</th>
+                                <th>Employment Status</th>
                                 <th>Required Hours</th>
                                 <th>Actions</th>
                             </tr>
@@ -57,7 +57,7 @@
                             <?php if (!empty($classifications) && is_array($classifications)) : ?>
                                 <?php foreach ($classifications as $classification) : ?>
                                     <tr>
-                                        <td><?php echo $classification->getEMPLOYMENTID(); ?></td>
+                                        <td hidden><?php echo $classification->getEMPLOYMENTID(); ?></td>
                                         <td><?php echo $classification->getEMPLOYMENTNAME(); ?></td>
                                         <td><?php echo $classification->getEMPLOYMENTHRS(); ?></td>
                                         <td>
