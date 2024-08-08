@@ -35,22 +35,27 @@ $("#editGeneralBtn").click(function () {
             birth_date: birthDate,
           },
           success: function (data) {
-            // After a successful request, new values will be displayed
-            $(".empFname").text(data.f_name);
-            $(".empMname").text(data.m_name);
-            $(".empLname").text(data.l_name);
-
             Swal.fire({
               title: "Success",
               text: "Your changes have been successfully saved!",
               icon: "success",
             });
+
+            $(".swal2-confirm").click(function () {
+              location.reload();
+            });
           },
 
           error: function (xhr, status, error) {
+            var errorMessage =
+              "Unable to save changes. Please try again later.";
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+              errorMessage = xhr.responseJSON.error;
+            }
+
             Swal.fire({
               title: "Error",
-              html: "Unable to save changes. <br>An attempt to change general information has already been made.",
+              text: errorMessage,
               icon: "error",
             });
 
@@ -86,23 +91,37 @@ $("#passwordInfoForm").submit(function (event) {
     success: function (data) {
       Swal.fire({
         title: "Success",
-        text: "Your changes has been successfully saved!",
+        text: "Your changes have been successfully saved!",
         icon: "success",
       });
 
       $(".swal2-confirm").click(function () {
-        $("#getmycurrpassword").val("");
-        $("#getmynewpassword").val("");
+        location.reload();
       });
     },
     error: function (xhr, status, error) {
+      var errorMessage = "Unable to save changes. Please try again later.";
+      if (xhr.responseJSON && xhr.responseJSON.error) {
+        errorMessage = xhr.responseJSON.error;
+      }
+
       Swal.fire({
         title: "Error",
-        text: "Unable to save changes. Please try again later.",
+        text: errorMessage,
         icon: "error",
+      });
+
+      $(".swal2-confirm").click(function () {
+        location.reload();
       });
     },
   });
+});
+
+// Contact change starts here
+$("#editContactBtn").click(function () {
+  $("#contactInfoForm input").prop("disabled", false);
+  $("#saveContactBtn").prop("disabled", false);
 });
 
 // Contact Form
@@ -125,20 +144,30 @@ $("#contactInfoForm").submit(function (event) {
       ecn: ecn,
     },
     success: function (data) {
-      $(".empEmail").text(data.email);
-      $(".empContact").text(data.ecn);
-
       Swal.fire({
         title: "Success",
-        text: "Your changes has been successfully saved!",
+        text: "Your changes have been successfully saved!",
         icon: "success",
+      });
+
+      $(".swal2-confirm").click(function () {
+        location.reload();
       });
     },
     error: function (xhr, status, error) {
+      var errorMessage = "Unable to save changes. Please try again later.";
+      if (xhr.responseJSON && xhr.responseJSON.error) {
+        errorMessage = xhr.responseJSON.error;
+      }
+
       Swal.fire({
         title: "Error",
-        text: "Unable to save changes. Please try again later.",
+        text: errorMessage,
         icon: "error",
+      });
+
+      $(".swal2-confirm").click(function () {
+        location.reload();
       });
     },
   });
@@ -219,10 +248,15 @@ $(".profilePicChange").on("submit", function (e) {
         location.reload();
       });
     },
-    error: function () {
+    error: function (xhr, status, error) {
+      var errorMessage = "Unable to save changes. Please try again later.";
+      if (xhr.responseJSON && xhr.responseJSON.error) {
+        errorMessage = xhr.responseJSON.error;
+      }
+
       Swal.fire({
         title: "Error",
-        text: "Unable to save changes. Please try again later.",
+        text: errorMessage,
         icon: "error",
       });
 
