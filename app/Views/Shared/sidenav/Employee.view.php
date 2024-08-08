@@ -99,24 +99,19 @@
                             </li>
                         </ul>
                     </div>
+                    
                     <hr>
-                    <?php
-                    $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
-                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
-                    $getProfilePhoto = $defaultPhoto;
-                    if ($empId) {
-                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
-                        $returnParams = [':emp_id' => $empId];
-                        $returnData = $this->Query($returnQuery, $returnParams);
-
-                        if (!empty($returnData) && !empty($returnData[0]->image)) {
-                            $getProfilePhoto = $returnData[0]->image;
-                        }
-                    }
+                    
+                    <?php 
+                        $img = $_SESSION['image'] ?? null;
+                        $isImgFile = file_exists(__DIR__ . "/../../../../public/" . $img);
+                        $isSessionImg = $_SESSION['image'] != null;
+                        $photo = $isImgFile && $isSessionImg ? ROOT . $_SESSION['image'] : ROOT . "assets/img/employee/default-settings-profile.png";
                     ?>
+
                     <span class="nav-item-title fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img id="profile-photo" class="" src="<?php echo $getProfilePhoto; ?>"
+                        <img id="profile-photo" class="" src="<?php echo $photo; ?>"
                             style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px; object-fit: cover;"
                             alt="Profile Picture">
                         <span class="nav-item-title">
