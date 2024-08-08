@@ -145,7 +145,7 @@
 
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img id="profile-photo" src="<?php echo $getProfilePhoto; ?>"
+                        <img id="profile-photo" src="<?php echo $photo; ?>"
                             style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px; object-fit: cover;"
                             alt="Profile Picture">
                         <span class="nav-item-title">
