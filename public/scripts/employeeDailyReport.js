@@ -55,7 +55,12 @@ $(".view-breaks-btn").click(function () {
         $accordionBody.html(content);
       },
       error: function (xhr, status, error) {
-        $accordionBody.html("Error fetching break data");
+        var errorMessage = "An error has occured while fetching break data. Please try again later.";
+        if (xhr.responseJSON && xhr.responseJSON.error) {
+          errorMessage = xhr.responseJSON.error;
+        }
+  
+        $accordionBody.html(errorMessage);
       },
     });
   }
