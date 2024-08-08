@@ -87,7 +87,7 @@
                                 <?php endforeach; ?>
                             <?php else : ?>
                                 <tr>
-                                    <td colspan="6">No Data Found</td>
+                                    <td colspan="12">No Data Found</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
