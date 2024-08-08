@@ -502,7 +502,7 @@ class Employee extends Controller
     public function settings()
     {
         try {
-            $data = $this->GetInfo($_SESSION["userId"], 'employee');
+            $data = $this->GetInfo($_SESSION["userId"]);
             $results = $this->ArrangePersonalInfo($data);
 
             $reportModels = [];
@@ -521,8 +521,10 @@ class Employee extends Controller
     public function UpdateProfilePic()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-            // Sanitize and validates the uploaded file and employee session id
+            // Sanitize and validate the uploaded file
             $profilePhoto = isset($_FILES['profilePhoto']) ? $_FILES['profilePhoto'] : null;
+
+            // Validate and sanitize the session data
             $empId = isset($_SESSION["userId"]) ? Sanitize::intSanitation($_SESSION["userId"]) : null;
 
             // Define allowed file types for file upload
@@ -532,13 +534,11 @@ class Employee extends Controller
             if ($profilePhoto && $profilePhoto['error'] == 0 && in_array($profilePhoto['type'], $allowed)) {
                 $folder = 'uploads/';
 
-                // Checks if the 'uploads' directory already exist
-                // If it is not, it will create a new directory
                 if (!file_exists($folder)) {
                     mkdir($folder, 0777, true);
                 }
 
-                // Sanitized the file name to avoid security issues
+                // Sanitize the file name to avoid security issues
                 $sanitizedFileName = Sanitize::strSanitation(basename($profilePhoto['name']));
                 $destination = $folder . $sanitizedFileName;
 
@@ -559,11 +559,11 @@ class Employee extends Controller
                         echo "PDO Error: " . $e->getMessage();
                     }
                 }
-            }  
+            }
         } else {
             die();
         }
-    } 
+    }
 
     public function UpdateSettingsGeneralInfo()
     {
@@ -594,26 +594,10 @@ class Employee extends Controller
                     ':birth_date' => $sanitized_data['birth_date']
                 ];
 
-                $this->Query($query, $params);
-
-                // Get the values of the updated entries 
-                $returnQuery = "SELECT lname, mname, fname, birth_date FROM employee WHERE emp_id = :emp_id";
-                $returnParams = [':emp_id' => $sanitized_data['emp_id']];
-
-                $returnData = $this->Query($returnQuery, $returnParams);
-
-                // Sends the updated values to display changes without reload and remain on the same tab
-                if (!empty($returnData) && isset($returnData[0])) {
-                    $returnUpdatedData = $returnData[0];
-
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'f_name' => $returnUpdatedData->fname ?? null,
-                        'm_name' => $returnUpdatedData->mname ?? null,
-                        'l_name' => $returnUpdatedData->lname ?? null,
-                        'birth_date' => $returnUpdatedData->birth_date ?? null,
-                    ]);
-                }
+                $data = $this->Query($query, $params);
+                $results = $this->ArrangePersonalInfo($data);
+                header("Content-Type: application/json");
+                echo json_encode($results);
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
             } catch (PDOException $e) {
@@ -625,7 +609,7 @@ class Employee extends Controller
     }
 
     public function UpdateSettingsPasswordInfo()
-    {
+    {  
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $data = [
                 'curr_password' => $_POST['curr_password'] ?? null,
@@ -640,28 +624,26 @@ class Employee extends Controller
             ];
 
             try {
+                // Log the incoming data for debugging
+                error_log("Sanitized data: " . print_r($sanitized_data, true));
+
                 $query = "CALL change_password(:emp_id, :curr_password, :new_password)";
                 $params = [
                     ':emp_id' => $sanitized_data['emp_id'],
                     ':curr_password' => $sanitized_data['curr_password'],
                     ':new_password' => $sanitized_data['new_password']
-                ];
+                ]; 
 
-                $data = $this->Query($query, $params);
+                $data = $this->Query($query, $params);  
+                $results = $this->ArrangePersonalInfo($data);
 
-                // Sends the updated values to display changes without reload and remain on the same tab
-                if (!empty($data) && isset($data[0])) {
-                    $updatedInfo = $data[0];
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'curr_password' => $updatedInfo['curr_password'] ?? null,
-                        'new_password' => $updatedInfo['new_password'] ?? null,
-                    ]);
-                }
-            } catch (PDOException $e) {
-                echo "PDO Error: " . $e->getMessage();
+                // Send the results as JSON
+                header("Content-Type: application/json");
+                echo json_encode($results);
             } catch (Exception $e) {
                 echo "Error: " . $e->getMessage();
+            } catch (PDOException $e) {
+                echo "PDO Error: " . $e->getMessage();
             }
         } else {
             die();
@@ -691,24 +673,10 @@ class Employee extends Controller
                     ':ecn' => $sanitized_data['ecn']
                 ];
 
-                $this->Query($query, $params);
-
-                // Get the values of the updated entries
-                $returnQuery = "SELECT email, ecn FROM employee_credential WHERE emp_id = :emp_id";
-                $returnParams = [':emp_id' => $sanitized_data['emp_id']];
-
-                $returnData = $this->Query($returnQuery, $returnParams);
-
-                // Sends the updated values to display changes without reload and remain on the same tab
-                if (!empty($returnData) && isset($returnData[0])) {
-                    $returnUpdatedData = $returnData[0];
-
-                    header("Content-Type: application/json");
-                    echo json_encode([
-                        'email' => $returnUpdatedData->email ?? null,
-                        'ecn' => $returnUpdatedData->ecn ?? null,
-                    ]);
-                }
+                $data = $this->Query($query, $params);
+                $results = $this->ArrangePersonalInfo($data);
+                header("Content-Type: application/json");
+                echo json_encode($results);
             } catch (PDOException $e) {
                 echo "PDO Error: " . $e->getMessage();
             } catch (Exception $e) {
