@@ -107,7 +107,7 @@
                                              <form id="passwordInfoForm">
                                                  <?php foreach ($results as $report) : ?>
                                                      <div class="form-group">
-                                                         <input type="password" class="form-control" id="getmycurrpassword" placeholder="Password" disabled required>
+                                                         <input type="password" class="form-control" id="getmycurrpassword" placeholder="Current Password" disabled required>
                                                      </div>
                                                      <div class="form-group">
                                                          <input type="password" class="form-control mt-3" id="getmynewpassword" placeholder="New password" disabled required>
@@ -147,9 +147,9 @@
      </div>
      </div> 
      </div>
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
      <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
      <script defer src="<?= ROOT ?>scripts/Admin/settings.js"></script> 
 
  </body>
