@@ -97,14 +97,20 @@ deleteBtns.forEach((button) => {
                             text: "Shift has been deleted successfully!",
                             icon: "success"
                         });
+
                         $('.swal2-confirm').click(function() {
                             location.reload();
                         });
                     },
-                    error: function(error) {
+                    error: function(xhr) {
+                        // Use the response JSON from the server-side error
+                        var errorMessage = xhr.responseJSON && xhr.responseJSON.message
+                            ? xhr.responseJSON.message
+                            : "Unable to save changes. Please try again later.";
+            
                         Swal.fire({
                             title: "Error",
-                            html: "Unable to save changes. Please try again later.",
+                            text: errorMessage,
                             icon: "error"
                         });
 
