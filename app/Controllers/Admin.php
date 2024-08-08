@@ -13,13 +13,13 @@ require_once __DIR__ . "/../Models/DailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllDailyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllWeeklyReportModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllBiweeklyReportModel.php";
-require_once __DIR__ . "/../Models/AdminModels/AllSettingsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageAdminModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageShiftsModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllEmploymentClassificationModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllManageJobPositionModel.php";
 require_once __DIR__ . "/../Models/AdminModels/AllRecycleBinModel.php";
 require_once __DIR__ . '/../Helpers/Sanitation.php';
+require_once __DIR__ . '/../Models/SettingsModel.php';
 require_once __DIR__ . '/../Helpers/DailyReportPDF.php';
 require_once __DIR__ . '/../Helpers/WeeklyReportPDF.php';
 require_once __DIR__ . '/../Helpers/BiweeklyReportPDF.php';
@@ -1480,7 +1480,7 @@ class Admin extends Controller
         return $results;
     }
 
-    // Admin settings table view 
+   // Admin settings table view 
     public function editProfileInformation()
     {
         try {
