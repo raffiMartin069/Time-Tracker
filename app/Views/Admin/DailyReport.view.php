@@ -64,6 +64,11 @@
                             padding-right: 12px !important;
                             white-space: nowrap;
                         }
+
+                        input:focus {
+                            box-shadow: none !important;
+                            border: 1px solid #0095ff !important;
+                        }
                     </style>
 
                     <div class="table-responsive">
