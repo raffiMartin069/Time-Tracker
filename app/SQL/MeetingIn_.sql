@@ -1,0 +1,2 @@
+
+update daily_report set meeting_status = true WHERE EMP_ID = :id and date = current_date;

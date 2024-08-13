@@ -1,0 +1,2 @@
+
+UPDATE employee_credential SET emp_stat_id = ? WHERE emp_id = ?;  
