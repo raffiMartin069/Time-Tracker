@@ -102,6 +102,7 @@
                                         $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
                                         $getProfilePhoto = $defaultPhoto;
 
+                                        // This will change profile image on update
                                         if ($empId) {
                                             $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
                                             $returnParams = [
