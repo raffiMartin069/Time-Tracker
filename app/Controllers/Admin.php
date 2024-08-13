@@ -1053,13 +1053,32 @@ class Admin extends Controller
 
             $pdf = new DailyReportPDF();
 
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename="daily-report.pdf"');
+            $employeeName = isset($data['name']) ? $data['name'] : 'Employee';
+            $reportDate = isset($data['date']) ? $data['date'] : '';
+            $nameParts = explode(',', $employeeName);
 
-            $pdf->createPDFReport($data);
+            if (count($nameParts) === 2) {
+                $formattedName = trim($nameParts[1]) . ' ' . trim($nameParts[0]);
+            } else {
+                $formattedName = $employeeName;
+            }
+
+            $filename = $formattedName . ' Daily Report ' . $reportDate . '.pdf';
+
+            $pdfContent = $pdf->createPDFReport($data);
+
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+            echo $pdfContent;
             exit;
         }
     }
+
 
     public function employeeWeeklyReport()
     {
@@ -1068,10 +1087,28 @@ class Admin extends Controller
 
             $pdf = new WeeklyReportPDF();
 
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename="weekly-report.pdf"');
+            $employeeName = isset($data['name']) ? $data['name'] : 'Employee';
+            $reportDate = isset($data['date']) ? $data['date'] : '';
+            $nameParts = explode(',', $employeeName);
 
-            $pdf->createPDFReport($data);
+            if (count($nameParts) === 2) {
+                $formattedName = trim($nameParts[1]) . ' ' . trim($nameParts[0]);
+            } else {
+                $formattedName = $employeeName;
+            }
+
+            $filename = $formattedName . ' Weekly Report ' . $reportDate[0] . ' - ' . $reportDate[6] . '.pdf';
+
+            $pdfContent = $pdf->createPDFReport($data);
+
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+            echo $pdfContent;
             exit;
         }
     }
@@ -1083,10 +1120,28 @@ class Admin extends Controller
 
             $pdf = new BiweeklyReportPDF();
 
-            header('Content-Type: application/pdf');
-            header('Content-Disposition: inline; filename="biweekly-report.pdf"');
+            $employeeName = isset($data['name']) ? $data['name'] : 'Employee';
+            $reportDate = isset($data['date']) ? $data['date'] : '';
+            $nameParts = explode(',', $employeeName);
 
-            $pdf->createPDFReport($data);
+            if (count($nameParts) === 2) {
+                $formattedName = trim($nameParts[1]) . ' ' . trim($nameParts[0]);
+            } else {
+                $formattedName = $employeeName;
+            }
+
+            $filename = $formattedName . ' Biweekly Report ' . $reportDate[0] . ' - ' . $reportDate[13] . '.pdf';
+
+            $pdfContent = $pdf->createPDFReport($data);
+
+            if (ob_get_length()) {
+                ob_end_clean();
+            }
+
+            header('Content-Type: application/pdf');
+            header('Content-Disposition: attachment; filename="' . $filename . '"');
+
+            echo $pdfContent;
             exit;
         }
     }
@@ -1134,7 +1189,7 @@ class Admin extends Controller
             echo $e->getMessage();
         }
     }
-    
+
     // Query to update clockin stamp of an employee
     public function UpdateClockInReport()
     {
@@ -1395,7 +1450,7 @@ class Admin extends Controller
             die();
         }
     }
-    
+
     protected function ArrangeBiweeklyResults($data)
     {
         $results = [];
@@ -1480,7 +1535,7 @@ class Admin extends Controller
         return $results;
     }
 
-   // Admin settings table view 
+    // Admin settings table view 
     public function editProfileInformation()
     {
         try {
@@ -1547,20 +1602,30 @@ class Admin extends Controller
                 }
                 $empId = array_map('intval', $empId);
                 $sanitizedEmpId = array_map('Sanitize::intSanitation', $empId);
-
-                // Converts the array to a comma separated string for the query
+    
+                // Checks if the employee to be remove is the currently login user
+                $currentUserId = $_SESSION['userId'] ?? null;
+                $isRemovingSelf = in_array($currentUserId, $sanitizedEmpId);
+    
                 $idsArray = implode(',', $sanitizedEmpId);
                 $query = "CALL remove_admins(ARRAY[" . $idsArray . "])";
-
+    
                 $this->Query($query);
-
-                header("Content-Type: application/json");
+    
+                // Redirects to the login page if the current user is to be remove
+                if ($isRemovingSelf) {
+                    session_destroy();
+                    echo json_encode(['success' => true, 'redirect' => '']);
+                    exit;
+                }
+    
                 echo json_encode(['success' => true]);
             } catch (PDOException $e) {
-                echo "PDO Error: " . $e->getMessage();
+                echo json_encode(['success' => false, 'error' => "PDO Error: " . $e->getMessage()]);
             } catch (Exception $e) {
-                echo "Error: " . $e->getMessage();
+                echo json_encode(['success' => false, 'error' => "Error: " . $e->getMessage()]);
             }
+            exit;
         } else {
             die();
         }
@@ -1707,7 +1772,7 @@ class Admin extends Controller
 
                 $sanitizedEmploymentType = $sanitized_data['employment_type'];
                 $sanitizedRequiredHours = $sanitized_data['required_hours'];
-                
+
                 $query = "CALL add_update_employment_status('$sanitizedEmploymentType', '$sanitizedRequiredHours')";
 
                 $this->Query($query);
@@ -2018,14 +2083,14 @@ class Admin extends Controller
                 $empId = isset($_POST['empId']) ? $_POST['empId'] : [];
                 if (!is_array($empId)) {
                     $empId = [$empId];
-                } 
+                }
 
                 // Apply sanitation to each employee id 
                 $sanitizedEmpId = array_map('Sanitize::intSanitation', $empId);
 
                 // Converts array of ids to a comma separated string for the query
                 $idsArray = implode(',', $sanitizedEmpId);
-                $query = "CALL add_admins(ARRAY[" . $idsArray . "])"; 
+                $query = "CALL add_admins(ARRAY[" . $idsArray . "])";
 
                 $this->Query($query);
 
