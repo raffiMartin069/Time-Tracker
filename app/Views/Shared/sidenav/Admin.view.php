@@ -143,6 +143,7 @@
                     $updatedEmail = '';
                     $updatedName = '';
 
+                    // Updates sidebar image, name, and email on update
                     if ($empId) {
                         $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
                         $returnEmailQuery = "SELECT email FROM employee_credential WHERE emp_id = :emp_id";
