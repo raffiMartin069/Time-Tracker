@@ -120,7 +120,7 @@
                                             <td class="getmywklyid" hidden><?php echo $report->getWKLYID(); ?></td>
                                             <td class="getmyempid" id="reportsTableIdTd"><?php echo $report->getEMPID(); ?></td>
                                             <td class="employee-name">
-                                                <div class="photo-container">
+                                                <div class="photo-container me-1">
                                                     <img class="photo" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
                                                 </div>
 
@@ -129,16 +129,16 @@
                                             <td hidden class="getmyreportdate"><?php echo $report->getREPORTDATE(); ?></td>
                                             <td><?php echo $report->getTOTALHRS(); ?></td>
                                             <td>
-                                                <button type="submit" class="btn clickMyDots" id="previewBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius: 0; border-right: none !important; margin-right: 2.3rem !important; margin-top: 1rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
+                                                <button type="submit" class="btn clickMyDots" id="previewBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius: 0; border-right: none !important; margin-right: 2.3rem !important; margin-top: 1rem; margin-bottom: -.5rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
                                                     <img src="<?php ROOT ?>assets/img/view30.png" class="img-fluid ms-2" title="View Daily Reports" style="max-width:87%;  margin-left: .1rem !important;" />
                                                 </button>
 
                                                 <!-- Pass data to pdf at the same time all remaining input fields will be appended here -->
-                                                <form action="Admin/employeeWeeklyReport" method="post" target="_blank" class="weeklyDownload">
+                                                <form action="Admin/employeeWeeklyReport" method="post" class="weeklyDownload">
                                                     <input type="hidden" name="name" value="<?php echo $report->getEMPNAME(); ?>">
                                                     <input type="hidden" name="totalweeklyhrs" value="<?php echo $report->getTOTALHRS(); ?>">
 
-                                                    <button type="submit" class="btn downloadBtn" id="downloadBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius:0; margin-right: -2.5rem !important; margin-top: -2.05rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                                                    <button type="submit" class="btn downloadBtn" id="downloadBtn" style="width: 2.4rem; height: 2.05rem; border: none; border-radius:0; margin-right: -2.5rem !important; margin-top: -3.7rem; margin-bottom: -1rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
                                                         <img src="<?php ROOT ?>assets/img/download-pdf5.png" class="img-fluid" title="Download Report" style="max-width: 110%; margin-left: -.1rem;" />
                                                     </button>
                                                 </form>

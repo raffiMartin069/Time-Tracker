@@ -82,37 +82,44 @@
                                          <hr class="border-light m-0">
                                          <div class="card-body">
                                              <form id="generalInfoForm">
-                                                 <?php foreach ($results as $report) : ?>
-                                                     <div class="form-group">
-                                                         <input type="text" class="form-control mb-1" id="getmylname" value="<?php echo $report->getLNAME(); ?>" placeholder="Last Name" disabled>
-                                                     </div>
-
-                                                     <div class="form-group">
-                                                         <input type="text" class="form-control mt-3" id="getmymname" value="<?php echo $report->getMNAME(); ?>" placeholder="Middle Name" disabled>
-                                                     </div>
-                                                     <div class="form-group">
-                                                         <input type="text" class="form-control mt-3" id="getmyfname" value="<?php echo $report->getFNAME(); ?>" placeholder="First Name" disabled>
-                                                     </div>
-                                                     <div class="form-group">
-                                                         <input placeholder="Birth Date" class="form-control mt-3" id="getmybirthday" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" value="<?php echo $report->getBIRTHDATE(); ?>" id="date" disabled>
-                                                     </div>
-                                                 <?php endforeach; ?>
-                                                 <button type="button" class="save-btn mt-1" id="editGeneralBtn">Update</button>
-                                                 <button type="submit" class="save-btn mt-1" id="saveGeneralBtn" disabled>Save</button>
-                                             </form>
+                                             <?php foreach ($results as $report) : ?>
+                                                    <div class="form-group row" style="margin-bottom: 10px;">
+                                                        <div class="col-md-4">
+                                                            <label for="getmyfname" class="text-secondary text-start" style="font-size: 12px; display:block;">First Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmyfname" value="<?php echo $report->getFNAME(); ?>" disabled>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="getmymname" class="text-secondary text-start" style="font-size: 12px; display:block;">Middle Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmymname" value="<?php echo $report->getMNAME(); ?>" disabled>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="getmylname" class="text-secondary text-start" style="font-size: 12px; display:block;">Last Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmylname" value="<?php echo $report->getLNAME(); ?>" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="getmybirthday" class="text-secondary text-start" style="font-size: 12px; display:block;">Birthdate</label>
+                                                        <input class="form-control mt-1" id="getmybirthday" type="date" value="<?php echo $report->getBIRTHDATE(); ?>" id="date" disabled>
+                                                    </div>
+                                                <?php endforeach; ?>
+                                                <button type="button" class="save-btn" id="editGeneralBtn">Update</button>
+                                                <button type="submit" class="save-btn align-end" id="saveGeneralBtn" disabled>Save</button>
+                                            </form>
                                          </div>
                                      </div>
                                      <div class="tab-pane fade" id="account-change-password">
                                          <div class="card-body pb-2">
                                              <form id="passwordInfoForm">
-                                                 <?php foreach ($results as $report) : ?>
-                                                     <div class="form-group">
-                                                         <input type="password" class="form-control" id="getmycurrpassword" placeholder="Current Password" disabled required>
-                                                     </div>
-                                                     <div class="form-group">
-                                                         <input type="password" class="form-control mt-3" id="getmynewpassword" placeholder="New password" disabled required>
-                                                     </div>
-                                                 <?php endforeach; ?>
+                                             <?php foreach ($results as $report) : ?>
+                                                    <div class="form-group" style="margin-bottom: 10px;">
+                                                        <label for="getmycurrpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">Old Password</label>
+                                                        <input type="password" class="form-control mt-1" id="getmycurrpassword" disabled required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="getmynewpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">New Password</label>
+                                                        <input type="password" class="form-control mt-1" id="getmynewpassword" disabled required>
+                                                    </div>
+                                                <?php endforeach; ?>
                                                  <button type="button" class="save-btn mt-1" id="editPasswordBtn">Update</button>
                                                  <button type="submit" class="save-btn mt-1" id="savePasswordBtn" disabled>Save</button>
                                              </form>
@@ -122,14 +129,16 @@
                                          <hr class="border-light m-0">
                                          <div class="card-body pb-2">
                                              <form id="contactInfoForm">
-                                                 <?php foreach ($results as $report) : ?>
-                                                     <div class="form-group">
-                                                         <input type="text" class="form-control mt-3" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" placeholder="Email" disabled>
-                                                     </div>
-                                                     <div class="form-group">
-                                                         <input type="text" class="form-control mt-3" id="getmyecn" value="<?php echo $report->getECN(); ?>" placeholder="Contact Number" disabled>
-                                                     </div>
-                                                 <?php endforeach; ?>
+                                             <?php foreach ($results as $report) : ?>
+                                                    <div class="form-group" style="margin-bottom: 10px;">
+                                                        <label for="getmyemail" class="text-secondary text-start" style="font-size: 12px; display:block;">Email</label>
+                                                        <input type="text" class="form-control mt-1" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="getmyecn" class="text-secondary text-start" style="font-size: 12px; display:block;">Contact Number</label>
+                                                        <input type="text" class="form-control mt-1" id="getmyecn" value="<?php echo $report->getECN(); ?>" disabled>
+                                                    </div>
+                                                <?php endforeach; ?>
                                                  <button type="button" class="save-btn mt-1" id="editContactBtn">Update</button>
                                                  <button type="submit" class="save-btn mt-1" id="saveContactBtn" disabled>Save</button>
                                              </form>

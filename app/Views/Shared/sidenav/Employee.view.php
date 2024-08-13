@@ -99,28 +99,52 @@
                             </li>
                         </ul>
                     </div>
-                    
+
                     <hr>
-                    
-                    <?php 
-                        $img = $_SESSION['image'] ?? null;
-                        $isImgFile = file_exists(__DIR__ . "/../../../../public/" . $img);
-                        $isSessionImg = $_SESSION['image'] != null;
-                        $photo = $isImgFile && $isSessionImg ? ROOT . $_SESSION['image'] : ROOT . "assets/img/employee/default-settings-profile.png";
+
+                    <?php
+                    $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
+                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                    $getUpdatedProfilePhoto = $defaultPhoto;
+                    $updatedEmail = '';
+                    $updatedName = '';
+
+                    if ($empId) {
+                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                        $returnEmailQuery = "SELECT email FROM employee_credential WHERE emp_id = :emp_id";
+                        $returnNameQuery = "SELECT lname, fname FROM employee WHERE emp_id = :emp_id";
+
+                        $returnParams = [':emp_id' => $empId];
+                        $returnData = $this->Query($returnQuery, $returnParams);
+                        $returnEmail = $this->Query($returnEmailQuery, $returnParams);
+                        $returnName = $this->Query($returnNameQuery, $returnParams);
+
+                        if (!empty($returnData) && !empty($returnData[0]->image)) {
+                            $getUpdatedProfilePhoto = $returnData[0]->image;
+                        }
+
+                        if (!empty($returnEmail) && !empty($returnEmail[0]->email)) {
+                            $updatedEmail = $returnEmail[0]->email;
+                        }
+
+                        if (!empty($returnName)) {
+                            $updatedName = $returnName[0]->lname . ', ' . $returnName[0]->fname;
+                        }
+                    }
                     ?>
 
                     <span class="nav-item-title fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img id="profile-photo" class="" src="<?php echo $photo; ?>"
+                        <img id="profile-photo" class="" src="<?php echo $getUpdatedProfilePhoto; ?>"
                             style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px; object-fit: cover;"
                             alt="Profile Picture">
-                        <span class="nav-item-title">
-                            <h6 class="mt-1 mb-0 ms-2"><?php echo $_SESSION['name'] ?? '' ?></h6>
-                            <small class="ms-2 text-secondary"><?php echo $_SESSION['email'] ?? '' ?></small>
+                        <span class="nav-item-title" id="bottom-sidebar-content" style="max-width: 218px !important;">
+                            <h6 class="mt-1 mb-0 ms-2"><?php echo $updatedName; ?></h6>
+                            <small class="ms-2 text-secondary"><?php echo $updatedEmail; ?></small>
                         </span>
                     </div>
                     <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
-                    <form id="log-out" action="Login/logout" method="post">
+                        <form id="log-out" action="Login/logout" method="post">
                             <button type="submit" value="1" name="logoutBtn" id="logoutBtn" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
                                 Log Out
                             </button>

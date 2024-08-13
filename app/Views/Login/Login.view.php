@@ -6,6 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <title>Login | WTN</title>
+  <link rel="icon" type="image/x-icon" href="<?php ROOT ?>assets/img/login/logo_wtn.png">
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
@@ -55,18 +56,9 @@
 
       <!-- 2 column grid layout for inline styling -->
       <div class="row mb-4">
-        <div class="col d-flex justify-content-end">
-          <!-- Checkbox -->
-          <div class="form-check">
-            <input class="form-check-input" type="checkbox" value="" id="rememberMe" checked />
-            <label class="form-check-label" for="rememberMe">
-              Remember me
-            </label>
-          </div>
-        </div>
         <div class="text-end">
           <!-- Simple link -->
-          <a href="#!">Forgot password?</a>
+          <a href="<?php echo FORGOT_PASS ?>">Forgot password?</a>
         </div>
       </div>
       <div>

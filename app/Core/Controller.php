@@ -31,7 +31,7 @@ class Controller {
             }
         } else {
             // Handle the case where "role" is not set
-            header('Location: /Time-Tracker/public/login'); // Redirect to login or appropriate page
+            header('Location: /Time-Tracker/public'); // Redirect to login or appropriate page
             exit();
         }
     }
@@ -53,7 +53,7 @@ class Controller {
             }
         } else {
             // Handle the case where "role" is not set
-            header('Location: /Time-Tracker/public/login'); // Redirect to login or appropriate page
+            header('Location: /Time-Tracker/public'); // Redirect to login or appropriate page
             exit();
         }
     }

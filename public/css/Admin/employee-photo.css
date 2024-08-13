@@ -1,7 +1,6 @@
-.photo-container {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
+.photo-container { 
+    width: 25px;
+    height: 25px;
     border-radius: 50%;
 }
 

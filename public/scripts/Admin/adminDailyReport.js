@@ -66,7 +66,7 @@ $(".view-breaks-btn").click(function () {
   }
 });
 
-const editButtons = document.querySelectorAll(".edit-report-btn");
+const editButtons = document.querySelectorAll(".editReportBtn");
 editButtons.forEach((button) => {
   button.addEventListener("click", function () {
     const dailyId = this.getAttribute("data-daily-id");
@@ -78,7 +78,7 @@ editButtons.forEach((button) => {
     const empLunchout = this.getAttribute("data-lunch-out");
     const empClockout = this.getAttribute("data-clock-out");
 
-    document.getElementById("loadingMessage").style.display = "block";
+    // document.getElementById("loadingMessage").style.display = "block";
     // document.getElementById("editReportForm").style.display = "none";
 
     document.getElementById("modal-employee-name").value = empName;

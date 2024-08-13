@@ -53,7 +53,7 @@ class DailyReportPDF extends FPDF
         $this->SetFont('Arial', '', 10);
         $this->Cell(35, 10, $date, 1, 0, 'C');
 
-        // Custom result to avoid null and undefined values
+        // Custom results to avoid null and undefined values
         if ($clockin != 'null' && $clockin != '') {
             $this->Cell(31, 10, $clockin, 1, 0, 'C');
         } else {
@@ -87,6 +87,6 @@ class DailyReportPDF extends FPDF
             $this->Cell(31, 10, 'N/A', 1, 1, 'C');
         }
 
-        $this->Output();
+        return $this->Output('S');
     }
 }

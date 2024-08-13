@@ -9,6 +9,45 @@ class Login extends Controller
 
     use AuthDAO;
 
+
+    /**
+     * Method to handle invalid requests
+     * @return void
+     * @throws Exception
+     * 
+     */
+    private static function InvalidRequest()
+    {
+        header('Content-Type: application/json');
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid request']);
+        exit();
+    }
+
+    /**
+     * Summary of validateLogoutRequest
+     * @param int $request
+     * @return bool
+     */
+    private function validateLogoutRequest($request)
+    {
+        $request_value = filter_var($request, FILTER_VALIDATE_INT);
+
+        if(!isset($request_value)) {
+            Login::InvalidRequest();
+        }
+
+        if(!is_int($request_value)) {
+            Login::InvalidRequest();
+        }
+
+        if ($request_value !== 1) {
+            Login::InvalidRequest();
+        }
+
+        return true;
+    }
+
     public function logout()
     {
         if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
@@ -16,29 +55,36 @@ class Login extends Controller
             throw new Exception("Invalid request method", 405);
         }
 
-        $_SESSION = array();
+        $request = json_decode(file_get_contents("php://input"), true);
+        $request_value = $request['logoutBtn'];
+        try {
+            $this->validateLogoutRequest($request_value);
 
-        // If it's desired to kill the session, also delete the session cookie.
-        // Note: This will destroy the session, and not just the session data!
-        if (ini_get("session.use_cookies")) {
-            $params = session_get_cookie_params();
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $params["path"],
-                $params["domain"],
-                $params["secure"],
-                $params["httponly"]
-            );
+            $_SESSION = array();
+            session_unset();
+            session_destroy();
+            if (ini_get("session.use_cookies")) {
+                $params = session_get_cookie_params();
+                setcookie(
+                    session_name(),
+                    '',
+                    time() - 42000,
+                    $params["path"],
+                    $params["domain"],
+                    $params["secure"],
+                    $params["httponly"]
+                );
+            }
+            
+            header('Content-Type: application/json');
+            echo json_encode(['url' => '/Time-Tracker']);
+            exit();
+        } catch(Exception $e) {
+            header('Content-Type: application/json');
+            http_response_code($e->getCode());
+            echo json_encode(['error' => $e->getMessage()]);
+            exit();
         }
-
-
-        session_unset();
-        session_destroy();
-
-        header('Location: /Time-Tracker/public/login');
-        exit();
     }
 
     public function index()
@@ -94,7 +140,7 @@ class Login extends Controller
             $mess = $value->message;
             $name = $value->employee_name;
             $email = $value->email;
-            $popup_notif = $value->notification;
+            $image = $value->image;
         }
         return [
             'id' => $id,
@@ -103,7 +149,7 @@ class Login extends Controller
             'message' => $mess,
             'employee_name' => $name,
             'email' => $email,
-            'notification' => $popup_notif
+            'image' => $image
         ];
     }
 
@@ -116,6 +162,19 @@ class Login extends Controller
         return $prompt;
     }
 
+    /**
+     * Authenticates a user based on POST request data.
+     * 
+     * This method processes a POST request containing user credentials, performs authentication,
+     * and sets session variables based on the authenticated user's role. It redirects the user to
+     * an appropriate page (admin or employee) based on their role. If authentication fails or
+     * if the request method is not POST, it sends an appropriate HTTP response code and JSON error message.
+     * 
+     * @throws Exception If the request method is not POST, if input validation fails, or if user authentication fails.
+     * @return void This method does not return a value but redirects the user or exits with an error response.
+     * 
+     * Note: This method reads JSON-encoded POST data from php://input, expecting 'idNumber' and 'pass' fields.
+     */
     public function auth()
     {
         if ($_SERVER["REQUEST_METHOD"] !== 'POST') {
@@ -144,14 +203,16 @@ class Login extends Controller
 
         try {
             $extract = $this->extractData($result);
-            $_SESSION["userId"] = $extract['id'];
+            $extract['admin'];
             $keyVerify = $this->passwordVerify($extract['pass']);
+
+            $_SESSION["userId"] = $extract['id'];
             $_SESSION["notification"] = $extract['message'];
             $_SESSION['name'] = $extract['employee_name'];
             $_SESSION['email'] = $extract['email'];
-            $extract['admin'];
             $_SESSION['role'] = $extract['admin'] === true ? 'admin' : 'employee';
-            $_SESSION['popup_notif'] = $extract['notification'];
+            $_SESSION['image'] = $extract['image'];
+
             define('KEY_PROMPT', $keyVerify);
 
             if ($extract['admin'] === true) {

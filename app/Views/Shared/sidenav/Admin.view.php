@@ -45,7 +45,7 @@
                         <a href="?page=dashboard"
                             class="nav-link text-dark rounded d-flex align-items-center justify-content-start"
                             style="height: 50px;">
-                            <i class="lni lni-grid-alt fw-bold" style="margin-left: 4px;"></i>
+                            <i class="lni lni-grid-alt" style="margin-left: 4px;"></i>
                             <span class="nav-item-title ms-2">Dashboard</span>
                         </a>
                     </li>
@@ -127,7 +127,7 @@
                             <li class="nav-item mb-4 " style="width: 270px;">
                                 <a href="?page=editProfile" class="nav-link text-dark rounded" style="height: 50px;">
                                     <div style="display: flex; align-items: center;">
-                                        <i class="lni lni-cog mt-2 fs-5 fw-semibold"></i>
+                                        <i class="lni lni-cog mt-2 fs-5"></i>
                                         <span class="nav-item-title ms-2 mt-2">Settings</span>
                                     </div>
                                 </a>
@@ -137,25 +137,51 @@
                     <hr>
 
                     <?php
-                    $img = $_SESSION['image'] ?? null;
-                    $isImgFile = file_exists(__DIR__ . "/../../../../public/" . $img);
-                    $isSessionImg = $_SESSION['image'] != null;
-                    $photo = $isImgFile && $isSessionImg ? ROOT . $_SESSION['image'] : ROOT . "assets/img/employee/default-settings-profile.png";
-                    ?>
+                    $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
+                    $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                    $getUpdatedProfilePhoto = $defaultPhoto;
+                    $updatedEmail = '';
+                    $updatedName = '';
 
+                    if ($empId) {
+                        $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                        $returnEmailQuery = "SELECT email FROM employee_credential WHERE emp_id = :emp_id";
+                        $returnNameQuery = "SELECT lname, fname FROM employee WHERE emp_id = :emp_id";
+
+                        $returnParams = [':emp_id' => $empId];
+
+                        $returnData = $this->Query($returnQuery, $returnParams);
+                        $returnEmail = $this->Query($returnEmailQuery, $returnParams);
+                        $returnName = $this->Query($returnNameQuery, $returnParams);
+
+                        if (!empty($returnData) && !empty($returnData[0]->image)) {
+                            $getUpdatedProfilePhoto = $returnData[0]->image;
+                        }
+ 
+                        if (!empty($returnEmail) && !empty($returnEmail[0]->email)) {
+                            $updatedEmail = $returnEmail[0]->email;
+                        }
+
+                        if (!empty($returnName)) {
+                            $updatedName = $returnName[0]->lname . ', ' . $returnName[0]->fname;
+                        }
+                    }
+                    ?>
+ 
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
-                        <img id="profile-photo" src="<?php echo $photo; ?>"
+                        <img id="profile-photo" src="<?php echo $getUpdatedProfilePhoto; ?>"
                             style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px; object-fit: cover;"
                             alt="Profile Picture">
-                        <span class="nav-item-title">
-                            <h6 class="mt-1 mb-0 ms-2"><?php echo $_SESSION['name'] ?? '' ?></h6>
-                            <small class="ms-2 text-secondary"><?php echo $_SESSION['email'] ?? '' ?></small>
+                        <span class="nav-item-title" id="bottom-sidebar-content" style="max-width: 218px !important;">
+                            <h6 class="mt-1 mb-0 ms-2"><?php echo $updatedName; ?></h6>
+                            <small class="ms-2 text-secondary"><?php echo $updatedEmail; ?></small>
                         </span>
                     </div>
-                    <li class="nav-item mt-3 rounded" style="background: #F6F7F8; width: 270px; margin-left: 14px;">
+                     
+                    <li class="nav-item mt-3 rounded" style="margin-left: 14px;">
                         <form id="log-out" action="Login/logout" method="post">
-                            <button type="submit" value="1" name="logoutBtn" id="logoutBtn" class="btn btn-primary shadow-sm rounded w-100 m-0 justify-content-center">
+                            <button type="submit" value="1" name="logoutBtn" id="logoutBtn" class="btn btn-primary shadow-sm rounded w-100 m-0 ">
                                 Log Out
                             </button>
                         </form>
@@ -195,8 +221,7 @@
             $controller->management();
             break;
 
-        case 'set/meeting':
-            ;
+        case 'set/meeting':;
             $controller->meeting();
             break;
 

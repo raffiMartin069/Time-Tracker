@@ -120,6 +120,6 @@ class BiweeklyReportPDF extends FPDF
         $this->SetFont('Arial', 'B', 9);
         $this->Cell(191, 10, 'TOTAL BIWEEKLY HOURS', 0, 1, 'R');
 
-        $this->Output();
+        return $this->Output('S');
     }
 }

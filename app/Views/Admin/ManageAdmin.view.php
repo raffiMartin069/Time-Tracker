@@ -28,11 +28,11 @@
             <div class="container" style="text-align: center;">
 
                 <div class="button-container">
-                    <button class="btn" id="addAdminBtn" title="Add Admin(s)" style="width: 6rem; height: 1.8rem; margin-top: .5rem; margin-left: 70rem !important; border: 1px solid #e0e0e0; margin-left: auto; margin-right: 1px !important;">
+                    <button class="btn shadow-sm text-center" id="addAdminBtn" title="Add Admin(s)" style="width: 6rem; height: 1.8rem; margin-top: .5rem; margin-left: 70rem !important; border: 1px solid #e0e0e0; margin-left: auto; margin-right: 1px !important;">
                         <i class="lni lni-plus" style="font-size: 10px;"></i>
                         <span class="ms-2" style="font-size: 12px;">Create</span>
                     </button>
-                    <button class="btn" id="deleteBtn" title="Delete Admin(s)" style="width: 6rem; height: 1.8rem; margin-top: .5rem; border: 1px solid #e0e0e0; margin-left: auto; margin-right: 1px !important;">
+                    <button class="btn shadow-sm text-center" id="deleteBtn" title="Delete Admin(s)" style="width: 6rem; height: 1.8rem; margin-top: .5rem; border: 1px solid #e0e0e0; margin-left: auto; margin-right: 1px !important;">
                         <i class="fa-regular fa-trash-can" style="font-size: 10px;"></i>
                         <span class="ms-2" style="font-size: 12px;">Remove</span>
                     </button>

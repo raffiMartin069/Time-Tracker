@@ -9,6 +9,36 @@ trait AdminDAO
 {
     use Database;
 
+    public function adminLunchOut($id)
+    {
+        try {
+            $query = "CALL lunch_out(:id);";
+            $params = [
+                'id' => $id
+            ];
+            return !empty($this->Query($query, $params)) ? true : false;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
+    public function adminLunchIn($id)
+    {
+        try {
+            $query = "CALL lunch_in(:id);";
+            $params = [
+                'id' => $id
+            ];
+            return !empty($this->Query($query, $params)) ? true : false;
+        } catch (Exception $e) {
+            echo 'Error: ' . $e->getMessage();
+        } catch (PDOException $e) {
+            echo 'PDO Error: ' . $e->getMessage();
+        }
+    }
+
     public function updateEmployeePos($emp_id, $pos_id) 
     {
         try {
@@ -179,8 +209,7 @@ trait AdminDAO
     public function adminBreakLogs()
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('BreakLogs.sql');
+            $query = "SELECT * FROM get_break_logs_admin();";
             return $this->Query($query);
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
@@ -192,8 +221,7 @@ trait AdminDAO
     public function adminMeetingLogs()
     {
         try{
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('MeetingLogs.sql');
+            $query = "SELECT * FROM get_huddle_logs_admin()";
             return $this->Query($query);
         } catch(Exception $e) {
             echo 'Error: ' . $e->getMessage();
@@ -202,15 +230,13 @@ trait AdminDAO
         }
     }
 
-
+    // TODO: Refactor this method to use the Query method
     public function adminButtonState($id, $date)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('AdminState.sql');
+            $query = "SELECT * FROM get_button_stats(:id)";
             $params = [
-                $id,
-                $date
+                $id
             ];
             return $this->Query($query, $params);
         } catch(Exception $e) {
@@ -272,8 +298,7 @@ trait AdminDAO
     private function adminBreakOut($id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('BreakOut.sql');
+            $query = "CALL break_out(:id);";
             $params = [
                 'id' => $id
             ];
@@ -288,8 +313,7 @@ trait AdminDAO
     private function adminBreakIn($id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('BreakIn.sql');
+            $query = "CALL break_in(:id)";
             $params = [
                 'id' => $id
             ];
@@ -304,8 +328,7 @@ trait AdminDAO
     private function adminMeetingOut($id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('MeetingOut.sql');
+            $query = "update daily_report set huddle_status = false where emp_id = :id and date = current_date;";
             $params = [
                 'id' => $id
             ];
@@ -320,8 +343,7 @@ trait AdminDAO
     private function adminMeetingIn($id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('MeetingIn.sql');
+            $query = "update daily_report set huddle_status = true WHERE EMP_ID = :id and date = current_date;";
             $params = [
                 'id' => $id
             ];
@@ -336,8 +358,7 @@ trait AdminDAO
     private function adminClockIn($id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('ClockIn.sql');
+            $query = "CALL clock_in(:id);";
             $params = [
                 'id' => $id
             ];
@@ -358,8 +379,7 @@ trait AdminDAO
     private function adminClockOut($id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('ClockOut.sql');
+            $query = "CALL clock_out(:id);";
             $params = [
                 'id' => $id
             ];

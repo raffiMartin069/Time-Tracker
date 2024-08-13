@@ -623,10 +623,7 @@ class Employee extends Controller
                 'emp_id' => Sanitize::intSanitation($data['emp_id'])
             ];
 
-            try {
-                // Log the incoming data for debugging
-                error_log("Sanitized data: " . print_r($sanitized_data, true));
-
+            try { 
                 $query = "CALL change_password(:emp_id, :curr_password, :new_password)";
                 $params = [
                     ':emp_id' => $sanitized_data['emp_id'],

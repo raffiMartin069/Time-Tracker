@@ -1,4 +1,5 @@
-.editDownloadBtns,
+#editReport,
+#download,
 #previewBtn,
 #downloadBtn {
   background-image: linear-gradient(#f7f8fa, #e7e9ec);
@@ -30,7 +31,8 @@
 }
 
 @media (max-width: 576px) {
-  .editDownloadBtns,
+  #editReport,
+  #download,
   #previewBtn {
     margin: 0.3px;
   }

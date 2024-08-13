@@ -194,11 +194,12 @@ $(document).on("click", ".view-breaks-btn", function () {
         $accordionBody.html(content);
       },
       error: function (xhr, status, error) {
-        var errorMessage = "An error has occured while fetching break data. Please try again later.";
+        var errorMessage =
+          "An error has occured while fetching break data. Please try again later.";
         if (xhr.responseJSON && xhr.responseJSON.error) {
           errorMessage = xhr.responseJSON.error;
         }
-  
+
         $accordionBody.html(errorMessage);
       },
     });
@@ -277,7 +278,7 @@ $(".downloadBtn").click(function (event) {
         if (xhr.responseJSON && xhr.responseJSON.error) {
           errorMessage = xhr.responseJSON.error;
         }
-  
+
         Swal.fire({
           title: "Error",
           text: errorMessage,

@@ -96,7 +96,7 @@
                                                 <img src="<?php ROOT ?>assets/img/view30.png" class="img-fluid ms-2" title="View Daily Reports" style="max-width:87%;  margin-left: .1rem !important;" />
                                             </button>
 
-                                            <form action="Admin/employeeWeeklyReport" method="post" target="_blank" class="weeklyDownload" style="display:inline;">
+                                            <form action="Admin/employeeWeeklyReport" method="post" class="weeklyDownload" style="display:inline;">
                                                 <input type="hidden" name="name" value="<?php echo $report->getEMPNAME(); ?>"> 
                                                 <input type="hidden" name="totalweeklyhrs" value="<?php echo $report->getTOTALHRS(); ?>">
 

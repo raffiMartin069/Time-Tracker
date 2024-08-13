@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WhereToNext | Employee</title>
+    <title>WhereToNext | Admin</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="<?= ROOT ?>css/Employee/reports.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/default.css" />
     <link rel="stylesheet" href="<?= ROOT ?>css/settings.css" />
@@ -42,15 +41,24 @@
                 </div>
 
                 <?php
-                $img = $_SESSION['image'] ?? null;
-                $isImgFile = file_exists(__DIR__ . "/../../../../public/" . $img);
-                $isSessionImg = $_SESSION['image'] != null;
-                $photo = $isImgFile && $isSessionImg ? ROOT . $_SESSION['image'] : ROOT . "assets/img/employee/default-settings-profile.png";
+                $empId = isset($_SESSION["userId"]) ? $_SESSION["userId"] : null;
+                $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
+                $getProfilePhoto = $defaultPhoto;
+
+                if ($empId) {
+                    $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
+                    $returnParams = [':emp_id' => $empId];
+                    $returnData = $this->Query($returnQuery, $returnParams);
+
+                    if (!empty($returnData) && !empty($returnData[0]->image)) {
+                        $getProfilePhoto = $returnData[0]->image;
+                    }
+                }
                 ?>
 
                 <div class="profile-pic-container">
                     <form id="profilePicForm" class="profilePicChange" method="post" enctype="multipart/form-data">
-                        <img id="profilePic" class="profile-pic" src="<?php echo $photo; ?>" alt="Profile Picture">
+                        <img id="profilePic" class="profile-pic" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
                         <input type="file" id="profilePhoto" class="getmyimg" name="profilePhoto">
                     </form>
                 </div>
@@ -79,22 +87,27 @@
                                         <div class="card-body">
                                             <form id="generalInfoForm">
                                                 <?php foreach ($results as $report) : ?>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control mb-1" id="getmylname" value="<?php echo $report->getLNAME(); ?>" placeholder="Last Name" disabled>
+                                                    <div class="form-group row" style="margin-bottom: 10px;">
+                                                        <div class="col-md-4">
+                                                            <label for="getmyfname" class="text-secondary text-start" style="font-size: 12px; display:block;">First Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmyfname" value="<?php echo $report->getFNAME(); ?>" disabled>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="getmymname" class="text-secondary text-start" style="font-size: 12px; display:block;">Middle Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmymname" value="<?php echo $report->getMNAME(); ?>" disabled>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="getmylname" class="text-secondary text-start" style="font-size: 12px; display:block;">Last Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmylname" value="<?php echo $report->getLNAME(); ?>" disabled>
+                                                        </div>
                                                     </div>
-
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control mt-3" id="getmymname" value="<?php echo $report->getMNAME(); ?>" placeholder="Middle Name" disabled>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control mt-3" id="getmyfname" value="<?php echo $report->getFNAME(); ?>" placeholder="First Name" disabled>
-                                                    </div>
-                                                    <div class="form-group">
-                                                        <input placeholder="Birth Date" class="form-control mt-3" id="getmybirthday" type="text" onfocus="(this.type='date')" onblur="(this.type='text')" value="<?php echo $report->getBIRTHDATE(); ?>" id="date" disabled>
+                                                        <label for="getmybirthday" class="text-secondary text-start" style="font-size: 12px; display:block;">Birthdate</label>
+                                                        <input class="form-control mt-1" id="getmybirthday" type="date" value="<?php echo $report->getBIRTHDATE(); ?>" id="date" disabled>
                                                     </div>
                                                 <?php endforeach; ?>
-                                                <button type="button" class="save-btn mt-1" id="editGeneralBtn">Update</button>
-                                                <button type="submit" class="save-btn mt-1" id="saveGeneralBtn" disabled>Save</button>
+                                                <button type="button" class="save-btn" id="editGeneralBtn">Update</button>
+                                                <button type="submit" class="save-btn align-end" id="saveGeneralBtn" disabled>Save</button>
                                             </form>
                                         </div>
                                     </div>
@@ -102,11 +115,13 @@
                                         <div class="card-body pb-2">
                                             <form id="passwordInfoForm">
                                                 <?php foreach ($results as $report) : ?>
-                                                    <div class="form-group">
-                                                        <input type="password" class="form-control" id="getmycurrpassword" placeholder="Password" disabled required>
+                                                    <div class="form-group" style="margin-bottom: 10px;">
+                                                        <label for="getmycurrpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">Old Password</label>
+                                                        <input type="password" class="form-control mt-1" id="getmycurrpassword" disabled required>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="password" class="form-control mt-3" id="getmynewpassword" placeholder="New password" disabled required>
+                                                        <label for="getmynewpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">New Password</label>
+                                                        <input type="password" class="form-control mt-1" id="getmynewpassword" disabled required>
                                                     </div>
                                                 <?php endforeach; ?>
                                                 <button type="button" class="save-btn mt-1" id="editPasswordBtn">Update</button>
@@ -119,11 +134,13 @@
                                         <div class="card-body pb-2">
                                             <form id="contactInfoForm">
                                                 <?php foreach ($results as $report) : ?>
-                                                    <div class="form-group">
-                                                        <input type="text" class="form-control mt-3" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" placeholder="Email" disabled>
+                                                    <div class="form-group" style="margin-bottom: 10px;">
+                                                        <label for="getmyemail" class="text-secondary text-start" style="font-size: 12px; display:block;">Email</label>
+                                                        <input type="text" class="form-control mt-1" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" disabled>
                                                     </div>
                                                     <div class="form-group">
-                                                        <input type="text" class="form-control mt-3" id="getmyecn" value="<?php echo $report->getECN(); ?>" placeholder="Contact Number" disabled>
+                                                        <label for="getmyecn" class="text-secondary text-start" style="font-size: 12px; display:block;">Contact Number</label>
+                                                        <input type="text" class="form-control mt-1" id="getmyecn" value="<?php echo $report->getECN(); ?>" disabled>
                                                     </div>
                                                 <?php endforeach; ?>
                                                 <button type="button" class="save-btn mt-1" id="editContactBtn">Update</button>
@@ -144,7 +161,7 @@
     </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script defer src="<?= ROOT ?>scripts/Admin/settings.js"></script>
 </body>

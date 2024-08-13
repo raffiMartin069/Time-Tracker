@@ -74,7 +74,7 @@
                                         <td><?php echo $recycle->getEMPHRS(); ?></td>
                                         <td>
                                             <div class="button-group">
-                                                <button type="button" class="btn btn-primary text-white recoverAccountBtn" id="recover-account-btn" title="Recover Employee Account" style="width: 2.5rem; height: 1.7rem; border: none;" data-recycle-id="<?php echo $recycle->getEMPID(); ?>">
+                                                <button type="button" class="btn btn-primary text-white mx-1 recoverAccountBtn" id="recover-account-btn" title="Recover Employee Account" style="width: 2.5rem; height: 1.7rem; border: none;" data-recycle-id="<?php echo $recycle->getEMPID(); ?>">
                                                     <i class="fa-solid fa-arrows-rotate" style="font-size: .8rem;"></i>
                                                 </button>
 

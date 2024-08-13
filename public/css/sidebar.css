@@ -68,4 +68,22 @@ hr {
 .bottom-items {
     position: absolute;
     bottom: 15px;
+} 
+
+#bottom-sidebar-content small {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+    display: inline-block;
+}
+
+#logoutBtn {
+    border: none;
+}
+
+#logoutBtn:hover,
+#logoutBtn:active {
+    background-color: #0B5ED7 !important;
+    border: none !important;
 }

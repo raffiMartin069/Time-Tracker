@@ -107,11 +107,7 @@ updateBtn.forEach((button) => {
               title: "Error",
               text: errorMessage,
               icon: "error",
-            }); 
-
-            $(".swal2-confirm").click(function () {
-              location.reload();
-            });
+            });  
           },
         });
       });

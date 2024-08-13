@@ -63,11 +63,12 @@ class Sanitation
     public function emailSanitation($value)
     {
         try {
-            $email = filter_var($value, FILTER_SANITIZE_EMAIL);
+            $email = filter_var($value, FILTER_VALIDATE_EMAIL);
+            
             if ($email !== false && $email === $value) {
                 return $email;
             }
-            throw new Exception("Invalid input, please check the fields and try again.");
+            throw new Exception("Invalid email, please try again.");
         } catch (Exception $e) {
             header('Content-Type: application/json');
             http_response_code(500);

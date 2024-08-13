@@ -1,9 +1,3 @@
 .modal-body {
   text-align: left;
-}
-
-#addJobPosition:focus,
-#modal-update-job-position:focus {
-  box-shadow: none;
-  border: 1px solid #0095ff;
-}
+} 

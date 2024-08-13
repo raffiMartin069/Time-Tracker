@@ -64,11 +64,6 @@
                             padding-right: 12px !important;
                             white-space: nowrap;
                         }
-
-                        input:focus {
-                            box-shadow: none !important;
-                            border: 1px solid #0095ff !important;
-                        }
                     </style>
 
                     <div class="table-responsive">
@@ -87,7 +82,7 @@
                             </thead>
                             <tbody>
 
-                                <!-- Customized report date for better layout and fetch each employee photo -->
+                                <!-- Customized report date for better table layout and fetches each employee photo -->
                                 <?php if (!empty($results) && is_array($results)) : ?>
                                     <?php
                                     $currentDate = "";
@@ -130,8 +125,8 @@
                                     ?>
                                         <tr class="employee-record" data-date="<?php echo $reportDate; ?>">
                                             <td hidden class="daily-id"><?php echo $report->getDAILYID(); ?></td>
-                                            <td class="employee-name" id="reportsTableNameTd">
-                                                <div class="photo-container">
+                                            <td class="employee-name" id="reportsTableNameTd" style="padding-top: .1rem;">
+                                                <div class="photo-container me-1">
                                                     <img class="photo" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
                                                 </div>
 
@@ -161,63 +156,13 @@
                                             </td>
                                             <td><?php echo $report->getHRSWORKED(); ?></td>
                                             <td>
-                                                <button type="button" class="btn editDownloadBtns" data-bs-toggle="modal" data-bs-target="#editReportModal" id="editReport" style="width: 2.4rem; height: 2.05rem; border: none; border-radius: 0; border-right: none !important; margin-right: 2.3rem !important; margin-top: 1rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-left-radius: 5px; border-bottom-left-radius: 5px;">
-                                                    <img src="<?php ROOT ?>assets/img/edit21.png" class="img-fluid ms-2 edit-report-btn" title="Edit Report" style="max-width:85%; margin-left: .14rem !important;" data-name="<?php echo $report->getEMPNAME(); ?>" data-date="<?php echo $report->getDATE(); ?>" data-clock-in="<?php echo $report->getCLOCKIN(); ?>" data-lunch-in="<?php echo $report->getLUNCHIN(); ?>" data-lunch-out="<?php echo $report->getLUNCHOUT(); ?>" data-clock-out="<?php echo $report->getCLOCKOUT(); ?>" data-daily-id="<?php echo $report->getDAILYID(); ?>" data-emp-id="<?php echo $report->getEMPID(); ?>" />
+                                                <button type="button" class="btn editReportBtn" data-bs-toggle="modal" data-bs-target="#editReportModal" id="editReport" style="width: 2.4rem; height: 2.05rem; border: none; border-radius: 0; border-right: none !important; margin-right: 2.3rem !important; margin-top: 1rem; margin-bottom: -.5rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-left-radius: 5px; border-bottom-left-radius: 5px;"
+                                                    data-name="<?php echo $report->getEMPNAME(); ?>" data-date="<?php echo $report->getDATE(); ?>" data-clock-in="<?php echo $report->getCLOCKIN(); ?>" data-lunch-in="<?php echo $report->getLUNCHIN(); ?>" data-lunch-out="<?php echo $report->getLUNCHOUT(); ?>" data-clock-out="<?php echo $report->getCLOCKOUT(); ?>" data-daily-id="<?php echo $report->getDAILYID(); ?>" data-emp-id="<?php echo $report->getEMPID(); ?>">
+                                                    <img src="<?php ROOT ?>assets/img/edit21.png" class="img-fluid ms-2 edit-report-btn" title="Edit Report" style="max-width:85%; margin-left: .14rem !important;" />
                                                 </button>
 
-                                                <!-- Modal to update reports -->
-                                                <div class="modal fade" id="editReportModal" tabindex="-1" aria-labelledby="editReportModalLabel" aria-hidden="true">
-                                                    <div class="modal-dialog">
-                                                        <div class="modal-content">
-                                                            <div class="modal-header">
-                                                                <h5 class="modal-title">Update Report</h5>
-                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                            </div>
-                                                            <div class="modal-body">
-                                                                <!-- Loading message -->
-                                                                <div id="loadingMessage" style=" text-align: center; margin-bottom: 10px;">
-                                                                    Please wait while we are loading the data...
-                                                                </div>
-                                                                <form id="editReportForm" style="display: none;">
-                                                                    <div class="mb-2" style="text-align: left;">
-                                                                        Employee Name:
-                                                                        <input disabled type="text" class="mt-1 form-control" id="modal-employee-name">
-                                                                    </div>
-                                                                    <div class="mb-2" style="text-align: left;">
-                                                                        Date:
-                                                                        <input disabled type="date" class="mt-1 form-control" id="modal-report-date">
-                                                                    </div>
-                                                                    <div class="mb-2" style="text-align: left;">
-                                                                        Clock in:
-                                                                        <input type="text" class="mt-1 form-control" id="modal-clock-in">
-                                                                    </div>
-                                                                    <div class="mb-2" style="text-align: left;">
-                                                                        Lunch Start:
-                                                                        <input type="text" class="mt-1 form-control" id="modal-lunch-in">
-                                                                    </div>
-                                                                    <div class="mb-2" style="text-align: left;">
-                                                                        Lunch End:
-                                                                        <input type="text" class="mt-1 form-control" id="modal-lunch-out">
-                                                                    </div>
-                                                                    <div id="breakInputs" class="mb-2" style="text-align: left;">
-                                                                    </div>
-                                                                    <div class="mb-2" style="text-align: left;">
-                                                                        Clock Out:
-                                                                        <input type="text" class="mt-1 form-control" id="modal-clock-out">
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-
-                                                            <div class="modal-footer">
-                                                                <button type="button" id="closeReport" class="btn btn-secondary" data-bs-dismiss="modal" style="max-width: 15% !important; margin-right: 1px;">Close</button>
-                                                                <button type="button" id="updateReport" class="btn btn-primary" style="max-width: 15% !important;">Save</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-
                                                 <!-- Pass form data to pdf -->
-                                                <form action="Admin/employeeDailyReport" method="post" target="_blank">
+                                                <form action="Admin/employeeDailyReport" method="post">
                                                     <input type="hidden" name="name" value="<?php echo $report->getEMPNAME(); ?>">
                                                     <input type="hidden" name="date" value="<?php echo $report->getDATE(); ?>">
                                                     <input type="hidden" name="clockin" value="<?php echo $report->getCLOCKIN(); ?>">
@@ -225,7 +170,7 @@
                                                     <input type="hidden" name="breakduration" value="<?php echo $report->getTOTALBREAK(); ?>">
                                                     <input type="hidden" name="clockout" value="<?php echo $report->getCLOCKOUT(); ?>">
                                                     <input type="hidden" name="hoursworked" value="<?php echo $report->getHRSWORKED(); ?>">
-                                                    <button type="submit" class="btn editDownloadBtns" id="download" style="width: 2.4rem; height: 2.05rem; border: none; border-radius:0; margin-right: -2.5rem !important; margin-top: -2.05rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
+                                                    <button type="submit" class="btn" id="download" style="width: 2.4rem; height: 2.05rem; border: none; border-radius:0; margin-right: -2.5rem !important; margin-top: -3.7rem; margin-bottom: -1rem; background-color: #F9F9F9; border: 1.5px solid #DDDDDD; border-top-right-radius: 5px; border-bottom-right-radius: 5px;">
                                                         <img src="<?php ROOT ?>assets/img/download-pdf5.png" class="img-fluid downloadBtn" title="Download Report" style="max-width: 110%; margin-left: -.1rem;" />
                                                     </button>
                                                 </form>
@@ -259,14 +204,65 @@
                                 </tr>
                             </tbody>
                         </table>
+
+                        <!-- Modal to update reports -->
+                        <div class="modal fade" id="editReportModal" tabindex="-1" aria-labelledby="editReportModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Update Report</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <!-- Loading message -->
+                                        <div id="loadingMessage" style="text-align: center; margin-bottom: 10px;">
+                                            Please wait while we are loading the data...
+                                        </div>
+                                        <form id="editReportForm" style="display: none;">
+                                            <div class="mb-2" style="text-align: left;">
+                                                Employee Name:
+                                                <input disabled type="text" class="mt-1 form-control" id="modal-employee-name">
+                                            </div>
+                                            <div class="mb-2" style="text-align: left;">
+                                                Date:
+                                                <input disabled type="date" class="mt-1 form-control" id="modal-report-date">
+                                            </div>
+                                            <div class="mb-2" style="text-align: left;">
+                                                Clock in:
+                                                <input type="text" class="mt-1 form-control" id="modal-clock-in">
+                                            </div>
+                                            <div class="mb-2" style="text-align: left;">
+                                                Lunch Start:
+                                                <input type="text" class="mt-1 form-control" id="modal-lunch-in">
+                                            </div>
+                                            <div class="mb-2" style="text-align: left;">
+                                                Lunch End:
+                                                <input type="text" class="mt-1 form-control" id="modal-lunch-out">
+                                            </div>
+                                            <div id="breakInputs" class="mb-2" style="text-align: left;">
+                                            </div>
+                                            <div class="mb-2" style="text-align: left;">
+                                                Clock Out:
+                                                <input type="text" class="mt-1 form-control" id="modal-clock-out">
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <div class="modal-footer">
+                                        <button type="button" id="closeReport" class="btn btn-secondary" data-bs-dismiss="modal" style="margin-right: 2px;">Close</button>
+                                        <button type="button" id="updateReport" class="btn btn-primary">Save</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- jQuery and Bootstrap Scripts -->
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="<?= ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>

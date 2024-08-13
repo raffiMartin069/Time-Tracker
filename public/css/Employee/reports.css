@@ -28,14 +28,13 @@ table tr {
     }
 }
 
-.btn {
+.button-container .btn {
     margin-top: -0.2rem;
-    margin-right: .5rem;
-    width: 7rem;
+    margin-right: .5rem; 
 }
 
-.btn:hover,
-.btn:focus {
+.button-container .btn:hover,
+.button-container .btn:focus {
     background-color: #A6E7D8 !important;
 }
 
@@ -47,7 +46,7 @@ table tr {
 }
 
 @media (max-width: 1199.98px) {
-    .btn {
+    .button-container .btn {
         width: 100%;
         margin-top: 0.5rem;
     }
@@ -72,7 +71,7 @@ table tr {
         gap: 0.5rem;
     }
 
-    .btn {
+    .button-container .btn {
         width: auto;
         margin: 0.5rem 0;
     }
@@ -89,7 +88,7 @@ table tr {
         display: grid;
     }
 
-    .btn {
+    .button-container .btn {
         width: 100%;
         margin: 0.5rem 0;
     }

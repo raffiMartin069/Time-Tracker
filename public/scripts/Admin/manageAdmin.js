@@ -69,16 +69,22 @@ $('#saveAdminBtn').click(function() {
                 location.reload();
             })
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
+            var errorMessage = "Unable to save changes. Please try again later.";
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+              errorMessage = xhr.responseJSON.error;
+            }
+      
             Swal.fire({
-                title: "Error",
-                text: "Unable to save changes. Please try again later.",
-                icon: "error"
+              title: "Error",
+              text: errorMessage,
+              icon: "error",
             });
-            $('.swal2-confirm').click(function() {
-                location.reload();
-            }) 
-        }
+      
+            $(".swal2-confirm").click(function () {
+              location.reload();
+            });
+          },
     });
 });
 
@@ -112,13 +118,12 @@ $("#deleteBtn").click(function() {
             });
             $('.swal2-confirm').click(function() {
                 $('#deleteAdminModal').modal('hide'); 
-            })  
+            });
         }
     });
 
     $('#deleteAdminModal').modal('show');
 });
-
 
 // Performs the action of deleting an admin
 $('#confirmDeleteBtn').click(function() {
@@ -158,25 +163,38 @@ $('#confirmDeleteBtn').click(function() {
                 },
                 dataType: 'json',
                 success: function(response) {
-                    Swal.fire(
-                        "Success",
-                        "Admin(s) has been deleted successfully!",
-                        "success"
-                    ) 
-
-                    $('.swal2-confirm').click(function() { 
-                        location.reload();
-                    })
+                    // Checks if the employee to be remove is/includes the currently logged in employee, if so, it will then go to the login page
+                    if (response.redirect) {
+                        window.location.href = response.redirect;
+                    } else {
+                        Swal.fire(
+                            "Success",
+                            "Admin(s) has been deleted successfully!",
+                            "success"
+                        );
+                        $('.swal2-confirm').click(function() { 
+                            location.reload();
+                        });
+                    }
                 },
                 error: function(xhr, status, error) {
+                    var errorMessage = "Unable to save changes. Please try again later.";
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        errorMessage = xhr.responseJSON.error;
+                    }
+              
                     Swal.fire({
                         title: "Error",
-                        text: "Unable to save changes. Please try again later.",
-                        icon: "error"
+                        text: errorMessage,
+                        icon: "error",
                     });
-                }
+              
+                    $(".swal2-confirm").click(function () {
+                        location.reload();
+                    });
+                },
             });
-        } else   { 
+        } else {
             Swal.fire({
                 title: "Cancelled",
                 text: "The deletion has been cancelled!",
@@ -185,6 +203,7 @@ $('#confirmDeleteBtn').click(function() {
         }
     });
 });
+
 
  
 // Adds CSS active selector to enable CSS color for the current active tab

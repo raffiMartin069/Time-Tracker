@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . "/../../public/vendor/autoload.php";
 /*
  * This file contains configuration settings for the application. 
  * If there is a necessity to change the configuration, this is the place to do it.
@@ -7,24 +7,33 @@
  * This will make it easier to manage the settings.
  */
 function defineRoot() {
+    $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../');
+    // $dotenv->safeLoad();
+    $dotenv->load();
     if($_SERVER['SERVER_NAME'] == 'localhost') {
-        // database configuration
-        $config = simplexml_load_file('../App.config');
-        define('DBNAME', $config->database->dbname);
-        define('DBHOST', $config->database->host);
-        define('DBUSER', $config->database->username);
-        define('DBKEY', $config->database->password);
-        define('PORT', $config->database->port); 
+        $dotenv->load();
+        define('DBNAME', $_ENV['DB_NAME'] ?? null);
+        define('DBHOST', $_ENV['DB_HOST'] ?? null);
+        define('DBUSER', $_ENV['DB_USER'] ?? null);
+        define('DBKEY', $_ENV['DB_KEY'] ?? null);
+        define('PORT', $_ENV['DB_PORT'] ?? null);
         define('ROOT', 'http://localhost/Time-Tracker/public/');
         define('APP', 'http://localhost/Time-Tracker/app/');
+        define('RECOVERY_REDIRECT', 'http://localhost/Time-Tracker/public/recovery/reconfirm');
+        define('FORGOT_PASS', 'http://localhost/Time-Tracker/public/recovery/');
     } else {
-        define('DBNAME', 'test');
-        define('DBHOST', 'localhost');
-        define('DBUSER', 'root');
-        define('DBKEY', '');
-        define('ROOT', 'http://www.website.com/public/');
+        define('DBNAME', $_ENV['DB_NAME'] ?? null);
+        define('DBHOST', $_ENV['DB_HOST'] ?? null);
+        define('DBUSER', $_ENV['DB_USER'] ?? null);
+        define('DBKEY', $_ENV['DB_KEY'] ?? null);
+        define('PORT', $_ENV['DB_PORT'] ?? null);
+        define('ROOT', 'https://wheretomed.azurewebsites.net/public/');
+        define('APP', 'https://wheretomed.azurewebsites.net/app/');
+        define('RECOVERY_REDIRECT', 'https://wheretomed.azurewebsites.net/public/recovery/reconfirm');
+        define('FORGOT_PASS', 'https://wheretomed.azurewebsites.net/public/recovery/');
     }
 }
+
 
 function standardErrors() 
 {

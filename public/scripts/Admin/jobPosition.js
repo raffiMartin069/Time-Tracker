@@ -43,7 +43,7 @@ $("#saveAddJobPositionBtn").click(function () {
         title: "Error",
         text: errorMessage,
         icon: "error",
-      }); 
+      });
     },
   });
 });
@@ -87,19 +87,16 @@ updateBtn.forEach((button) => {
             });
           },
           error: function (xhr, status, error) {
-            var errorMessage = "Unable to save changes. Please try again later.";
+            var errorMessage =
+              "Unable to save changes. Please try again later.";
             if (xhr.responseJSON && xhr.responseJSON.error) {
               errorMessage = xhr.responseJSON.error;
             }
-      
+
             Swal.fire({
               title: "Error",
               text: errorMessage,
               icon: "error",
-            }); 
-
-            $(".swal2-confirm").click(function () {
-              location.reload();
             });
           },
         });
@@ -146,10 +143,16 @@ deleteBtns.forEach((button) => {
               location.reload();
             });
           },
-          error: function (error) {
+          error: function (xhr, status, error) {
+            var errorMessage =
+              "Unable to save changes. Please try again later.";
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+              errorMessage = xhr.responseJSON.error;
+            }
+
             Swal.fire({
               title: "Error",
-              html: "Unable to save changes. Please try again later.",
+              text: errorMessage,
               icon: "error",
             });
 
