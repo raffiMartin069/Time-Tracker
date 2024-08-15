@@ -1,0 +1,2 @@
+
+SELECT * FROM get_bi_weekly_report_table_admin();

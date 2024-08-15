@@ -102,6 +102,7 @@
                                         $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
                                         $getProfilePhoto = $defaultPhoto;
 
+                                        // This will display all employee images based on their employee ID
                                         if ($empId) {
                                             $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
                                             $returnParams = [

@@ -91,7 +91,7 @@
                     ?>
 
                     <!-- Reports list item -->
-                    <li class="nav-item mb-2 <?= $showStartMeeting ? '' : 'mb-4' ?>"
+                    <li class="nav-item mb-2 <?= $showStartMeeting ? '' : '' ?>"
                         style="width: 270px; margin-left: 14px;">
                         <a href="?page=dailyReport" class="nav-link text-dark rounded" style="height: 50px;"
                             id="reports">
@@ -111,7 +111,12 @@
                             </a>
                         </li>
                     <?php endif; ?>
-                    <!-- <hr /> -->
+                    <li class="nav-item mb-4 " style="width: 270px; margin-left: 14px;">
+                        <a href="?page=editProfile" class="nav-link text-dark rounded" style="height: 50px;"> 
+                            <i class="lni lni-cog style mt-2" style="margin-left: 4px;"></i>
+                            <span class="nav-item-title ms-2" style="margin-top: -32px;">Settings</span>
+                        </a>
+                    </li>
                 </div>
                 <div class="bottom-items">
                     <div class="nav-item-title mt-2 fs-6 mb-3 flex-column justify-content-center align-items-start"
@@ -124,14 +129,14 @@
                                     <span class="nav-item-title ms-2" style="margin-top: -32px;">Notifications</span>
                                 </a>
                             </li> -->
-                            <li class="nav-item mb-4 " style="width: 270px;">
+                            <!-- <li class="nav-item mb-4 " style="width: 270px;">
                                 <a href="?page=editProfile" class="nav-link text-dark rounded" style="height: 50px;">
                                     <div style="display: flex; align-items: center;">
                                         <i class="lni lni-cog mt-2 fs-5"></i>
                                         <span class="nav-item-title ms-2 mt-2">Settings</span>
                                     </div>
                                 </a>
-                            </li>
+                            </li> -->
                         </ul>
                     </div>
                     <hr>
@@ -143,6 +148,7 @@
                     $updatedEmail = '';
                     $updatedName = '';
 
+                    // Updates sidebar image, name, and email on update
                     if ($empId) {
                         $returnQuery = "SELECT image FROM employee_credential WHERE emp_id = :emp_id";
                         $returnEmailQuery = "SELECT email FROM employee_credential WHERE emp_id = :emp_id";
@@ -157,7 +163,7 @@
                         if (!empty($returnData) && !empty($returnData[0]->image)) {
                             $getUpdatedProfilePhoto = $returnData[0]->image;
                         }
- 
+
                         if (!empty($returnEmail) && !empty($returnEmail[0]->email)) {
                             $updatedEmail = $returnEmail[0]->email;
                         }
@@ -167,7 +173,7 @@
                         }
                     }
                     ?>
- 
+
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
                         <img id="profile-photo" src="<?php echo $getUpdatedProfilePhoto; ?>"
@@ -178,7 +184,7 @@
                             <small class="ms-2 text-secondary"><?php echo $updatedEmail; ?></small>
                         </span>
                     </div>
-                     
+
                     <li class="nav-item mt-3 rounded" style="margin-left: 14px;">
                         <form id="log-out" action="Login/logout" method="post">
                             <button type="submit" value="1" name="logoutBtn" id="logoutBtn" class="btn btn-primary shadow-sm rounded w-100 m-0 ">

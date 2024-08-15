@@ -107,6 +107,7 @@
                                             echo '</tr>';
                                         }
 
+                                        // This will display all employee images based on their employee ID
                                         $empId = $report->getEMPID();
                                         $defaultPhoto = ROOT . "assets/img/employee/default-settings-profile.png";
                                         $getProfilePhoto = $defaultPhoto;

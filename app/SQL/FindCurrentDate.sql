@@ -1,0 +1,2 @@
+
+SELECT date FROM get_daily_report(:id);
