@@ -4,7 +4,7 @@ $(".view-breaks-btn").click(function () {
   var $accordionBody = $breakDetailsRow.find(".accordion-body");
 
   $breakDetailsRow.toggle();
-  
+
   $button.attr(
     "src",
     $breakDetailsRow.is(":visible")
@@ -24,7 +24,8 @@ $(".view-breaks-btn").click(function () {
       },
       dataType: "json",
       success: function (data) {
-        var content = '<table class="table table-responsive"><thead><tr>';
+        var content =
+          '<table class="table table-responsive" id="breakStampsTable"><thead><tr>';
         for (let i = 0; i < data.length; i++) {
           content +=
             "<th>Break " +
@@ -53,13 +54,14 @@ $(".view-breaks-btn").click(function () {
         }
         content += "</tbody></table>";
         $accordionBody.html(content);
-      }, 
+      },
       error: function (xhr, status, error) {
-        var errorMessage = "An error has occured while fetching break data. Please try again later.";
+        var errorMessage =
+          "An error has occured while fetching break data. Please try again later.";
         if (xhr.responseJSON && xhr.responseJSON.error) {
           errorMessage = xhr.responseJSON.error;
         }
-  
+
         $accordionBody.html(errorMessage);
       },
     });
@@ -90,7 +92,7 @@ editButtons.forEach((button) => {
 
     let originalBreakData = [];
     // Flag to track success messages of each updated inputs and only display one successful message
-    let successMsg = false;  
+    let successMsg = false;
 
     $.ajax({
       url: "Admin/BreakStamps",
@@ -127,13 +129,13 @@ editButtons.forEach((button) => {
         if (xhr.responseJSON && xhr.responseJSON.error) {
           errorMessage = xhr.responseJSON.error;
         }
-  
+
         Swal.fire({
           title: "Error",
           text: errorMessage,
           icon: "error",
         });
-  
+
         $(".swal2-confirm").click(function () {
           location.reload();
         });

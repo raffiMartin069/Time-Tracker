@@ -24,7 +24,7 @@ $(".view-breaks-btn").click(function () {
       },
       dataType: "json",
       success: function (data) {
-        var content = '<table class="table table-responsive"><thead><tr>';
+        var content = '<table class="table table-responsive" id="breakStampsPreviewTable"><thead><tr>';
         for (let i = 0; i < data.length; i++) {
           content +=
             "<th>Break " +
