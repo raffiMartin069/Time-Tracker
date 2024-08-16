@@ -80,9 +80,6 @@ editButtons.forEach((button) => {
     const empLunchout = this.getAttribute("data-lunch-out");
     const empClockout = this.getAttribute("data-clock-out");
 
-    // document.getElementById("loadingMessage").style.display = "block";
-    // document.getElementById("editReportForm").style.display = "none";
-
     document.getElementById("modal-employee-name").value = empName;
     document.getElementById("modal-report-date").value = reportDate;
     document.getElementById("modal-clock-in").value = empClockin;
@@ -93,6 +90,7 @@ editButtons.forEach((button) => {
     let originalBreakData = [];
     // Flag to track success messages of each updated inputs and only display one successful message
     let successMsg = false;
+    let errorMsg = false;
 
     $.ajax({
       url: "Admin/BreakStamps",
@@ -164,6 +162,7 @@ editButtons.forEach((button) => {
             success: function (data) {
               if (!successMsg) {
                 $("#editReportModal").modal("hide");
+
                 if (timeFormat.test(modalClockIn)) {
                   Swal.fire({
                     title: "Success",
@@ -172,23 +171,42 @@ editButtons.forEach((button) => {
                   }).then(() => location.reload());
                   successMsg = true;
                 } else {
-                  Swal.fire({
-                    title: "Error",
-                    html: "Failed to update report!<br>Invalid time format. Please use HH:MM:SS AM/PM.",
-                    icon: "error",
-                  }).then(() => location.reload());
+                  if (!errorMsg) {
+                    Swal.fire({
+                      title: "Opss", 
+                      text: "Invalid date or time format.",
+                      icon: "error",
+                    }).then(() => location.reload());
+                    errorMsg = true;
+                  }  
                 }
               }
             },
-            error: function (xhr, status, error) {
+            error: function (xhr) {
+              // Use this default error message if the server doesn't return any error message
+              let errorMessage =
+                "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
+
+              // Get the error message from the server is any is available
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+              }
+
+              // Remove "Error." or "Error:" prefix from the returned message if there is
+              errorMessage = errorMessage.replace(/Error[.:] /, "");
+
               if (!successMsg) {
                 Swal.fire({
-                  title: "Error",
-                  html: "Failed to update report!<br>Please make sure updated entries are within the correct range: not earlier, equal, or later than other time stamps.",
+                  title: "Oops.",
+                  text: errorMessage,
                   icon: "error",
                 });
                 successMsg = true;
               }
+
+              $(".swal2-confirm").click(function () {
+                location.reload();
+              });
             },
           });
         }
@@ -213,23 +231,42 @@ editButtons.forEach((button) => {
                   }).then(() => location.reload());
                   successMsg = true;
                 } else {
-                  Swal.fire({
-                    title: "Error",
-                    html: "Failed to update report!<br>Invalid time format. Please use HH:MM:SS AM/PM.",
-                    icon: "error",
-                  }).then(() => location.reload());
+                  if (!errorMsg) {
+                    Swal.fire({
+                      title: "Opss", 
+                      text: "Invalid date or time format.",
+                      icon: "error",
+                    }).then(() => location.reload());
+                    errorMsg = true;
+                  }   
                 }
               }
             },
-            error: function (xhr, status, error) {
+            error: function (xhr) {
+              // Use this default error message if the server doesn't return any error message
+              let errorMessage =
+                "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
+
+              // Get the error message from the server is any is available
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+              }
+
+              // Remove "Error." or "Error:" prefix from the returned message if there is
+              errorMessage = errorMessage.replace(/Error[.:] /, "");
+
               if (!successMsg) {
                 Swal.fire({
-                  title: "Error",
-                  html: "Failed to update report!<br>Please make sure updated entries are within the correct range: not earlier, equal, or later than other time stamps.",
+                  title: "Oops.",
+                  text: errorMessage,
                   icon: "error",
                 });
                 successMsg = true;
               }
+
+              $(".swal2-confirm").click(function () {
+                location.reload();
+              });
             },
           });
         }
@@ -259,23 +296,42 @@ editButtons.forEach((button) => {
                   }).then(() => location.reload());
                   successMsg = true;
                 } else {
-                  Swal.fire({
-                    title: "Error",
-                    html: "Failed to update report!<br>Invalid time format. Please use HH:MM:SS AM/PM.",
-                    icon: "error",
-                  }).then(() => location.reload());
+                  if (!errorMsg) {
+                    Swal.fire({
+                      title: "Opss", 
+                      text: "Invalid date or time format.",
+                      icon: "error",
+                    }).then(() => location.reload());
+                    errorMsg = true;
+                  }   
                 }
               }
             },
-            error: function (xhr, status, error) {
+            error: function (xhr) {
+              // Use this default error message if the server doesn't return any error message
+              let errorMessage =
+                "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
+
+              // Get the error message from the server is any is available
+              if (xhr.responseJSON && xhr.responseJSON.error) {
+                errorMessage = xhr.responseJSON.error;
+              }
+
+              // Remove "Error." or "Error:" prefix from the returned message if there is
+              errorMessage = errorMessage.replace(/Error[.:] /, "");
+
               if (!successMsg) {
                 Swal.fire({
-                  title: "Error",
-                  html: "Failed to update report!<br>Please make sure updated entries are within the correct range: not earlier, equal, or later than other time stamps.",
+                  title: "Oops.",
+                  text: errorMessage,
                   icon: "error",
                 });
                 successMsg = true;
               }
+
+              $(".swal2-confirm").click(function () {
+                location.reload();
+              });
             },
           });
         }
@@ -313,23 +369,42 @@ editButtons.forEach((button) => {
                       }).then(() => location.reload());
                       successMsg = true;
                     } else {
-                      Swal.fire({
-                        title: "Error",
-                        html: "Failed to update report!<br>Invalid time format. Please use HH:MM:SS AM/PM.",
-                        icon: "error",
-                      }).then(() => location.reload());
+                      if (!errorMsg) {
+                        Swal.fire({
+                          title: "Opss", 
+                          text: "Invalid date or time format.",
+                          icon: "error",
+                        }).then(() => location.reload());
+                        errorMsg = true;
+                      }   
                     }
                   }
                 },
-                error: function (xhr, status, error) {
+                error: function (xhr) {
+                  // Use this default error message if the server doesn't return any error message
+                  let errorMessage =
+                    "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
+    
+                  // Get the error message from the server is any is available
+                  if (xhr.responseJSON && xhr.responseJSON.error) {
+                    errorMessage = xhr.responseJSON.error;
+                  }
+    
+                  // Remove "Error." or "Error:" prefix from the returned message if there is
+                  errorMessage = errorMessage.replace(/Error[.:] /, "");
+    
                   if (!successMsg) {
                     Swal.fire({
-                      title: "Error",
-                      html: "Failed to update report!<br>Please make sure updated entries are within the correct range: not earlier, equal, or later than other time stamps.",
+                      title: "Oops.",
+                      text: errorMessage,
                       icon: "error",
                     });
                     successMsg = true;
                   }
+    
+                  $(".swal2-confirm").click(function () {
+                    location.reload();
+                  });
                 },
               });
             }
