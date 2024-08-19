@@ -132,7 +132,7 @@
                                              <?php foreach ($results as $report) : ?>
                                                     <div class="form-group" style="margin-bottom: 10px;">
                                                         <label for="getmyemail" class="text-secondary text-start" style="font-size: 12px; display:block;">Email</label>
-                                                        <input type="text" class="form-control mt-1" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" disabled>
+                                                        <input type="email" class="form-control mt-1" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" disabled>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="getmyecn" class="text-secondary text-start" style="font-size: 12px; display:block;">Contact Number</label>
@@ -159,6 +159,9 @@
      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
      <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+     <script>
+        var isSuperAdminID = "<?php echo $_SESSION['userId']; ?>";
+     </script>  
      <script defer src="<?= ROOT ?>scripts/Admin/settings.js"></script> 
 
  </body>
