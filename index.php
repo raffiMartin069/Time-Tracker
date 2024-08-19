@@ -1,4 +1,4 @@
 <?php
 // Redirect to the public directory
-header("Location: public/");
+header("Location: Time-Tracker/public/");
 exit();
