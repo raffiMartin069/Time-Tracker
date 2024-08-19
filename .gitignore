@@ -24,6 +24,7 @@ Thumbs.db
 *.log
 *.sql
 *.sqlite
+!Time-Tracker/app/SQL/*.sql
 
 # Ignore build files
 /build/
@@ -38,8 +39,6 @@ Thumbs.db
 
 /public/vendor/
 
-/Dockerfile
-/compose.yaml
 /.dockerignore
 /README.Docker.md
 Report.view.txt

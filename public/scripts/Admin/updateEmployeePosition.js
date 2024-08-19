@@ -102,31 +102,23 @@ import { formCheck } from '../security.js';
             const response = await fetch(url, settings);
         
             if(!response.ok) {
-                throw new Error('Something went wrong.');
+                const errorResponse = await response.json();
+                throw new Error(errorResponse.error);
             }
-    
-            const jsonResponse = await response.json();
             
-            if(!response.status) {
-                Swal.fire({
-                    title: "Oops...",
-                    text: "Unable to update, please try again later.",
-                    icon: "error",
-                  });
-            } else {
-                Swal.fire({
-                    title: "Information Update",
-                    text: "Update success!",
-                    icon: "success",
-                  }).then(() => {
-                    window.location.reload();
-                  });
-            }
+            Swal.fire({
+                title: "Information Update",
+                text: "Update success!",
+                icon: "success",
+                }).then(() => {
+                window.location.reload();
+                });
+            
         
         } catch(e) {
             Swal.fire({
                 title: "Oops...",
-                text: "Something went wrong.",
+                text: String(e).replace("Error: ", "").replace("Error. ", ""),
                 icon: "error",
               });
         }

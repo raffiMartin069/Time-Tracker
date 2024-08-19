@@ -185,6 +185,7 @@ class RecoveryModel
             $imgFormat = $this->imageFormat();
             $header = $this->emailHeader();
             
+            // $this->email should be the proper variable to be used.
             $mail = new Mailing('int3rnal.test@gmail.com', $this->email, 
             'Password Recovery', $email_body, 
             $path, $cid, 

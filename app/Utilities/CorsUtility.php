@@ -1,4 +1,3 @@
-
 <?php
 // Time-Tracker/app/Utilities/CorsUtil.php
 
