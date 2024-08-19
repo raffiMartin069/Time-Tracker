@@ -76,7 +76,7 @@ class Admin extends Controller
         }
     }
 
-    private function addUpdatePositionDB($pos_id, $emp_id)
+    private function addUpdatePositionDB($pos_id, $emp_id, $admin_id)
     {
         /*
          * This is supposed to be passed to model since a model of this exist.
@@ -85,7 +85,7 @@ class Admin extends Controller
          * to the database. The data have pass through validation and sanitation
          * before reaching this point.
          */
-        $result = $this->updateEmployeePos($emp_id, $pos_id);
+        $result = $this->updateEmployeePos($emp_id, $pos_id, $admin_id);
         return $result;
     }
 
@@ -119,9 +119,10 @@ class Admin extends Controller
         $work_id = $cleaned_data[1];
         $emp_id = $cleaned_data[0];
 
+        $admin_id = $_SESSION['userId'];
 
         // this method should be changed.
-        $result = $this->addUpdatePositionDB($work_id, $emp_id);
+        $result = $this->addUpdatePositionDB($work_id, $emp_id, $admin_id);
 
         header("Content-Type: application/json");
         $serverResponse = [
@@ -154,11 +155,11 @@ class Admin extends Controller
         }
     }
 
-    private function addSoftDeleteDB($data)
+    private function addSoftDeleteDB($data, $admin_id)
     {
         $emp = new EmployeeModel();
         $emp->setID($data);
-        $result = $emp->softDeleteEmployee();
+        $result = $emp->softDeleteEmployee($admin_id);
         return $result;
     }
 
@@ -199,7 +200,9 @@ class Admin extends Controller
 
         $cleaned_data = $this->prepareSanitizeSoftDelete($arr['del']);
 
-        $result = $this->addSoftDeleteDB($cleaned_data);
+        $admin_id = $_SESSION['userId'];
+
+        $result = $this->addSoftDeleteDB($cleaned_data, $admin_id);
 
         header("Content-Type: application/json");
         $serverResponse = [
@@ -210,14 +213,14 @@ class Admin extends Controller
         exit;
     }
 
-    private function addUpdateEmployee($work_id, $emp_id)
+    private function addUpdateEmployee($work_id, $emp_id, $admin_id)
     {
         $emp = new EmployeeModel();
 
         $emp->setWorkingHours($work_id);
         $emp->setID($emp_id);
 
-        $result = $emp->updateEmployeeHours();
+        $result = $emp->updateEmployeeHours($admin_id);
         return $result;
     }
 
@@ -278,7 +281,9 @@ class Admin extends Controller
         $work_id = $cleaned_data[1];
         $emp_id = $cleaned_data[0];
 
-        $result = $this->addUpdateEmployee($work_id, $emp_id);
+        $admin_id = $_SESSION['userId'];
+
+        $result = $this->addUpdateEmployee($work_id, $emp_id, $admin_id);
 
         header("Content-Type: application/json");
         $serverResponse = [

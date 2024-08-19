@@ -37,22 +37,22 @@ final class EmployeeModel
         }
     }
 
-    public function softDeleteEmployee()
+    public function softDeleteEmployee($admin_id)
     {
         try {
-            $result = $this->softDeletion($this->getID());
+            $result = $this->softDeletion($this->getID(), $admin_id);
             return $result;
         } catch (Exception $e) {
             echo $e->getMessage();
         }
     }
 
-    public function updateEmployeeHours()
+    public function updateEmployeeHours($admin_id)
     {
        $pos_id = $this->getWorkingHours();
        $emp_id = $this->getID();
         try {
-            $result = $this->updateEmployeeHrs($pos_id , $emp_id);
+            $result = $this->updateEmployeeHrs($pos_id , $emp_id, $admin_id);
             return $result;
         } catch(Exception $e) {
             echo $e->getMessage();

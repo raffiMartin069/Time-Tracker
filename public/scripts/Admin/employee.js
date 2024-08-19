@@ -12,6 +12,8 @@ import { formCheck } from '../security.js';
   });
 
   const employmentMapping = {
+    6: { emp_stat_name: "Part-time", req_hrs: 10 },
+    7: { emp_stat_name: "Part-time", req_hrs: 5 },
     2: { emp_stat_name: "Part-time", req_hrs: 20 },
     3: { emp_stat_name: "Part-time", req_hrs: 30 },
     1: { emp_stat_name: "Full-time", req_hrs: 40 },
@@ -27,6 +29,7 @@ import { formCheck } from '../security.js';
     7: "Co Founder",
     8: "Virtual Assistant",
     9: "Chief Executive Officer",
+    22: "Janitor",
   };
 
   const shiftMapping = {
@@ -37,6 +40,11 @@ import { formCheck } from '../security.js';
     35: "Tuesday-Saturday",
     33: "Sunday-Thursday",
     34: "Monday-Friday",
+    12: "Mon • Wed • Fri",
+    21: "Mon-Fri",
+    22: "Tue • Thu • Fri • Sat",
+    23: "Wed • Thu • Sat",
+    16: "Mon • Tue • Wed • Thu • Sat"
   };
 
   // const emptyFields = () => {

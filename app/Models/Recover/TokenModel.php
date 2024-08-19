@@ -27,10 +27,7 @@ class Token {
      */
     public function setToken($token) 
     {
-        $sanitize = new Sanitation();
-        $sanitize_token = $sanitize->strSanitation($token);
-        Token::checkNull($sanitize_token); // Check if token is empty or not.
-        $this->token = $sanitize_token;
+        $this->token = $token;
     }
 
     /**

@@ -103,6 +103,9 @@
                     Confirm
                 </button>
             </div>
+            <div>
+                <a href="<?php echo ROOT ?>">Back to log in</a>
+            </div>
         </form>
         </div>
       </div>

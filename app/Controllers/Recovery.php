@@ -81,7 +81,7 @@ class Recovery extends Controller
                 if (!$email_result) {
                     header('Content-Type: application/json');
                     http_response_code(200);
-                    echo json_encode(['result' => false]);
+                    echo json_encode(['result' => true]);
                     exit();
                 }
             }

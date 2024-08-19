@@ -27,10 +27,10 @@ function defineRoot() {
         define('DBUSER', $_ENV['DB_USER'] ?? null);
         define('DBKEY', $_ENV['DB_KEY'] ?? null);
         define('PORT', $_ENV['DB_PORT'] ?? null);
-        define('ROOT', 'https://wheretomed.azurewebsites.net/public/');
-        define('APP', 'https://wheretomed.azurewebsites.net/app/');
-        define('RECOVERY_REDIRECT', 'https://wheretomed.azurewebsites.net/public/recovery/reconfirm');
-        define('FORGOT_PASS', 'https://wheretomed.azurewebsites.net/public/recovery/');
+        define('ROOT', 'https://wheretomed.azurewebsites.net/Time-Tracker/public/');
+        define('APP', 'https://wheretomed.azurewebsites.net/Time-Tracker/app/');
+        define('RECOVERY_REDIRECT', 'https://wheretomed.azurewebsites.net/Time-Tracker/public/recovery/reconfirm');
+        define('FORGOT_PASS', 'https://wheretomed.azurewebsites.net/Time-Tracker/public/recovery/');
     }
 }
 

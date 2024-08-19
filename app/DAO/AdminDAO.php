@@ -39,15 +39,14 @@ trait AdminDAO
         }
     }
 
-    public function updateEmployeePos($emp_id, $pos_id) 
+    public function updateEmployeePos($emp_id, $pos_id, $admin_id) 
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('UpdateEmployeePosition.sql');
+            $query = "CALL update_position(?,?,?);";
             $params = [
                 $pos_id,
                 $emp_id,
-                
+                $admin_id
             ];
             return !empty($this->Query($query, $params)) ? true : false;
         } catch(Exception $e) {
@@ -57,13 +56,13 @@ trait AdminDAO
         }
     }
 
-    public function softDeletion($data)
+    public function softDeletion($data, $admin_id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('SoftDeleteEmployee.sql');
+            $query = "CALL delete_employee(?, ?);";
             $params = [
-                $data
+                $data,
+                $admin_id
             ];
             return !empty($this->Query($query, $params)) ? true : false;
         } catch (Exception $e) {
@@ -73,14 +72,14 @@ trait AdminDAO
         }
     }
 
-    public function updateEmployeeHrs($pos_id, $emp_id)
+    public function updateEmployeeHrs($pos_id, $emp_id, $admin_id)
     {
         try {
-            $LOADER = new SQLoader();
-            $query = $LOADER->loadSqlQuery('UpdateEmployee.sql');
+            $query = "CALL update_employment_status(:pos_id,:emp_id, :admin_id);";
             $params = [
                 $pos_id,
                 $emp_id,
+                $admin_id
             ];
             return !empty($this->Query($query, $params)) ? true : false;
         } catch (Exception $e) {
@@ -343,7 +342,7 @@ trait AdminDAO
     private function adminMeetingIn($id)
     {
         try {
-            $query = "update daily_report set huddle_status = true WHERE EMP_ID = :id and date = current_date;";
+            $query = "call join_huddle(:id);";
             $params = [
                 'id' => $id
             ];
