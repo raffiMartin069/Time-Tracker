@@ -101,7 +101,7 @@
     </div>
 </body>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
-<script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
+<script defer src="<?= ROOT ?>scripts/Admin/huddleEvent.js"></script>
 
 
 
