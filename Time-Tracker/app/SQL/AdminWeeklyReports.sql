@@ -1,2 +1,0 @@
-
-SELECT * FROM get_weekly_report_table_admin();

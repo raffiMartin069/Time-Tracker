@@ -1,2 +1,0 @@
-
-SELECT emp_id, lname || ', ' || fname as full_name FROM employee;

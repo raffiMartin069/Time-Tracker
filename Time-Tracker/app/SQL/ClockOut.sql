@@ -1,2 +1,0 @@
-
-update daily_report set clock_out = current_timestamp where emp_id = :id and date = current_date;

@@ -1,2 +1,0 @@
-
-SELECT COUNT(meeting_id) FROM meeting WHERE emp_id = ?;

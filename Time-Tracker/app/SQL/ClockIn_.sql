@@ -1,2 +1,0 @@
-
-CALL clock_in(?);;

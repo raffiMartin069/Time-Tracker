@@ -1,2 +1,0 @@
-
-select * from get_meeting_notification_admin();
