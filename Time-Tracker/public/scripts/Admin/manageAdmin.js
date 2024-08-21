@@ -19,17 +19,27 @@ $("#addAdminBtn").click(function() {
             } else {
                 addAdminModal.append('<p>There is currently no non-admin employees.</p>');
             }
-        },
-        error: function(xhr, status, error) { 
-            Swal.fire({
-                title: "Error",
-                html: "Failed to load non-admin employees. <br>Please reload or try again later.'",
-                icon: "error"
-            });
-            $('.swal2-confirm').click(function() {
+        }, 
+         error: function (xhr) {
+            let errorMessage =
+              "Failed to load non-admin employees. Please reload or try again later.";
+
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+              errorMessage = xhr.responseJSON.error;
+            }
+
+            errorMessage = errorMessage.replace(/Error[.:] /, "");
+ 
+              Swal.fire({
+                title: "Oops.",
+                text: errorMessage,
+                icon: "error",
+              }); 
+
+            $(".swal2-confirm").click(function () {
                 $('#addAdminModal').modal('hide');
-            })
-         }
+            });
+          }, 
     });
     $('#addAdminModal').modal('show');
 });
@@ -68,19 +78,23 @@ $('#saveAdminBtn').click(function() {
             $('.swal2-confirm').click(function() {
                 location.reload();
             })
-        },
-        error: function (xhr, status, error) {
-            var errorMessage = "Unable to save changes. Please try again later.";
+        }, 
+          error: function (xhr) {
+            let errorMessage =
+              "Unable to save changes. Please try again later.";
+
             if (xhr.responseJSON && xhr.responseJSON.error) {
               errorMessage = xhr.responseJSON.error;
             }
-      
-            Swal.fire({
-              title: "Error",
-              text: errorMessage,
-              icon: "error",
-            });
-      
+
+            errorMessage = errorMessage.replace(/Error[.:] /, "");
+ 
+              Swal.fire({
+                title: "Oops.",
+                text: errorMessage,
+                icon: "error",
+              }); 
+
             $(".swal2-confirm").click(function () {
               location.reload();
             });
@@ -109,17 +123,27 @@ $("#deleteBtn").click(function() {
             } else {
                 delAdmin.append('<p>There is currently no admin employees.</p>');
             }
+        }, 
+        error: function (xhr) {
+            let errorMessage =
+              "Failed to load admin employees. Please reload or try again later.";
+
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+              errorMessage = xhr.responseJSON.error;
+            }
+
+            errorMessage = errorMessage.replace(/Error[.:] /, "");
+ 
+              Swal.fire({
+                title: "Oops.",
+                text: errorMessage,
+                icon: "error",
+              }); 
+
+            $(".swal2-confirm").click(function () {
+                $('#deleteAdminModal').modal('hide');
+            });
         },
-        error: function(xhr, status, error) {
-            Swal.fire({
-                title: "Error",
-                html: "Failed to load admin employees. <br>Please reload or try again later.",
-                icon: "error"
-            });
-            $('.swal2-confirm').click(function() {
-                $('#deleteAdminModal').modal('hide'); 
-            });
-        }
     });
 
     $('#deleteAdminModal').modal('show');
@@ -176,21 +200,25 @@ $('#confirmDeleteBtn').click(function() {
                             location.reload();
                         });
                     }
-                },
-                error: function(xhr, status, error) {
-                    var errorMessage = "Unable to save changes. Please try again later.";
+                }, 
+                error: function (xhr) {
+                    let errorMessage =
+                      "Unable to save changes. Please try again later.";
+        
                     if (xhr.responseJSON && xhr.responseJSON.error) {
-                        errorMessage = xhr.responseJSON.error;
+                      errorMessage = xhr.responseJSON.error;
                     }
-              
-                    Swal.fire({
-                        title: "Error",
+        
+                    errorMessage = errorMessage.replace(/Error[.:] /, "");
+         
+                      Swal.fire({
+                        title: "Oops.",
                         text: errorMessage,
                         icon: "error",
-                    });
-              
+                      }); 
+        
                     $(".swal2-confirm").click(function () {
-                        location.reload();
+                      location.reload();
                     });
                 },
             });
@@ -202,9 +230,7 @@ $('#confirmDeleteBtn').click(function() {
             });
         }
     });
-});
-
-
+}); 
  
 // Adds CSS active selector to enable CSS color for the current active tab
 var currentPage = new URLSearchParams(window.location.search).get('page');

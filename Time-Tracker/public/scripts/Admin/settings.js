@@ -1,10 +1,19 @@
 let isEditAllowed = true;
+var defaultError = "This function isn't supported in superadmin";
 
-$("#editGeneralBtn").click(function () {
+$("#editGeneralBtn").click(function () { 
   if (isEditAllowed) {
-    // Enable form inputs and submit button to allow editing
-    $("#generalInfoForm input").prop("disabled", false);
-    $("#saveGeneralBtn").prop("disabled", false);
+    if(isSuperAdminID == 0) {
+      Swal.fire({
+        title: "Oops.",
+        text: defaultError,
+        icon: "error",
+      }); 
+    } else {
+      // Enable form inputs and submit button to allow editing of informations
+      $("#generalInfoForm input").prop("disabled", false);
+      $("#saveGeneralBtn").prop("disabled", false);
+    }  
 
     $("#generalInfoForm")
       .off("submit")
@@ -15,14 +24,14 @@ $("#editGeneralBtn").click(function () {
         $("#generalInfoForm input").prop("disabled", true);
         $("#saveGeneralBtn").prop("disabled", true);
 
-        // This is a flag to keep track of changes submission
+        // This is a flag to keep track of the changes upon submission
         isEditAllowed = false;
 
         // Fetch updated values from form inputs
         var fName = $("#getmyfname").val();
         var mName = $("#getmymname").val();
         var lName = $("#getmylname").val();
-        var birthDate = $("#getmybirthday").val();
+        var birthDate = $("#getmybirthday").val();  
 
         // Send request to server and process changes
         $.ajax({
@@ -44,23 +53,24 @@ $("#editGeneralBtn").click(function () {
             $(".swal2-confirm").click(function () {
               location.reload();
             });
-          },
-
-          error: function (xhr, status, error) {
-            var errorMessage =
-              "Unable to save changes. Please try again later.";
+          }, 
+          error: function (xhr) {
+            let errorMessage = "Unable to save changes. Please try again later.";
+        
+            // Ensure the server returns JSON with an error key
             if (xhr.responseJSON && xhr.responseJSON.error) {
-              errorMessage = xhr.responseJSON.error;
+                errorMessage = xhr.responseJSON.error;
             }
-
+        
+            // Display the specific error message
             Swal.fire({
-              title: "Error",
-              text: errorMessage,
-              icon: "error",
+                title: "Oops.",
+                text: errorMessage,
+                icon: "error",
             });
-
+        
             $(".swal2-confirm").click(function () {
-              location.reload();
+                location.reload();
             });
           },
         });
@@ -108,33 +118,31 @@ $("#passwordInfoForm").submit(function (event) {
       Swal.fire({
         title: "Error",
         text: errorMessage,
-        icon: "error",
-      });
-
-      $(".swal2-confirm").click(function () {
-        location.reload();
-      });
+        icon: "warning",
+      }); 
     },
   });
 });
 
 // Contact change starts here
-$("#editContactBtn").click(function () {
-  $("#contactInfoForm input").prop("disabled", false);
-  $("#saveContactBtn").prop("disabled", false);
+$("#editContactBtn").click(function () { 
+  if(isSuperAdminID == 0) {
+    Swal.fire({
+      title: "Oops.",
+      text: defaultError,
+      icon: "error",
+    }); 
+  } else {
+    $("#contactInfoForm input").prop("disabled", false);
+    $("#saveContactBtn").prop("disabled", false);
+  } 
 });
-
-// Contact Form
-$("#editContactBtn").click(function () {
-  $("#contactInfoForm input").prop("disabled", false);
-  $("#saveContactBtn").prop("disabled", false);
-});
-
+ 
 $("#contactInfoForm").submit(function (event) {
   event.preventDefault();
   $("#contactInfoForm input").prop("disabled", true);
   var email = $("#getmyemail").val();
-  var ecn = $("#getmyecn").val();
+  var ecn = $("#getmyecn").val(); 
 
   $.ajax({
     url: "Employee/UpdateSettingsContactInfo",
@@ -154,27 +162,38 @@ $("#contactInfoForm").submit(function (event) {
         location.reload();
       });
     },
-    error: function (xhr, status, error) {
-      var errorMessage = "Unable to save changes. Please try again later.";
+    error: function (xhr) {
+      let errorMessage = "Unable to save changes. Please try again later.";
+  
+      // Ensure the server returns JSON with an error key
       if (xhr.responseJSON && xhr.responseJSON.error) {
-        errorMessage = xhr.responseJSON.error;
+          errorMessage = xhr.responseJSON.error;
       }
-
+  
+      // Display the specific error message
       Swal.fire({
-        title: "Error",
-        text: errorMessage,
-        icon: "error",
+          title: "Oops.",
+          text: errorMessage,
+          icon: "error",
       });
-
+  
       $(".swal2-confirm").click(function () {
-        location.reload();
+          location.reload();
       });
     },
   });
 });
 
-$("#profilePic").on("click", function () {
-  $("#profilePhoto").click();
+$("#profilePic").on("click", function () {  
+  if(isSuperAdminID == 0) {
+    Swal.fire({
+      title: "Oops.",
+      text: defaultError,
+      icon: "error",
+    }); 
+  } else {
+    $("#profilePhoto").click();
+  }  
 });
 
 $("#profilePhoto").on("change", function () {
@@ -213,7 +232,7 @@ $("#profilePhoto").on("change", function () {
       return;
     }
 
-    // Submits the form once file type and file size are checked and is valid
+    // Submits the form once the file type and size are checked and are valid
     let reader = new FileReader();
     reader.onload = function (e) {
       $("#profilePic").attr("src", e.target.result);
@@ -248,21 +267,20 @@ $(".profilePicChange").on("submit", function (e) {
         location.reload();
       });
     },
-    error: function (xhr, status, error) {
-      var errorMessage = "Unable to save changes. Please try again later.";
+    error: function (xhr) {
+      let errorMessage = "Unable to save changes. Please try again later.";
+  
+      // Ensure the server returns JSON with an error key
       if (xhr.responseJSON && xhr.responseJSON.error) {
-        errorMessage = xhr.responseJSON.error;
+          errorMessage = xhr.responseJSON.error;
       }
-
+  
+      // Display the specific error message
       Swal.fire({
-        title: "Error",
-        text: errorMessage,
-        icon: "error",
-      });
-
-      $(".swal2-confirm").click(function () {
-        location.reload();
-      });
+          title: "Oops.",
+          text: errorMessage,
+          icon: "error",
+      }); 
     },
   });
 });

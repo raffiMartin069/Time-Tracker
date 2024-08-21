@@ -33,11 +33,11 @@ Thumbs.db
 /workspace/
 
 # Ignore node_modules
-/public/node_modules/
+node_modules
 
 /App.config
 
-/public/vendor/
+vendor
 
 /.dockerignore
 /README.Docker.md

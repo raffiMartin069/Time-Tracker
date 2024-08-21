@@ -62,14 +62,22 @@
                         <input type="file" id="profilePhoto" class="getmyimg" name="profilePhoto">
                     </form>
                 </div>
-
+ 
                 <?php foreach ($results as $report) : ?>
                     <div class="profile-info">
-                        <h6><span class="empFname"><?php echo $report->getFNAME(); ?></span> <span> </span> <span class="empMname"><?php echo $report->getMNAME(); ?></span> <span> </span> <span class="empLname"><?php echo $report->getLNAME(); ?></span></h6>
-                        <span class="empEmail"><?php echo $report->getEMAIL(); ?></span><span> | </span><span class="empContact"><?php echo $report->getECN(); ?></span>
+                        <h6>
+                            <span class="empFname"><?php echo $report->getFNAME() ?></span> 
+                            <span> </span> 
+                            <span class="empMname"><?php echo $report->getMNAME() ?></span> 
+                            <span> </span> 
+                            <span class="empLname"><?php echo $report->getLNAME() ?></span>
+                        </h6>
+                        <span class="empEmail"><?php echo $report->getEMAIL() ?></span>
+                        <span> | </span>
+                        <span class="empContact"><?php echo $report->getECN() ?></span>
                     </div>
-                <?php endforeach; ?>
-
+                <?php endforeach; ?> 
+ 
                 <div class="container light-style flex-grow-1 container-p-y">
                     <div class="card overflow-hidden">
                         <div class="row no-gutters row-bordered row-border-light">
@@ -86,6 +94,7 @@
                                         <hr class="border-light m-0">
                                         <div class="card-body">
                                             <form id="generalInfoForm">
+                                            <?php if (!empty($results)) : ?>
                                                 <?php foreach ($results as $report) : ?>
                                                     <div class="form-group row" style="margin-bottom: 10px;">
                                                         <div class="col-md-4">
@@ -106,14 +115,36 @@
                                                         <input class="form-control mt-1" id="getmybirthday" type="date" value="<?php echo $report->getBIRTHDATE(); ?>" id="date" disabled>
                                                     </div>
                                                 <?php endforeach; ?>
+                                                <?php else : ?> 
+                                                    <div class="form-group row" style="margin-bottom: 10px;">
+                                                        <div class="col-md-4">
+                                                            <label for="getmyfname" class="text-secondary text-start" style="font-size: 12px; display:block;">First Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmyfname" disabled>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="getmymname" class="text-secondary text-start" style="font-size: 12px; display:block;">Middle Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmymname" disabled>
+                                                        </div>
+                                                        <div class="col-md-4">
+                                                            <label for="getmylname" class="text-secondary text-start" style="font-size: 12px; display:block;">Last Name</label>
+                                                            <input type="text" class="form-control mt-1" id="getmylname" disabled>
+                                                        </div>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="getmybirthday" class="text-secondary text-start" style="font-size: 12px; display:block;">Birthdate</label>
+                                                        <input class="form-control mt-1" id="getmybirthday" type="date" id="date" disabled>
+                                                    </div>
+                                            <?php endif; ?>
                                                 <button type="button" class="save-btn" id="editGeneralBtn">Update</button>
                                                 <button type="submit" class="save-btn align-end" id="saveGeneralBtn" disabled>Save</button>
                                             </form>
                                         </div>
                                     </div>
+
                                     <div class="tab-pane fade" id="account-change-password">
                                         <div class="card-body pb-2">
                                             <form id="passwordInfoForm">
+                                            <?php if (!empty($results)) : ?>
                                                 <?php foreach ($results as $report) : ?>
                                                     <div class="form-group" style="margin-bottom: 10px;">
                                                         <label for="getmycurrpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">Old Password</label>
@@ -123,26 +154,48 @@
                                                         <label for="getmynewpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">New Password</label>
                                                         <input type="password" class="form-control mt-1" id="getmynewpassword" disabled required>
                                                     </div>
-                                                <?php endforeach; ?>
+                                                    <?php endforeach; ?>
+                                                    <?php else : ?> 
+                                                    <div class="form-group" style="margin-bottom: 10px;">
+                                                        <label for="getmycurrpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">Old Password</label>
+                                                        <input type="password" class="form-control mt-1" id="getmycurrpassword" disabled required>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label for="getmynewpassword" class="text-secondary text-start" style="font-size: 12px; display:block;">New Password</label>
+                                                        <input type="password" class="form-control mt-1" id="getmynewpassword" disabled required>
+                                                    </div>
+                                                <?php endif; ?>
                                                 <button type="button" class="save-btn mt-1" id="editPasswordBtn">Update</button>
                                                 <button type="submit" class="save-btn mt-1" id="savePasswordBtn" disabled>Save</button>
                                             </form>
                                         </div>
                                     </div>
+                                    
                                     <div class="tab-pane fade" id="account-info">
                                         <hr class="border-light m-0">
                                         <div class="card-body pb-2">
                                             <form id="contactInfoForm">
+                                            <?php if (!empty($results)) : ?> 
                                                 <?php foreach ($results as $report) : ?>
                                                     <div class="form-group" style="margin-bottom: 10px;">
                                                         <label for="getmyemail" class="text-secondary text-start" style="font-size: 12px; display:block;">Email</label>
-                                                        <input type="text" class="form-control mt-1" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" disabled>
+                                                        <input type="email" class="form-control mt-1" id="getmyemail" value="<?php echo $report->getEMAIL(); ?>" disabled>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="getmyecn" class="text-secondary text-start" style="font-size: 12px; display:block;">Contact Number</label>
                                                         <input type="text" class="form-control mt-1" id="getmyecn" value="<?php echo $report->getECN(); ?>" disabled>
                                                     </div>
                                                 <?php endforeach; ?>
+                                                <?php else : ?>
+                                                    <div class="form-group" style="margin-bottom: 10px;">
+                                                        <label class="text-secondary text-start" style="font-size: 12px; display:block;">Email</label>
+                                                        <input type="email" class="form-control mt-1" disabled>
+                                                    </div>
+                                                    <div class="form-group">
+                                                        <label class="text-secondary text-start" style="font-size: 12px; display:block;">Contact Number</label>
+                                                        <input type="text" class="form-control mt-1" disabled>
+                                                    </div>
+                                                <?php endif; ?>
                                                 <button type="button" class="save-btn mt-1" id="editContactBtn">Update</button>
                                                 <button type="submit" class="save-btn mt-1" id="saveContactBtn" disabled>Save</button>
                                             </form>
@@ -163,6 +216,9 @@
 
     <script src="<?= ROOT ?>node_modules/jquery/dist/jquery.min.js"></script>
     <script src="<?= ROOT ?>node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        var isSuperAdminID = "<?php echo $_SESSION['userId']; ?>";
+    </script>  
     <script defer src="<?= ROOT ?>scripts/Admin/settings.js"></script>
 </body>
 

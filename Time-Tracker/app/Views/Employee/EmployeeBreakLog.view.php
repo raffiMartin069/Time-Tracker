@@ -89,7 +89,7 @@
     </div>
 </body>
 <script src="https://cdn.lordicon.com/lordicon.js"></script>
-<script defer src="<?= ROOT ?>scripts/Admin/managementEvents.js"></script>
+<script defer src="<?= ROOT ?>scripts/Admin/breakLogEvent.js"></script>
 <script defer src="<?= ROOT ?>scripts/Employee/employee_break_log_sorting.js"></script>
 </body>
 

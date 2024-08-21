@@ -45,14 +45,14 @@ const managementSorting = () => {
             let rows = Array.from(tableBody.querySelectorAll('tr'));
             if (this.value === '1') { // Oldest First
                 rows.sort((a, b) => {
-                    let dateA = new Date(a.cells[0].textContent.trim());
-                    let dateB = new Date(b.cells[0].textContent.trim());
+                    let dateA = new Date(a.cells[5].textContent.trim());
+                    let dateB = new Date(b.cells[5].textContent.trim());
                     return dateA - dateB;
                 });
             } else if (this.value === '2') { // Newest First
                 rows.sort((a, b) => {
-                    let dateA = new Date(a.cells[0].textContent.trim());
-                    let dateB = new Date(b.cells[0].textContent.trim());
+                    let dateA = new Date(a.cells[4].textContent.trim());
+                    let dateB = new Date(b.cells[4].textContent.trim());
                     return dateB - dateA;
                 });
             }
