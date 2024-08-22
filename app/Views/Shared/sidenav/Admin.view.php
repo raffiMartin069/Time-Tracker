@@ -177,8 +177,7 @@
                     <span class="nav-item-title mt-2 fs-6 px-4" style="color: #64748B;">Profile</span>
                     <div class="d-flex mt-3">
                         <img id="profile-photo" src="<?php echo $getUpdatedProfilePhoto; ?>"
-                            style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px; object-fit: cover;"
-                            alt="Profile Picture">
+                            style="width: 50px; height: 50px; border: none; margin-left:10px; border-radius: 30px; object-fit: cover;">
                         <span class="nav-item-title" id="bottom-sidebar-content" style="max-width: 218px !important;">
                             <h6 class="mt-1 mb-0 ms-2"><?php echo $updatedName; ?></h6>
                             <small class="ms-2 text-secondary"><?php echo $updatedEmail; ?></small>
