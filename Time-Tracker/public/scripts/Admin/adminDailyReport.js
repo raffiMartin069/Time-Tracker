@@ -88,9 +88,63 @@ editButtons.forEach((button) => {
     document.getElementById("modal-clock-out").value = empClockout;
 
     let originalBreakData = [];
-    // Flag to track success messages of each updated inputs and only display one successful message
+    // A Flag set to display a successful message only once
     let successMsg = false;
-    let errorMsg = false;
+    // Tracks the number of AJAX requests
+    let ajaxRequestsCount = 0;  
+    let xhrError; 
+
+    // If an error is encountered, the flag will reset to false
+    function resetFlags() {
+      successMsg = false;
+    }
+
+    // Sets the boolean flag to true if the new time stamp/s is/are correct
+    // Displays the appropriate success message after the function call: checkAndDisplayMsgPrompt()
+    function handleSuccessFlag(newTimeStamp, timeFormat) {
+      if (timeFormat.test(newTimeStamp)) {
+        successMsg = true;
+      }
+      checkAndDisplayMsgPrompt();
+    }
+
+    // Displays the appropriate error message returned from the server after the function call: checkAndDisplayMsgPrompt()
+    function handleError(xhr) {
+      xhrError = xhr;
+      checkAndDisplayMsgPrompt();
+    }
+
+    function checkAndDisplayMsgPrompt() {
+      ajaxRequestsCount -= 1;
+      if (ajaxRequestsCount === 0) {
+        if (successMsg) {
+          Swal.fire({
+            title: "Success",
+            text: "Report has been updated successfully!",
+            icon: "success",
+          }).then(() => {
+            location.reload();
+            resetFlags();
+          });
+        } else {
+          let errorMessage =
+            "Failed to update the report! Please make sure updated entries are in the correct format (HH:MM:SS AM/PM) and doesn't overlap with other timestamps.";
+
+            if (xhrError && xhrError.responseJSON && xhrError.responseJSON.error) {
+              errorMessage = xhrError.responseJSON.error;
+            }
+
+          // Remove "Error." or "Error:" prefix from the returned message  
+          errorMessage = errorMessage.replace(/Error[.:] /, "");
+
+          Swal.fire({
+            title: "Oops.",
+            text: errorMessage,
+            icon: "error",
+          });
+        }
+      }
+    }
 
     $.ajax({
       url: "Admin/BreakStamps",
@@ -118,15 +172,17 @@ editButtons.forEach((button) => {
         document.getElementById("breakInputs").innerHTML = breakInputs;
         originalBreakData = data;
 
-        // Hide loading message and show the form
         document.getElementById("loadingMessage").style.display = "none";
         document.getElementById("editReportForm").style.display = "block";
       },
-      error: function (xhr, status, error) {
+      error: function (xhr) {
         var errorMessage = "Something went wrong. Please try again later.";
         if (xhr.responseJSON && xhr.responseJSON.error) {
           errorMessage = xhr.responseJSON.error;
-        }
+        } 
+
+        // Remove "Error." or "Error:" prefix from the returned message if there is
+        errorMessage = errorMessage.replace(/Error[.:] /, "");
 
         Swal.fire({
           title: "Error",
@@ -140,280 +196,116 @@ editButtons.forEach((button) => {
       },
     });
 
-    document
-      .getElementById("updateReport")
-      .addEventListener("click", function () {
-        const modalClockIn = document.getElementById("modal-clock-in").value;
-        const modalClockOut = document.getElementById("modal-clock-out").value;
-        const modalLunchIn = document.getElementById("modal-lunch-in").value;
-        const modalLunchOut = document.getElementById("modal-lunch-out").value;
+    document.getElementById("updateReport").onclick = function () {
+      const modalClockIn = document.getElementById("modal-clock-in").value;
+      const modalClockOut = document.getElementById("modal-clock-out").value;
+      const modalLunchIn = document.getElementById("modal-lunch-in").value;
+      const modalLunchOut = document.getElementById("modal-lunch-out").value;
 
-        const timeFormat = /^(0?[1-9]|1[0-2]):[0-5][0-9]:[0-5][0-9] (AM|PM)$/i;
+      const timeFormat = /^(0?[1-9]|1[0-2]):[0-5][0-9]:[0-5][0-9] (AM|PM)$/i;
 
-        if (empClockin !== modalClockIn) {
-          $.ajax({
-            url: "Admin/UpdateClockInReport",
-            method: "POST",
-            data: {
-              daily_id: dailyId,
-              report_date: reportDate,
-              clock_in: modalClockIn,
-            },
-            success: function (data) {
-              if (!successMsg) {
-                $("#editReportModal").modal("hide");
+      ajaxRequestsCount = 0; // Reset pending AJAX requests
 
-                if (timeFormat.test(modalClockIn)) {
-                  Swal.fire({
-                    title: "Success",
-                    text: "Report has been updated successfully!",
-                    icon: "success",
-                  }).then(() => location.reload());
-                  successMsg = true;
-                } else {
-                  if (!errorMsg) {
-                    Swal.fire({
-                      title: "Opss", 
-                      text: "Invalid date or time format.",
-                      icon: "error",
-                    }).then(() => location.reload());
-                    errorMsg = true;
-                  }  
-                }
-              }
-            },
-            error: function (xhr) {
-              // Use this default error message if the server doesn't return any error message
-              let errorMessage =
-                "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
+      if (empClockin !== modalClockIn) {
+        ajaxRequestsCount++;
+        $.ajax({
+          url: "Admin/UpdateClockInReport",
+          method: "POST",
+          data: {
+            daily_id: dailyId,
+            report_date: reportDate,
+            clock_in: modalClockIn,
+          },
+          success: function () {
+            handleSuccessFlag(modalClockIn, timeFormat);
+          },
+          error: handleError,
+        });
+      }
 
-              // Get the error message from the server is any is available
-              if (xhr.responseJSON && xhr.responseJSON.error) {
-                errorMessage = xhr.responseJSON.error;
-              }
+      if (empClockout !== modalClockOut) {
+        ajaxRequestsCount++;
+        $.ajax({
+          url: "Admin/UpdateClockOutReport",
+          method: "POST",
+          data: {
+            daily_id: dailyId,
+            report_date: reportDate,
+            clock_out: modalClockOut,
+          },
+          success: function () {
+            handleSuccessFlag(modalClockOut, timeFormat);
+          },
+          error: handleError,
+        });
+      }
 
-              // Remove "Error." or "Error:" prefix from the returned message if there is
-              errorMessage = errorMessage.replace(/Error[.:] /, "");
-
-              if (!successMsg) {
-                Swal.fire({
-                  title: "Oops.",
-                  text: errorMessage,
-                  icon: "error",
-                });
-                successMsg = true;
-              }
-
-              $(".swal2-confirm").click(function () {
-                location.reload();
-              });
-            },
-          });
-        }
-
-        if (empClockout !== modalClockOut) {
-          $.ajax({
-            url: "Admin/UpdateClockOutReport",
-            method: "POST",
-            data: {
-              daily_id: dailyId,
-              report_date: reportDate,
-              clock_out: modalClockOut,
-            },
-            success: function (data) {
-              if (!successMsg) {
-                $("#editReportModal").modal("hide");
-                if (timeFormat.test(modalClockOut)) {
-                  Swal.fire({
-                    title: "Success",
-                    text: "Report has been updated successfully!",
-                    icon: "success",
-                  }).then(() => location.reload());
-                  successMsg = true;
-                } else {
-                  if (!errorMsg) {
-                    Swal.fire({
-                      title: "Opss", 
-                      text: "Invalid date or time format.",
-                      icon: "error",
-                    }).then(() => location.reload());
-                    errorMsg = true;
-                  }   
-                }
-              }
-            },
-            error: function (xhr) {
-              // Use this default error message if the server doesn't return any error message
-              let errorMessage =
-                "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
-
-              // Get the error message from the server is any is available
-              if (xhr.responseJSON && xhr.responseJSON.error) {
-                errorMessage = xhr.responseJSON.error;
-              }
-
-              // Remove "Error." or "Error:" prefix from the returned message if there is
-              errorMessage = errorMessage.replace(/Error[.:] /, "");
-
-              if (!successMsg) {
-                Swal.fire({
-                  title: "Oops.",
-                  text: errorMessage,
-                  icon: "error",
-                });
-                successMsg = true;
-              }
-
-              $(".swal2-confirm").click(function () {
-                location.reload();
-              });
-            },
-          });
-        }
-
-        if (empLunchin !== modalLunchIn || empLunchout !== modalLunchOut) {
-          $.ajax({
-            url: "Admin/UpdateLunchReport",
-            method: "POST",
-            data: {
-              daily_id: dailyId,
-              emp_id: empId,
-              report_date: reportDate,
-              lunch_in: modalLunchIn,
-              lunch_out: modalLunchOut,
-            },
-            success: function (data) {
-              if (!successMsg) {
-                $("#editReportModal").modal("hide");
-                if (
-                  timeFormat.test(modalLunchIn) &&
-                  timeFormat.test(modalLunchOut)
-                ) {
-                  Swal.fire({
-                    title: "Success",
-                    text: "Report has been updated successfully!",
-                    icon: "success",
-                  }).then(() => location.reload());
-                  successMsg = true;
-                } else {
-                  if (!errorMsg) {
-                    Swal.fire({
-                      title: "Opss", 
-                      text: "Invalid date or time format.",
-                      icon: "error",
-                    }).then(() => location.reload());
-                    errorMsg = true;
-                  }   
-                }
-              }
-            },
-            error: function (xhr) {
-              // Use this default error message if the server doesn't return any error message
-              let errorMessage =
-                "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
-
-              // Get the error message from the server is any is available
-              if (xhr.responseJSON && xhr.responseJSON.error) {
-                errorMessage = xhr.responseJSON.error;
-              }
-
-              // Remove "Error." or "Error:" prefix from the returned message if there is
-              errorMessage = errorMessage.replace(/Error[.:] /, "");
-
-              if (!successMsg) {
-                Swal.fire({
-                  title: "Oops.",
-                  text: errorMessage,
-                  icon: "error",
-                });
-                successMsg = true;
-              }
-
-              $(".swal2-confirm").click(function () {
-                location.reload();
-              });
-            },
-          });
-        }
-
-        const breakInputs = document.querySelectorAll("#breakInputs input");
-        for (let i = 0; i < breakInputs.length; i += 2) {
-          const breakIn = breakInputs[i].value;
-          const breakOut = breakInputs[i + 1].value;
-          const recordId = breakInputs[i].getAttribute("data-record-id");
-
-          if (originalBreakData[i / 2]) {
+      if (empLunchin !== modalLunchIn || empLunchout !== modalLunchOut) {
+        ajaxRequestsCount++;
+        $.ajax({
+          url: "Admin/UpdateLunchReport",
+          method: "POST",
+          data: {
+            daily_id: dailyId,
+            emp_id: empId,
+            report_date: reportDate,
+            lunch_in: modalLunchIn,
+            lunch_out: modalLunchOut,
+          },
+          success: function () {
             if (
-              breakIn !== originalBreakData[i / 2].BREAK_IN ||
-              breakOut !== originalBreakData[i / 2].BREAK_OUT
+              timeFormat.test(modalLunchIn) &&
+              timeFormat.test(modalLunchOut)
             ) {
-              $.ajax({
-                url: "Admin/UpdateBreakReport",
-                method: "POST",
-                data: {
-                  daily_id: dailyId,
-                  record_id: recordId,
-                  emp_id: empId,
-                  report_date: reportDate,
-                  break_in: breakIn,
-                  break_out: breakOut,
-                },
-                success: function (data) {
-                  if (!successMsg) {
-                    $("#editReportModal").modal("hide");
-                    if (timeFormat.test(breakIn) && timeFormat.test(breakOut)) {
-                      Swal.fire({
-                        title: "Success",
-                        text: "Report has been updated successfully!",
-                        icon: "success",
-                      }).then(() => location.reload());
-                      successMsg = true;
-                    } else {
-                      if (!errorMsg) {
-                        Swal.fire({
-                          title: "Opss", 
-                          text: "Invalid date or time format.",
-                          icon: "error",
-                        }).then(() => location.reload());
-                        errorMsg = true;
-                      }   
-                    }
-                  }
-                },
-                error: function (xhr) {
-                  // Use this default error message if the server doesn't return any error message
-                  let errorMessage =
-                    "Failed to update report!<br>Please make sure updated entries are in the correct format or within the correct range: not earlier, equal, or later than other time stamps.";
-    
-                  // Get the error message from the server is any is available
-                  if (xhr.responseJSON && xhr.responseJSON.error) {
-                    errorMessage = xhr.responseJSON.error;
-                  }
-    
-                  // Remove "Error." or "Error:" prefix from the returned message if there is
-                  errorMessage = errorMessage.replace(/Error[.:] /, "");
-    
-                  if (!successMsg) {
-                    Swal.fire({
-                      title: "Oops.",
-                      text: errorMessage,
-                      icon: "error",
-                    });
-                    successMsg = true;
-                  }
-    
-                  $(".swal2-confirm").click(function () {
-                    location.reload();
-                  });
-                },
-              });
+              handleSuccessFlag(modalLunchIn, timeFormat);
+            } else {
+              handleError();
             }
+          },
+          error: handleError,
+        });
+      }
+
+      const breakInputs = document.querySelectorAll("#breakInputs input");
+      for (let i = 0; i < breakInputs.length; i += 2) {
+        const breakIn = breakInputs[i].value;
+        const breakOut = breakInputs[i + 1].value;
+        const recordId = breakInputs[i].getAttribute("data-record-id");
+
+        if (originalBreakData[i / 2]) {
+          if (
+            breakIn !== originalBreakData[i / 2].BREAK_IN ||
+            breakOut !== originalBreakData[i / 2].BREAK_OUT
+          ) {
+            ajaxRequestsCount++;
+            $.ajax({
+              url: "Admin/UpdateBreakReport",
+              method: "POST",
+              data: {
+                daily_id: dailyId,
+                record_id: recordId,
+                emp_id: empId,
+                report_date: reportDate,
+                break_in: breakIn,
+                break_out: breakOut,
+              },
+              success: function () {
+                handleSuccessFlag(breakIn, timeFormat);
+              },
+              error: handleError,
+            });
           }
         }
+      }
 
-        $("#closeReport").click(function () {
-          $("#editReportModal").modal("hide");
-        });
+      if (ajaxRequestsCount === 0) {
+        // If no updates were made, the flag will reset
+        resetFlags();
+      }
+
+      $("#closeReport").click(function () {
+        $("#editReportModal").modal("hide");
       });
+    };
   });
 });

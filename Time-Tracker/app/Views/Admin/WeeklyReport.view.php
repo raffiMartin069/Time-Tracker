@@ -33,13 +33,13 @@
                     <h4 style="margin: 0;">Weekly Report</h4>
                     <div class="button-container" style="margin-left: 1rem;">
                         <a href="?page=dailyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Daily</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 7rem;">Daily</button>
                         </a>
                         <a href="?page=weeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Weekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 7rem;">Weekly</button>
                         </a>
                         <a href="?page=biweeklyReport" style="text-decoration: none;">
-                            <button class="btn btn-outline-success text-success text-center" style="width: 6.4rem;">Biweekly</button>
+                            <button class="btn btn-outline-success text-success text-center" style="width: 7rem;">Biweekly</button>
                         </a>
                     </div>
 
@@ -121,7 +121,7 @@
                                             <td class="getmyempid" id="reportsTableIdTd"><?php echo $report->getEMPID(); ?></td>
                                             <td class="employee-name">
                                                 <div class="photo-container me-1">
-                                                    <img class="photo" src="<?php echo $getProfilePhoto; ?>" alt="Profile Picture">
+                                                    <img class="photo" src="<?php echo $getProfilePhoto; ?>">
                                                 </div>
 
                                                 <?php echo $report->getEMPNAME(); ?>
